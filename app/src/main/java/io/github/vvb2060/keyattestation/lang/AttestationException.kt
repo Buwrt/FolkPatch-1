@@ -1,6 +1,6 @@
 package io.github.vvb2060.keyattestation.lang
 
-import io.github.vvb2060.keyattestation.R
+import me.bmax.apatch.R
 
 class AttestationException(code: Int, cause: Throwable) : RuntimeException(cause) {
 
@@ -18,29 +18,29 @@ class AttestationException(code: Int, cause: Throwable) : RuntimeException(cause
     }
 
     val titleResId: Int = when (code) {
-        CODE_UNAVAILABLE -> R.string.error_unavailable
-        CODE_CANT_PARSE_CERT -> R.string.error_cant_parse_cert
-        CODE_STRONGBOX_UNAVAILABLE -> R.string.error_strongbox_unavailable
-        CODE_DEVICEIDS_UNAVAILABLE -> R.string.error_deviceids_unavailable
-        CODE_OUT_OF_KEYS -> R.string.error_out_of_keys
-        CODE_OUT_OF_KEYS_TRANSIENT -> R.string.error_out_of_keys_transient
-        CODE_UNAVAILABLE_TRANSIENT -> R.string.error_unavailable_transient
-        CODE_KEYS_NOT_PROVISIONED -> R.string.error_keys_not_provisioned
-        CODE_RKP -> R.string.error_remote_key_provisioning
-        else -> R.string.error_unknown
+        CODE_UNAVAILABLE -> R.string.ka_error_unavailable
+        CODE_CANT_PARSE_CERT -> R.string.ka_error_cant_parse_cert
+        CODE_STRONGBOX_UNAVAILABLE -> R.string.ka_error_strongbox_unavailable
+        CODE_DEVICEIDS_UNAVAILABLE -> R.string.ka_error_deviceids_unavailable
+        CODE_OUT_OF_KEYS -> R.string.ka_error_out_of_keys
+        CODE_OUT_OF_KEYS_TRANSIENT -> R.string.ka_error_out_of_keys_transient
+        CODE_UNAVAILABLE_TRANSIENT -> R.string.ka_error_unavailable_transient
+        CODE_KEYS_NOT_PROVISIONED -> R.string.ka_error_keys_not_provisioned
+        CODE_RKP -> R.string.ka_error_remote_key_provisioning
+        else -> R.string.ka_error_unknown
     }
 
     val descriptionResId: Int = when (code) {
-        CODE_UNAVAILABLE -> R.string.error_unavailable_summary
-        CODE_CANT_PARSE_CERT -> R.string.error_cant_parse_cert_summary
-        CODE_STRONGBOX_UNAVAILABLE -> R.string.error_strongbox_unavailable_summary
-        CODE_DEVICEIDS_UNAVAILABLE -> R.string.error_deviceids_unavailable_summary
-        CODE_OUT_OF_KEYS -> R.string.error_out_of_keys_summary
-        CODE_OUT_OF_KEYS_TRANSIENT -> R.string.error_out_of_keys_transient_summary
-        CODE_UNAVAILABLE_TRANSIENT -> R.string.error_unavailable_transient_summary
-        CODE_KEYS_NOT_PROVISIONED -> R.string.error_keys_not_provisioned_summary
-        CODE_RKP -> R.string.error_remote_key_provisioning_summary
-        else -> R.string.error_unknown
+        CODE_UNAVAILABLE -> R.string.ka_error_unavailable_summary
+        CODE_CANT_PARSE_CERT -> R.string.ka_error_cant_parse_cert_summary
+        CODE_STRONGBOX_UNAVAILABLE -> R.string.ka_error_strongbox_unavailable_summary
+        CODE_DEVICEIDS_UNAVAILABLE -> R.string.ka_error_deviceids_unavailable_summary
+        CODE_OUT_OF_KEYS -> R.string.ka_error_out_of_keys_summary
+        CODE_OUT_OF_KEYS_TRANSIENT -> R.string.ka_error_out_of_keys_transient_summary
+        CODE_UNAVAILABLE_TRANSIENT -> R.string.ka_error_unavailable_transient_summary
+        CODE_KEYS_NOT_PROVISIONED -> R.string.ka_error_keys_not_provisioned_summary
+        CODE_RKP -> R.string.ka_error_remote_key_provisioning_summary
+        else -> R.string.ka_error_unknown
     }
 
     override fun fillInStackTrace() = this

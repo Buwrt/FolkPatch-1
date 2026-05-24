@@ -1162,4 +1162,24 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="ka_origin">Origin</string>
     <string name="ka_app_id">Application ID</string>
     <string name="ka_creation_time">Creation Time</string>
+    <string name="ka_error_unknown">Unknown error</string>
+    <string name="ka_error_unavailable">Key attestation unavailable</string>
+    <string name="ka_error_cant_parse_cert">Cannot parse certificate</string>
+    <string name="ka_error_strongbox_unavailable">StrongBox unavailable</string>
+    <string name="ka_error_deviceids_unavailable">Device IDs attestation unavailable</string>
+    <string name="ka_error_out_of_keys">Out of attestation keys</string>
+    <string name="ka_error_out_of_keys_transient">Temporarily out of attestation keys</string>
+    <string name="ka_error_unavailable_transient">Key attestation temporarily unavailable</string>
+    <string name="ka_error_keys_not_provisioned">Keys not provisioned</string>
+    <string name="ka_error_remote_key_provisioning">Remote key provisioning error</string>
+    <string name="ka_error_unknown">Unknown error</string>
+    <string name="ka_error_unavailable_summary">Device does not support key attestation</string>
+    <string name="ka_error_cant_parse_cert_summary">Failed to parse the attestation certificate</string>
+    <string name="ka_error_strongbox_unavailable_summary">StrongBox is not available on this device</string>
+    <string name="ka_error_deviceids_unavailable_summary">Device ID attestation is not supported</string>
+    <string name="ka_error_out_of_keys_summary">The device has exhausted its attestation keys</string>
+    <string name="ka_error_out_of_keys_transient_summary">The device is temporarily out of attestation keys</string>
+    <string name="ka_error_unavailable_transient_summary">Key attestation is temporarily unavailable</string>
+    <string name="ka_error_keys_not_provisioned_summary">Attestation keys have not been provisioned</string>
+    <string name="ka_error_remote_key_provisioning_summary">Remote key provisioning encountered an error</string>
 </resources>
