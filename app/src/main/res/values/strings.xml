@@ -1172,7 +1172,6 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="ka_error_unavailable_transient">Key attestation temporarily unavailable</string>
     <string name="ka_error_keys_not_provisioned">Keys not provisioned</string>
     <string name="ka_error_remote_key_provisioning">Remote key provisioning error</string>
-    <string name="ka_error_unknown">Unknown error</string>
     <string name="ka_error_unavailable_summary">Device does not support key attestation</string>
     <string name="ka_error_cant_parse_cert_summary">Failed to parse the attestation certificate</string>
     <string name="ka_error_strongbox_unavailable_summary">StrongBox is not available on this device</string>
