@@ -434,18 +434,18 @@ fun AuthorizationListItems(list: AuthorizationList?) {
 
 // Helper functions
 private fun formatByteArray(bytes: ByteArray?): String {
-    if (bytes == null) return "N/A"
+    if (bytes == null) return "不可用"
     return bytes.take(8).joinToString("") { "%02X".format(it) } + 
         if (bytes.size > 8) "..." else ""
 }
 
 private fun bootStateToString(state: Int): String {
     return when (state) {
-        RootOfTrust.KM_VERIFIED_BOOT_VERIFIED -> "Verified"
-        RootOfTrust.KM_VERIFIED_BOOT_SELF_SIGNED -> "Self Signed"
-        RootOfTrust.KM_VERIFIED_BOOT_UNVERIFIED -> "Unverified"
-        RootOfTrust.KM_VERIFIED_BOOT_FAILED -> "Failed"
-        else -> "Unknown ($state)"
+        RootOfTrust.KM_VERIFIED_BOOT_VERIFIED -> "已验证"
+        RootOfTrust.KM_VERIFIED_BOOT_SELF_SIGNED -> "自签名"
+        RootOfTrust.KM_VERIFIED_BOOT_UNVERIFIED -> "未验证"
+        RootOfTrust.KM_VERIFIED_BOOT_FAILED -> "验证失败"
+        else -> "未知 ($state)"
     }
 }
 
@@ -475,7 +475,7 @@ class KeyAttestationViewModel : ViewModel() {
                 certificateChain = result.getCertificateChainEncoded()
                 error = null
             } catch (e: Exception) {
-                error = e.message ?: "Unknown error"
+                error = e.message ?: "未知错误"
                 attestationData = null
                 certificateChain = null
             } finally {
@@ -486,7 +486,7 @@ class KeyAttestationViewModel : ViewModel() {
     
     fun loadCertificateFromUri(inputStream: InputStream?) {
         if (inputStream == null) {
-            error = "Failed to open file"
+            error = "无法打开文件"
             return
         }
         
@@ -503,7 +503,7 @@ class KeyAttestationViewModel : ViewModel() {
                 certificateChain = bytes
                 error = null
             } catch (e: Exception) {
-                error = e.message ?: "Failed to load certificate"
+                error = e.message ?: "加载证书失败"
                 attestationData = null
                 certificateChain = null
             } finally {
@@ -522,7 +522,7 @@ class KeyAttestationViewModel : ViewModel() {
                 outputStream.write(certificateChain)
                 outputStream.close()
             } catch (e: Exception) {
-                error = "Failed to save: ${e.message}"
+                error = "保存失败: ${e.message}"
             }
         }
     }
