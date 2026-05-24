@@ -31,6 +31,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -145,6 +148,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.window.DialogProperties
 import me.bmax.apatch.R
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.snapshotFlow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -181,6 +185,11 @@ val LocalScrollState = compositionLocalOf<ScrollState?> { null }
 
 val LocalBottomBarVisible = compositionLocalOf { mutableStateOf(true) }
 val LocalIsFloatingNavMode = compositionLocalOf { false }
+val LocalPagerState = compositionLocalOf<PagerState?> { null }
+
+// Navigation request for external events (e.g., pending action module, script)
+// When set, the active pager page's NavHost will navigate to the specified destination
+val LocalNavigationRequest = compositionLocalOf<MutableState<com.ramcosta.composedestinations.spec.DirectionDestinationSpec?>> { mutableStateOf(null) }
 
 @Composable
 fun rememberScrollConnection(
@@ -501,6 +510,7 @@ class MainActivity : AppCompatActivity() {
             val bottomBarRoutes = remember {
                 BottomBarDestination.entries.map { it.direction.route }.toSet()
             }
+            val navigationRequest = remember { mutableStateOf<com.ramcosta.composedestinations.spec.DirectionDestinationSpec?>(null) }
             val settingsRoutes = remember {
                 setOf(
                     SettingScreenDestination.route,
@@ -519,7 +529,7 @@ class MainActivity : AppCompatActivity() {
             LaunchedEffect(pendingActionModuleId) {
                 val id = pendingActionModuleId
                 if (!id.isNullOrEmpty()) {
-                    navigator.navigate(com.ramcosta.composedestinations.generated.destinations.ExecuteAPMActionScreenDestination(id))
+                    navigationRequest.value = com.ramcosta.composedestinations.generated.destinations.ExecuteAPMActionScreenDestination(id)
                     pendingActionModuleId = null
                 }
             }
@@ -530,7 +540,7 @@ class MainActivity : AppCompatActivity() {
                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
                         me.bmax.apatch.util.ScriptLibraryManager.loadScripts().find { it.id == id }
                     }?.let { scriptInfo ->
-                        navigator.navigate(com.ramcosta.composedestinations.generated.destinations.ScriptExecutionLogScreenDestination(scriptInfo))
+                        navigationRequest.value = com.ramcosta.composedestinations.generated.destinations.ScriptExecutionLogScreenDestination(scriptInfo)
                     }
                     pendingScriptId = null
                 }
@@ -595,7 +605,7 @@ class MainActivity : AppCompatActivity() {
                 val externalInstallConfirmDialog = rememberConfirmDialog(
                     onConfirm = {
                         pendingExternalInstallUri?.let { u ->
-                            navigator.navigate(InstallScreenDestination(u, MODULE_TYPE.APM))
+                            navigationRequest.value = InstallScreenDestination(u, MODULE_TYPE.APM)
                         }
                         pendingExternalInstallUri = null
                     },
@@ -619,7 +629,7 @@ class MainActivity : AppCompatActivity() {
                     lastHandledExternalKey.value = key
 
                     if (uris != null && uris.isNotEmpty()) {
-                        navigator.navigate(ApmBulkInstallScreenDestination(initialUris = uris))
+                        navigationRequest.value = ApmBulkInstallScreenDestination(initialUris = uris)
                         installUris = null
                         installUri = null
                     } else if (uri != null) {
@@ -651,7 +661,7 @@ class MainActivity : AppCompatActivity() {
                                     markdown = false
                                 )
                             } else {
-                                navigator.navigate(InstallScreenDestination(uri, MODULE_TYPE.APM))
+                                navigationRequest.value = InstallScreenDestination(uri, MODULE_TYPE.APM)
                             }
                         }
                         installUri = null
@@ -774,13 +784,51 @@ class MainActivity : AppCompatActivity() {
                         else -> maxWidth >= 600.dp && maxWidth > maxHeight // auto
                     }
 
+                    // Calculate visible destinations (same logic as BottomBar)
+                    val apState by APApplication.apStateLiveData.observeAsState(APApplication.State.UNKNOWN_STATE)
+                    val kPatchReady = apState != APApplication.State.UNKNOWN_STATE
+                    val aPatchReady = apState == APApplication.State.ANDROIDPATCH_INSTALLED
+                    val prefs = APApplication.sharedPreferences
+                    val showNavApm = prefs.getBoolean("show_nav_apm", true)
+                    val showNavKpm = prefs.getBoolean("show_nav_kpm", true)
+                    val showNavSuperUser = prefs.getBoolean("show_nav_superuser", true)
+                    val visibleDestinations = remember(kPatchReady, aPatchReady, showNavApm, showNavKpm, showNavSuperUser) {
+                        BottomBarDestination.entries.filter { destination ->
+                            when {
+                                destination == BottomBarDestination.AModule && !showNavApm -> false
+                                destination == BottomBarDestination.KModule && !showNavKpm -> false
+                                destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
+                                (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
+                                else -> true
+                            }
+                        }
+                    }
+
+                    // Determine initial pager page based on current route
+                    val initialPageIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }.coerceAtLeast(0)
+                    val pagerState = rememberPagerState(
+                        initialPage = initialPageIndex,
+                        pageCount = { visibleDestinations.size }
+                    )
+
                     val bottomBarVisibleState = remember { mutableStateOf(showBottomBar) }
-                    bottomBarVisibleState.value = showBottomBar
+                    // In pager mode (non-rail), always consider as main tab page since pager only contains bottom tabs
+                    val isOnMainTabPageAdjusted = if (!useNavigationRail) true else isOnMainTabPage
+                    val showBottomBarAdjusted = if (isFloatingMode) {
+                        if (!isOnMainTabPageAdjusted) false
+                        else if (!floatingAutoHide && !floatingSwipeHide) true
+                        else if (!floatingAutoHide) !isScrollingDown.value
+                        else if (!floatingSwipeHide) isBottomBarVisible
+                        else isBottomBarVisible && !isScrollingDown.value
+                    } else {
+                        true
+                    }
+                    bottomBarVisibleState.value = showBottomBarAdjusted
                     val shouldExposeContentToLiquid = currentRoute !in settingsRoutes
                     val floatingLiquidState = if (
                         isFloatingMode &&
-                        showBottomBar &&
-                        isOnMainTabPage &&
+                        showBottomBarAdjusted &&
+                        isOnMainTabPageAdjusted &&
                         BackgroundConfig.isNavBarGlassEnabled &&
                         isRealTimeBlurAvailable()
                     ) {
@@ -822,8 +870,19 @@ class MainActivity : AppCompatActivity() {
                                         previousScrollOffset = previousScrollOffset
                                     ) else null,
                                     LocalBottomBarVisible provides bottomBarVisibleState,
-                                    LocalIsFloatingNavMode provides isFloatingMode
+                                    LocalIsFloatingNavMode provides isFloatingMode,
+                                    LocalPagerState provides null,
+                                    LocalNavigationRequest provides navigationRequest
                                 ) {
+                                    // Handle navigation requests in rail mode
+                                    val railNavigator = navController.rememberDestinationsNavigator()
+                                    LaunchedEffect(navigationRequest.value) {
+                                        val request = navigationRequest.value
+                                        if (request != null) {
+                                            railNavigator.navigate(request)
+                                            navigationRequest.value = null
+                                        }
+                                    }
                                     DestinationsNavHost(
                                         modifier = Modifier.weight(1f).then(baseContentModifier),
                                         navGraph = NavGraphs.root,
@@ -834,30 +893,75 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
-                            CompositionLocalProvider(
-                                LocalSnackbarHost provides snackBarHostState,
-                                LocalScrollState provides if (isFloatingMode) ScrollState(
-                                    isScrollingDown = isScrollingDown,
-                                    scrollOffset = scrollOffset,
-                                    previousScrollOffset = previousScrollOffset
-                                ) else null,
-                                LocalBottomBarVisible provides bottomBarVisibleState,
-                                LocalIsFloatingNavMode provides isFloatingMode
-                            ) {
-                                DestinationsNavHost(
-                                    modifier = Modifier.fillMaxSize().then(baseContentModifier),
-                                    navGraph = NavGraphs.root,
-                                    navController = navController,
-                                    engine = rememberNavHostEngine(navHostContentAlignment = Alignment.TopCenter),
-                                    defaultTransitions = navTransitions
-                                )
+                            // Use HorizontalPager for swipeable bottom tab navigation.
+                            // Each page has its own NavHost instance; ViewModels are shared via Activity scope.
+                            HorizontalPager(
+                                state = pagerState,
+                                pageCount = visibleDestinations.size,
+                                userScrollEnabled = true,
+                                modifier = Modifier.fillMaxSize()
+                            ) { page ->
+                                key(page) {
+                                    val pageNavController = rememberNavController()
+                                    val pageNavigator = pageNavController.rememberDestinationsNavigator()
+
+                                    // Navigate to the corresponding tab when this page is created/recomposed
+                                    LaunchedEffect(page, visibleDestinations) {
+                                        if (page in visibleDestinations.indices) {
+                                            val destination = visibleDestinations[page]
+                                            val entry by pageNavController.currentBackStackEntryAsState()
+                                            val route = entry?.destination?.route
+                                            if (route != destination.direction.route) {
+                                                pageNavigator.navigate(destination.direction) {
+                                                    popUpTo(NavGraphs.root) {
+                                                        saveState = true
+                                                        inclusive = false
+                                                    }
+                                                    launchSingleTop = true
+                                                    restoreState = true
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    // Handle external navigation requests (e.g., pending action module, script)
+                                    // Only the current page processes the request
+                                    LaunchedEffect(navigationRequest.value) {
+                                        val request = navigationRequest.value
+                                        if (request != null && page == pagerState.settledPage) {
+                                            pageNavigator.navigate(request)
+                                            navigationRequest.value = null
+                                        }
+                                    }
+
+                                    CompositionLocalProvider(
+                                        LocalSnackbarHost provides snackBarHostState,
+                                        LocalScrollState provides if (isFloatingMode) ScrollState(
+                                            isScrollingDown = isScrollingDown,
+                                            scrollOffset = scrollOffset,
+                                            previousScrollOffset = previousScrollOffset
+                                        ) else null,
+                                        LocalBottomBarVisible provides bottomBarVisibleState,
+                                        LocalIsFloatingNavMode provides isFloatingMode,
+                                        LocalPagerState provides pagerState,
+                                        LocalNavigationRequest provides navigationRequest
+                                    ) {
+                                        DestinationsNavHost(
+                                            modifier = Modifier.fillMaxSize().then(baseContentModifier),
+                                            navGraph = NavGraphs.root,
+                                            navController = pageNavController,
+                                            engine = rememberNavHostEngine(navHostContentAlignment = Alignment.TopCenter),
+                                            defaultTransitions = navTransitions
+                                        )
+                                    }
+                                }
                             }
                         }
 
                         if (!useNavigationRail) {
                             if (isFloatingMode) {
                                 AnimatedVisibility(
-                                    visible = showBottomBar,
+                                    visible = showBottomBarAdjusted,
                                     modifier = Modifier.align(Alignment.BottomCenter),
                                     enter = slideInVertically(initialOffsetY = { it }) + fadeIn(),
                                     exit = slideOutVertically(targetOffsetY = { it }) + fadeOut()
@@ -867,7 +971,9 @@ class MainActivity : AppCompatActivity() {
                                         isFloating = true,
                                         lastValidSelection = lastValidNavbarSelection,
                                         onUserInteraction = { resetBottomBarAutoHide() },
-                                        liquidState = floatingLiquidState
+                                        liquidState = floatingLiquidState,
+                                        pagerState = pagerState,
+                                        pagerVisibleDestinations = visibleDestinations
                                     )
                                 }
                             } else {
@@ -875,7 +981,9 @@ class MainActivity : AppCompatActivity() {
                                     modifier = Modifier.align(Alignment.BottomCenter),
                                     navController = navController,
                                     isFloating = false,
-                                    lastValidSelection = lastValidNavbarSelection
+                                    lastValidSelection = lastValidNavbarSelection,
+                                    pagerState = pagerState,
+                                    pagerVisibleDestinations = visibleDestinations
                                 )
                             }
                         }
@@ -913,7 +1021,9 @@ private fun BottomBar(
     isFloating: Boolean = false,
     lastValidSelection: MutableState<Int> = mutableStateOf(0),
     onUserInteraction: (() -> Unit)? = null,
-    liquidState: io.github.fletchmckee.liquid.LiquidState? = null
+    liquidState: io.github.fletchmckee.liquid.LiquidState? = null,
+    pagerState: PagerState? = null,
+    pagerVisibleDestinations: List<BottomBarDestination>? = null
 ) {
     val context = LocalContext.current
     val state by APApplication.apStateLiveData.observeAsState(APApplication.State.UNKNOWN_STATE)
@@ -960,28 +1070,36 @@ private fun BottomBar(
         val aPatchReady = state == APApplication.State.ANDROIDPATCH_INSTALLED
 
         // Determine visible destinations
-        val visibleDestinations = BottomBarDestination.entries.filter { destination ->
-            when {
-                destination == BottomBarDestination.AModule && !showNavApm -> false
-                destination == BottomBarDestination.KModule && !showNavKpm -> false
-                destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
-                (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
-                else -> true
+        val visibleDestinations = if (pagerState != null && pagerVisibleDestinations != null) {
+            pagerVisibleDestinations
+        } else {
+            BottomBarDestination.entries.filter { destination ->
+                when {
+                    destination == BottomBarDestination.AModule && !showNavApm -> false
+                    destination == BottomBarDestination.KModule && !showNavKpm -> false
+                    destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
+                    (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
+                    else -> true
+                }
             }
         }
 
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = currentBackStackEntry?.destination?.route
 
-        val isOnBackStack = visibleDestinations.map { destination ->
-            navController.isRouteOnBackStackAsState(destination.direction).value
-        }
-
-        // Prefer an exact current-route match; fall back to whichever tab is on the back stack.
-        val selectedIndex = run {
-            val exactMatch = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
-            if (exactMatch != -1) exactMatch
-            else isOnBackStack.indexOfLast { it }
+        // When pager is active, use pager's current page as selected index
+        val selectedIndex = if (pagerState != null) {
+            pagerState.currentPage.coerceIn(0, visibleDestinations.size - 1)
+        } else {
+            val isOnBackStack = visibleDestinations.map { destination ->
+                navController.isRouteOnBackStackAsState(destination.direction).value
+            }
+            // Prefer an exact current-route match; fall back to whichever tab is on the back stack.
+            run {
+                val exactMatch = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
+                if (exactMatch != -1) exactMatch
+                else isOnBackStack.indexOfLast { it }
+            }
         }
 
         // Persist the selection so the indicator doesn't jump while the navbar is animating out/in.
@@ -1096,7 +1214,8 @@ private fun BottomBar(
                                 currentRoute = currentRoute,
                                 navController = navController,
                                 context = context,
-                                onUserInteraction = onUserInteraction
+                                onUserInteraction = onUserInteraction,
+                                pagerState = pagerState
                             )
                         }
                     } else {
@@ -1122,7 +1241,8 @@ private fun BottomBar(
                                 currentRoute = currentRoute,
                                 navController = navController,
                                 context = context,
-                                onUserInteraction = onUserInteraction
+                                onUserInteraction = onUserInteraction,
+                                pagerState = pagerState
                             )
                         }
                     }
@@ -1152,15 +1272,26 @@ private fun BottomBar(
                                 if (me.bmax.apatch.ui.theme.VibrationConfig.scope == me.bmax.apatch.ui.theme.VibrationConfig.SCOPE_BOTTOM_BAR) {
                                     me.bmax.apatch.util.VibrationManager.vibrate(context)
                                 }
-                                if (isCurrentDestOnBackStack) {
-                                    navigator.popBackStack(destination.direction, false)
-                                }
-                                navigator.navigate(destination.direction) {
-                                    popUpTo(NavGraphs.root) {
-                                        saveState = true
+                                if (pagerState != null) {
+                                    // When pager is active, drive navigation through pager
+                                    if (index != pagerState.currentPage) {
+                                        val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(index)
+                                        }
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                } else {
+                                    // Fallback: direct navigation (e.g., NavigationRail mode)
+                                    if (isCurrentDestOnBackStack) {
+                                        navigator.popBackStack(destination.direction, false)
+                                    }
+                                    navigator.navigate(destination.direction) {
+                                        popUpTo(NavGraphs.root) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
                             },
                             icon = {
@@ -1220,7 +1351,8 @@ private fun BottomBarContent(
     currentRoute: String?,
     navController: NavHostController,
     context: android.content.Context,
-    onUserInteraction: (() -> Unit)? = null
+    onUserInteraction: (() -> Unit)? = null,
+    pagerState: PagerState? = null
 ) {
     val navigator = navController.rememberDestinationsNavigator()
     val itemSize = 56.dp
@@ -1359,7 +1491,12 @@ private fun BottomBarContent(
                             .clickable {
                                 onUserInteraction?.invoke()
                                 // If already on this destination, do nothing
-                                if (destination.direction.route == currentRoute) return@clickable
+                                val isAlreadySelected = if (pagerState != null) {
+                                    index == pagerState.currentPage
+                                } else {
+                                    destination.direction.route == currentRoute
+                                }
+                                if (isAlreadySelected) return@clickable
 
                                 if (me.bmax.apatch.ui.theme.SoundEffectConfig.scope == me.bmax.apatch.ui.theme.SoundEffectConfig.SCOPE_BOTTOM_BAR) {
                                     me.bmax.apatch.util.SoundEffectManager.play(context)
@@ -1368,12 +1505,23 @@ private fun BottomBarContent(
                                     me.bmax.apatch.util.VibrationManager.vibrate(context)
                                 }
 
-                                navigator.navigate(destination.direction) {
-                                    popUpTo(NavGraphs.root) {
-                                        saveState = true
+                                if (pagerState != null) {
+                                    // When pager is active, drive navigation through pager
+                                    if (index != pagerState.currentPage) {
+                                        val coroutineScope = androidx.compose.runtime.rememberCoroutineScope()
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(index)
+                                        }
                                     }
-                                    launchSingleTop = true
-                                    restoreState = true
+                                } else {
+                                    // Fallback: direct navigation
+                                    navigator.navigate(destination.direction) {
+                                        popUpTo(NavGraphs.root) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
                                 }
                             },
                         contentAlignment = Alignment.Center
