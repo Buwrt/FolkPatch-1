@@ -8,15 +8,18 @@ import androidx.compose.material.icons.filled.AdminPanelSettings
 import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.outlined.Apps
 import androidx.compose.material.icons.outlined.Archive
 import androidx.compose.material.icons.outlined.AdminPanelSettings
 import androidx.compose.material.icons.outlined.Extension
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.VerifiedUser
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.ramcosta.composedestinations.generated.destinations.APModuleScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.HomeScreenDestination
+import com.ramcosta.composedestinations.generated.destinations.KeyAttestationScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.KPModuleScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.OnlineKPMScreenDestination
 import com.ramcosta.composedestinations.generated.destinations.SettingScreenDestination
@@ -37,6 +40,14 @@ enum class BottomBarDestination(
         R.string.home,
         Icons.Filled.Home,
         Icons.Outlined.Home,
+        false,
+        false
+    ),
+    KeyAttestation(
+        KeyAttestationScreenDestination,
+        R.string.key_attestation,
+        Icons.Filled.VerifiedUser,
+        Icons.Outlined.VerifiedUser,
         false,
         false
     ),

@@ -441,5 +441,11 @@ dependencies {
 
     implementation(libs.liquid)
 
+    // KeyAttestation dependencies
+    implementation(libs.bouncycastle)
+    implementation(libs.cbor)
+    implementation(libs.guava)
+    implementation(libs.shizuku.api)
+
     compileOnly(libs.cxx)
 }

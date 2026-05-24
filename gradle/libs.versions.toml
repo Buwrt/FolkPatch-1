@@ -11,6 +11,10 @@ biometric = "1.2.0-alpha05"
 gson = "2.10.1"
 vico = "2.0.0-alpha.13"
 liquid = "1.1.1"
+bouncycastle = "1.80"
+cbor = "0.9"
+guava = "33.4.0-android"
+shizuku = "13.1.5"
 
 [plugins]
 agp-app = { id = "com.android.application", version.ref = "agp" }
@@ -75,3 +79,9 @@ vico-compose = { group = "com.patrykandpatrick.vico", name = "compose-m3", versi
 cxx = { module = "org.lsposed.libcxx:libcxx", version = "28.1.13356709" }
 
 liquid = { group = "io.github.fletchmckee.liquid", name = "liquid-android", version.ref = "liquid" }
+
+# KeyAttestation dependencies
+bouncycastle = { group = "org.bouncycastle", name = "bcprov-jdk18on", version.ref = "bouncycastle" }
+cbor = { group = "co.nstant.in", name = "cbor", version.ref = "cbor" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+shizuku-api = { group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku" }

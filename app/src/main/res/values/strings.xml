@@ -1125,4 +1125,41 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="settings_search_hint">Search settings…</string>
     <string name="settings_search_empty_hint">Type to search all settings…</string>
     <string name="settings_no_results">No results found</string>
+
+    <!-- Key Attestation -->
+    <string name="key_attestation">Key Attestation</string>
+    <string name="ka_generate">Generate</string>
+    <string name="ka_save">Save</string>
+    <string name="ka_load">Load</string>
+    <string name="ka_no_data">No data available</string>
+    <string name="ka_error">Error</string>
+    <string name="ka_status_verified">Attestation verified</string>
+    <string name="ka_status_error">Attestation failed</string>
+    <string name="ka_status_ready">Ready to generate attestation</string>
+    <string name="ka_basic_info">Basic Information</string>
+    <string name="ka_attest_version">Attestation Version</string>
+    <string name="ka_attest_security">Attestation Security</string>
+    <string name="ka_km_version">Keymaster Version</string>
+    <string name="ka_km_security">Keymaster Security</string>
+    <string name="ka_root_of_trust">Root of Trust</string>
+    <string name="ka_verified_boot_key">Verified Boot Key</string>
+    <string name="ka_device_locked">Device Locked</string>
+    <string name="ka_boot_state">Boot State</string>
+    <string name="ka_yes">Yes</string>
+    <string name="ka_no">No</string>
+    <string name="ka_sw_enforced">Software Enforced</string>
+    <string name="ka_tee_enforced">TEE Enforced</string>
+    <string name="ka_cert_chain">Certificate Chain</string>
+    <string name="ka_certificate">Certificate</string>
+    <string name="ka_issuer">Issuer</string>
+    <string name="ka_subject">Subject</string>
+    <string name="ka_purposes">Purposes</string>
+    <string name="ka_algorithm">Algorithm</string>
+    <string name="ka_key_size">Key Size</string>
+    <string name="ka_digests">Digests</string>
+    <string name="ka_block_modes">Block Modes</string>
+    <string name="ka_padding">Padding</string>
+    <string name="ka_origin">Origin</string>
+    <string name="ka_app_id">Application ID</string>
+    <string name="ka_creation_time">Creation Time</string>
 </resources>
