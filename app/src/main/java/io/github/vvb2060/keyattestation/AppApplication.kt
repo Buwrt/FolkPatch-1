@@ -9,12 +9,14 @@ import me.bmax.apatch.apApp
  */
 object AppApplication {
     const val TAG = "KeyAttestation"
-    
+
     @JvmStatic
-    val app: Application
-        get() = apApp
-    
+    fun getApp(): Application {
+        return apApp as Application
+    }
+
     @JvmStatic
-    val context: Context
-        get() = apApp
+    fun getContext(): Context {
+        return apApp
+    }
 }

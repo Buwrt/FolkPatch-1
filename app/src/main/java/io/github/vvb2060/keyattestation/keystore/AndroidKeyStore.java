@@ -41,7 +41,7 @@ import java.util.Objects;
 import javax.security.auth.x500.X500Principal;
 
 import io.github.vvb2060.keyattestation.AppApplication;
-import io.github.vvb2060.keyattestation.BuildConfig;
+import me.bmax.apatch.BuildConfig;
 import rikka.shizuku.ShizukuApiConstants;
 
 public class AndroidKeyStore extends IAndroidKeyStore.Stub {
