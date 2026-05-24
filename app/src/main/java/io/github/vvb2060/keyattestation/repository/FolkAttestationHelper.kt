@@ -2,10 +2,10 @@ package io.github.vvb2060.keyattestation.repository
 
 import android.os.Build
 import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyPairGenerator
 import android.security.keystore.KeyProperties
 import android.util.Log
 import java.io.ByteArrayInputStream
+import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
