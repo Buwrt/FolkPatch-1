@@ -1,12 +1,6 @@
 package me.bmax.apatch.ui.screen
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,12 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ramcosta.composedestinations.annotation.Destination
@@ -39,11 +31,9 @@ import io.github.vvb2060.keyattestation.attestation.Attestation
 import io.github.vvb2060.keyattestation.attestation.AuthorizationList
 import io.github.vvb2060.keyattestation.attestation.RootOfTrust
 import io.github.vvb2060.keyattestation.repository.AttestationData
-import io.github.vvb2060.keyattestation.repository.AttestationRepository
+import io.github.vvb2060.keyattestation.repository.FolkAttestationHelper
 import me.bmax.apatch.R
 import java.io.InputStream
-import java.security.KeyStore
-import java.security.cert.X509Certificate
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -299,11 +289,11 @@ fun AttestationResultCard(data: AttestationData) {
                     HorizontalDivider()
                     
                     AttestationItem(stringResource(R.string.ka_verified_boot_key), 
-                        formatByteArray(rot.verifiedBootKey))
+                        formatByteArray(rot.getVerifiedBootKey()))
                     AttestationItem(stringResource(R.string.ka_device_locked), 
-                        if (rot.deviceLocked) stringResource(R.string.ka_yes) else stringResource(R.string.ka_no))
+                        if (rot.isDeviceLocked()) stringResource(R.string.ka_yes) else stringResource(R.string.ka_no))
                     AttestationItem(stringResource(R.string.ka_boot_state), 
-                        bootStateToString(rot.verifiedBootState))
+                        bootStateToString(rot.getVerifiedBootState()))
                 }
             }
         }
@@ -410,34 +400,28 @@ fun AttestationItem(label: String, value: String) {
 @Composable
 fun AuthorizationListItems(list: AuthorizationList?) {
     list?.let { authList ->
-        if (authList.purposes != null) {
-            AttestationItem(stringResource(R.string.ka_purposes), authList.purposes.toString())
+        if (authList.getPurposes() != null) {
+            AttestationItem(stringResource(R.string.ka_purposes), authList.getPurposes().toString())
         }
-        if (authList.algorithm != null) {
+        if (authList.getAlgorithm() != null) {
             AttestationItem(stringResource(R.string.ka_algorithm), 
-                algorithmToString(authList.algorithm))
+                AuthorizationList.algorithmToString(authList.getAlgorithm()))
         }
-        if (authList.keySize != null) {
-            AttestationItem(stringResource(R.string.ka_key_size), "${authList.keySize} bits")
+        if (authList.getKeySize() != null) {
+            AttestationItem(stringResource(R.string.ka_key_size), "${authList.getKeySize()} bits")
         }
-        if (authList.digests != null) {
-            AttestationItem(stringResource(R.string.ka_digests), authList.digests.toString())
+        if (authList.getDigests() != null) {
+            AttestationItem(stringResource(R.string.ka_digests), AuthorizationList.digestsToString(authList.getDigests()))
         }
-        if (authList.blockModes != null) {
-            AttestationItem(stringResource(R.string.ka_block_modes), authList.blockModes.toString())
+        if (authList.getPaddingModes() != null) {
+            AttestationItem(stringResource(R.string.ka_padding), AuthorizationList.paddingModesToString(authList.getPaddingModes()))
         }
-        if (authList.paddingModes != null) {
-            AttestationItem(stringResource(R.string.ka_padding), authList.paddingModes.toString())
+        if (authList.getOrigin() != null) {
+            AttestationItem(stringResource(R.string.ka_origin), AuthorizationList.originToString(authList.getOrigin()))
         }
-        if (authList.origin != null) {
-            AttestationItem(stringResource(R.string.ka_origin), originToString(authList.origin))
-        }
-        if (authList.applicationId != null) {
-            AttestationItem(stringResource(R.string.ka_app_id), authList.applicationId.toString())
-        }
-        if (authList.creationDateTime != null) {
+        if (authList.getCreationDateTime() != null) {
             AttestationItem(stringResource(R.string.ka_creation_time), 
-                java.util.Date(authList.creationDateTime).toString())
+                authList.getCreationDateTime().toString())
         }
     } ?: run {
         Text(
@@ -465,26 +449,6 @@ private fun bootStateToString(state: Int): String {
     }
 }
 
-private fun algorithmToString(algorithm: Int): String {
-    return when (algorithm) {
-        KeyProperties.KEY_ALGORITHM_RSA -> "RSA"
-        KeyProperties.KEY_ALGORITHM_EC -> "EC"
-        KeyProperties.KEY_ALGORITHM_AES -> "AES"
-        KeyProperties.KEY_ALGORITHM_HMAC_SHA256 -> "HMAC"
-        else -> "Unknown ($algorithm)"
-    }
-}
-
-private fun originToString(origin: Int): String {
-    return when (origin) {
-        0 -> "Generated"
-        1 -> "Derived"
-        2 -> "Imported"
-        3 -> "Reserved"
-        else -> "Unknown ($origin)"
-    }
-}
-
 class KeyAttestationViewModel : ViewModel() {
     private val executor: ExecutorService = Executors.newSingleThreadExecutor()
     
@@ -506,7 +470,7 @@ class KeyAttestationViewModel : ViewModel() {
         
         executor.execute {
             try {
-                val result = AttestationRepository.generateAttestation()
+                val result = FolkAttestationHelper.generateAttestation()
                 attestationData = result
                 certificateChain = result.getCertificateChainEncoded()
                 error = null
@@ -534,7 +498,7 @@ class KeyAttestationViewModel : ViewModel() {
                 val bytes = inputStream.readBytes()
                 inputStream.close()
                 
-                val result = AttestationRepository.loadAttestationData(bytes)
+                val result = FolkAttestationHelper.loadAttestationData(bytes)
                 attestationData = result
                 certificateChain = bytes
                 error = null
@@ -548,7 +512,7 @@ class KeyAttestationViewModel : ViewModel() {
         }
     }
     
-    fun saveCertificateToUri(outputStream: android.os.OutputStream?) {
+    fun saveCertificateToUri(outputStream: java.io.OutputStream?) {
         if (outputStream == null || certificateChain == null) {
             return
         }
