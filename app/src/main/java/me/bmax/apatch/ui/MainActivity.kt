@@ -708,12 +708,23 @@ class MainActivity : AppCompatActivity() {
                 var floatingAutoHide by remember { mutableStateOf(prefs.getBoolean("floating_auto_hide", true)) }
                 var floatingSwipeHide by remember { mutableStateOf(prefs.getBoolean("floating_swipe_hide", true)) }
                 
+                // Navigation visibility settings
+                var showNavApm by remember { mutableStateOf(prefs.getBoolean("show_nav_apm", true)) }
+                var showNavKpm by remember { mutableStateOf(prefs.getBoolean("show_nav_kpm", true)) }
+                var showNavSuperUser by remember { mutableStateOf(prefs.getBoolean("show_nav_superuser", true)) }
+                
+                // APatch state for visibility calculations
+                val state by APApplication.apStateLiveData.observeAsState(APApplication.State.UNKNOWN_STATE)
+                
                 DisposableEffect(Unit) {
                     val navModeListener = SharedPreferences.OnSharedPreferenceChangeListener { sharedPrefs, key ->
                         when (key) {
                             "nav_mode" -> navMode = sharedPrefs.getString("nav_mode", "floating") ?: "floating"
                             "floating_auto_hide" -> floatingAutoHide = sharedPrefs.getBoolean("floating_auto_hide", true)
                             "floating_swipe_hide" -> floatingSwipeHide = sharedPrefs.getBoolean("floating_swipe_hide", true)
+                            "show_nav_apm" -> showNavApm = sharedPrefs.getBoolean(key, true)
+                            "show_nav_kpm" -> showNavKpm = sharedPrefs.getBoolean(key, true)
+                            "show_nav_superuser" -> showNavSuperUser = sharedPrefs.getBoolean(key, true)
                         }
                     }
                     prefs.registerOnSharedPreferenceChangeListener(navModeListener)
@@ -800,7 +811,22 @@ class MainActivity : AppCompatActivity() {
                         onUserScroll = { resetBottomBarAutoHide() }
                     )
 
-                    Box(modifier = Modifier.fillMaxSize()) {
+                    // Compute visible destinations for swipe navigation
+                    val kPatchReady = state != APApplication.State.UNKNOWN_STATE
+                    val aPatchReady = state == APApplication.State.ANDROIDPATCH_INSTALLED
+                    val visibleDestinations = BottomBarDestination.entries.filter { destination ->
+                        when {
+                            destination == BottomBarDestination.AModule && !showNavApm -> false
+                            destination == BottomBarDestination.KModule && !showNavKpm -> false
+                            destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
+                            (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
+                            else -> true
+                        }
+                    }
+
+                    Box(modifier = Modifier.fillMaxSize().then(
+                        rememberSwipeNavigationModifier(navController, visibleDestinations)
+                    )) {
                         val baseContentModifier = Modifier
                             .navBarLiquefiable(
                                 if (shouldExposeContentToLiquid) floatingLiquidState else null
@@ -814,9 +840,6 @@ class MainActivity : AppCompatActivity() {
                             )
 
                         if (useNavigationRail) {
-                            // Swipe navigation state for rail mode
-                            val swipeModifier = rememberSwipeNavigationModifier(navController, visibleDestinations)
-                            
                             Row(modifier = Modifier.fillMaxSize()) {
                                 NavigationRailBar(navController)
                                 CompositionLocalProvider(
@@ -830,7 +853,7 @@ class MainActivity : AppCompatActivity() {
                                     LocalIsFloatingNavMode provides isFloatingMode
                                 ) {
                                     DestinationsNavHost(
-                                        modifier = Modifier.weight(1f).then(baseContentModifier).then(swipeModifier),
+                                        modifier = Modifier.weight(1f).then(baseContentModifier),
                                         navGraph = NavGraphs.root,
                                         navController = navController,
                                         engine = rememberNavHostEngine(navHostContentAlignment = Alignment.TopCenter),
@@ -839,9 +862,6 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
-                            // Swipe navigation state
-                            val swipeModifier = rememberSwipeNavigationModifier(navController, visibleDestinations)
-                            
                             CompositionLocalProvider(
                                 LocalSnackbarHost provides snackBarHostState,
                                 LocalScrollState provides if (isFloatingMode) ScrollState(
@@ -853,7 +873,7 @@ class MainActivity : AppCompatActivity() {
                                 LocalIsFloatingNavMode provides isFloatingMode
                             ) {
                                 DestinationsNavHost(
-                                    modifier = Modifier.fillMaxSize().then(baseContentModifier).then(swipeModifier),
+                                    modifier = Modifier.fillMaxSize().then(baseContentModifier),
                                     navGraph = NavGraphs.root,
                                     navController = navController,
                                     engine = rememberNavHostEngine(navHostContentAlignment = Alignment.TopCenter),
