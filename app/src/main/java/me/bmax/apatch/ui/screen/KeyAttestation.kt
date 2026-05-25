@@ -92,7 +92,7 @@ fun KeyAttestationScreen(navigator: DestinationsNavigator) {
                 ),
                 navigationIcon = {
                     IconButton(onClick = { navigator.popBackStack() }) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "返回")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = "返回")
                     }
                 },
                 actions = {
