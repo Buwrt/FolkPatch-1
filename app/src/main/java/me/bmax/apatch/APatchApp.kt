@@ -20,9 +20,11 @@ import me.bmax.apatch.util.MusicManager
 import me.bmax.apatch.util.Version
 import me.bmax.apatch.util.getRootShell
 import me.bmax.apatch.util.rootShellForResult
+import me.bmax.apatch.util.shellForResult
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import java.io.File
+import java.io.StringReader
 import java.util.Locale
 import kotlin.concurrent.thread
 import kotlin.system.exitProcess
@@ -248,7 +250,25 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
             set(value) {
                 field = value
                 _kpStateInitializedLiveData.postValue(false)
-                val ready = Natives.nativeReady(value)
+                var ready = Natives.nativeReady(value)
+                
+                // If default "su" doesn't work, try to read superKey from kernel image
+                if (!ready && value == "su") {
+                    try {
+                        val kernelSuperKey = readSuperKeyFromKernel()
+                        if (kernelSuperKey.isNotEmpty() && kernelSuperKey != "su") {
+                            Log.d(TAG, "Trying superKey from kernel: $kernelSuperKey")
+                            field = kernelSuperKey
+                            ready = Natives.nativeReady(kernelSuperKey)
+                            if (ready) {
+                                Log.d(TAG, "Successfully initialized with kernel superKey")
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.w(TAG, "Failed to read superKey from kernel: ${e.message}")
+                    }
+                }
+                
                 _kpStateLiveData.value =
                     if (ready) State.KERNELPATCH_INSTALLED else State.UNKNOWN_STATE
                 _apStateLiveData.value =
@@ -318,6 +338,42 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
                 }
             }
 
+        /**
+         * Try to read superKey from kernel image using kptools
+         */
+        private fun readSuperKeyFromKernel(): String {
+            try {
+                val patchDir = apApp.applicationContext.cacheDir.absolutePath
+                val shell = getRootShell()
+                
+                // Copy kptools to cache if not exists
+                val kptools = File(patchDir, "kptools")
+                if (!kptools.exists()) {
+                    apApp.assets.open("kptools").writeTo(kptools)
+                    kptools.setExecutable(true)
+                }
+                
+                // Get boot image path
+                val result = shell.newJob().add("${patchDir}/kptools -l -k ${patchDir}/kpimg 2>/dev/null || echo ''").exec()
+                if (!result.isSuccess) return ""
+                
+                val output = result.out.joinToString("\n")
+                if (output.isEmpty()) return ""
+                
+                // Parse INI format to get superkey
+                val ini = org.ini4j.Ini(StringReader(output))
+                val kpimg = ini["kpimg"]
+                if (kpimg != null) {
+                    val superKey = kpimg["superkey"]?.toString() ?: ""
+                    Log.d(TAG, "Read superKey from kernel: $superKey")
+                    return superKey
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to read superKey from kernel: ${e.message}")
+            }
+            return ""
+        }
+
         private fun bypassHiddenApiRestrictions() {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
             try {
@@ -343,7 +399,14 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         super.onCreate()
         apApp = this
         sharedPreferences = getSharedPreferences(SP_NAME, Context.MODE_PRIVATE)
-        superKey = "su"
+        // Try "su" as default superKey, will be updated from kernel image if different
+        // This allows SU operations to work with kernels using default "su" superKey
+        // For custom superKey, it will be set when kernel info is loaded
+        try {
+            superKey = "su"
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to initialize with default superKey, will retry later: ${e.message}")
+        }
         if (Application.getProcessName().endsWith(":root") || Application.getProcessName().endsWith(":webui")) {
             return
         }

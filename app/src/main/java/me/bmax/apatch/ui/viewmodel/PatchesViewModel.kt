@@ -178,6 +178,8 @@ class PatchesViewModel : ViewModel() {
                     kpimgInfo.superKey = superkey
                     if (superkey.isNotEmpty()) {
                         this.superkey = superkey
+                        // Set the global superKey for SU operations
+                        APApplication.superKey = superkey
                     }
                     var kpmNum = kernel["extra_num"]?.toInt()
                     if (kpmNum == null) {
