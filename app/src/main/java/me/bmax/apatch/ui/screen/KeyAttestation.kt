@@ -67,7 +67,7 @@ fun KeyAttestationScreen(navigator: DestinationsNavigator) {
 
     // File saver for saving certificate
     val fileSaverLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument("application/octet-stream")
+        ActivityResultContracts.CreateDocument()
     ) { uri: Uri? ->
         uri?.let {
             viewModel.saveCertificateToUri(context.contentResolver.openOutputStream(it))
@@ -654,12 +654,14 @@ private fun CertificateChainDetailCard(data: AttestationData) {
                     InfoRow("签发者", issuerName)
                     InfoRow("使用者", cert.subjectX500Principal.name)
 
-                    try {
-                        InfoRow("生效时间", formatDate(cert.notBefore))
-                    } catch (_: Exception) {}
-                    try {
-                        InfoRow("过期时间", formatDate(cert.notAfter))
-                    } catch (_: Exception) {}
+                    val notBeforeText = remember(cert) {
+                        try { formatDate(cert.notBefore) } catch (_: Exception) { "不可用" }
+                    }
+                    val notAfterText = remember(cert) {
+                        try { formatDate(cert.notAfter) } catch (_: Exception) { "不可用" }
+                    }
+                    InfoRow("生效时间", notBeforeText)
+                    InfoRow("过期时间", notAfterText)
                 }
 
                 if (index < certInfos.size - 1) {
