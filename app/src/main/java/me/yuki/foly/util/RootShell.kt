@@ -9,45 +9,68 @@ import java.io.InputStreamReader
 /**
  * Root权限执行工具类
  * 支持多种Root方案：Magisk、KernelSU、APatch
+ * 不主动申请权限，直接调用系统原生su
  */
 object RootShell {
     private const val TAG = "RootShell"
 
-    // 可能的SU路径
+    // 可能的SU路径（按优先级排序）
     private val SU_PATHS = arrayOf(
+        // Magisk 路径
+        "/data/adb/magisk/magisk",
+        "/sbin/.magisk/mirror/system/bin/su",
+        "/magisk/.core/bin/su",
+        // KernelSU 路径
+        "/data/adb/ksu/bin/ksu",
+        "/data/adb/ksu/bin/su",
+        // APatch 路径
+        "/data/adb/ap/bin/apd",
+        "/data/adb/ap/bin/su",
+        // 系统标准路径
         "/system/bin/su",
         "/system/xbin/su",
         "/sbin/su",
         "/su/bin/su",
-        "/magisk/.core/bin/su",
-        "/system/bin/magisk",
-        "/data/adb/magisk/magisk",
-        "/data/adb/ksu/bin/ksu",
-        "/data/adb/ap/bin/apd"
+        "/vendor/bin/su",
+        "/system_ext/bin/su"
     )
+
+    // 缓存找到的su路径
+    @Volatile
+    private var cachedSuPath: String? = null
 
     /**
      * 获取可用的SU路径
+     * 不弹窗申请权限，直接检测系统中存在的su
      */
     fun getSuPath(): String? {
+        // 返回缓存结果
+        cachedSuPath?.let { return it }
+
         // 首先检查环境变量中的su
         val pathEnv = System.getenv("PATH") ?: ""
         val paths = pathEnv.split(":")
         for (path in paths) {
-            val suFile = File("$path/su")
-            if (suFile.exists() && suFile.canExecute()) {
-                Log.d(TAG, "Found su in PATH: ${suFile.absolutePath}")
-                return suFile.absolutePath
-            }
+            try {
+                val suFile = File("$path/su")
+                if (suFile.exists() && suFile.canExecute()) {
+                    Log.d(TAG, "Found su in PATH: ${suFile.absolutePath}")
+                    cachedSuPath = suFile.absolutePath
+                    return suFile.absolutePath
+                }
+            } catch (_: Exception) {}
         }
 
         // 检查常见路径
         for (path in SU_PATHS) {
-            val file = File(path)
-            if (file.exists() && file.canExecute()) {
-                Log.d(TAG, "Found su at: $path")
-                return path
-            }
+            try {
+                val file = File(path)
+                if (file.exists() && file.canExecute()) {
+                    Log.d(TAG, "Found su at: $path")
+                    cachedSuPath = path
+                    return path
+                }
+            } catch (_: Exception) {}
         }
 
         // 尝试使用which命令查找
@@ -61,27 +84,36 @@ object RootShell {
             os.flush()
 
             val result = reader.readLine()?.trim()
+            process.waitFor()
             if (result != null && result != "NOT_FOUND" && File(result).exists()) {
                 Log.d(TAG, "Found su via which: $result")
+                cachedSuPath = result
                 return result
             }
         } catch (e: Exception) {
             Log.w(TAG, "which su failed: ${e.message}")
         }
 
-        // 尝试使用magisk的su
+        // 尝试Magisk特殊路径
         try {
             val magiskSu = File("/data/adb/magisk/magisk")
             if (magiskSu.exists()) {
                 Log.d(TAG, "Using Magisk su")
-                return magiskSu.absolutePath + " su"
+                cachedSuPath = magiskSu.absolutePath
+                return magiskSu.absolutePath
             }
-        } catch (e: Exception) {
-            Log.w(TAG, "Magisk check failed: ${e.message}")
-        }
+        } catch (_: Exception) {}
 
-        Log.w(TAG, "No su found, using default 'su'")
+        // 最后尝试默认su命令
+        Log.w(TAG, "No su found in known paths, will try default 'su'")
         return "su"
+    }
+
+    /**
+     * 清除缓存的su路径（用于重试）
+     */
+    fun clearCache() {
+        cachedSuPath = null
     }
 
     /**
@@ -119,7 +151,7 @@ object RootShell {
      * 执行命令并返回结果
      */
     fun execWithOutput(vararg commands: String): Pair<Int, String> {
-        val process = exec(*commands) ?: return Pair(-1, "Failed to get root")
+        val process = exec(*commands) ?: return Pair(-1, "无法获取Root权限，请检查设备是否已Root")
 
         return try {
             val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -133,7 +165,7 @@ object RootShell {
             Pair(exitCode, output.toString())
         } catch (e: Exception) {
             Log.e(TAG, "Read output failed: ${e.message}")
-            Pair(-1, e.message ?: "Unknown error")
+            Pair(-1, e.message ?: "未知错误")
         }
     }
 
@@ -141,7 +173,52 @@ object RootShell {
      * 检查是否有Root权限
      */
     fun hasRoot(): Boolean {
-        val (exitCode, output) = execWithOutput("id")
-        return exitCode == 0 && output.contains("uid=0")
+        return try {
+            val (exitCode, output) = execWithOutput("id")
+            exitCode == 0 && output.contains("uid=0")
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    /**
+     * 检测Root类型
+     */
+    fun detectRootType(): String {
+        val paths = listOf(
+            Pair("/data/adb/magisk/magisk", "Magisk"),
+            Pair("/data/adb/ksu/bin/ksu", "KernelSU"),
+            Pair("/data/adb/ap/bin/apd", "APatch")
+        )
+        
+        for ((path, name) in paths) {
+            if (File(path).exists()) {
+                return name
+            }
+        }
+        
+        // 尝试通过命令检测
+        try {
+            val process = Runtime.getRuntime().exec("sh")
+            val os = DataOutputStream(process.outputStream)
+            os.writeBytes("which magisk 2>/dev/null && echo MAGISK\n")
+            os.writeBytes("which ksu 2>/dev/null && echo KSU\n")
+            os.writeBytes("which apd 2>/dev/null && echo APATCH\n")
+            os.writeBytes("exit\n")
+            os.flush()
+            
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            val output = reader.readText()
+            process.waitFor()
+            
+            return when {
+                output.contains("MAGISK") -> "Magisk"
+                output.contains("KSU") -> "KernelSU"
+                output.contains("APATCH") -> "APatch"
+                else -> "未知Root方案"
+            }
+        } catch (_: Exception) {}
+        
+        return if (hasRoot()) "通用Root" else "未检测到Root"
     }
 }
