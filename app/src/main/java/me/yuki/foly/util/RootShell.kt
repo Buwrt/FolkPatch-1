@@ -26,6 +26,8 @@ object RootShell {
         // APatch 路径
         "/data/adb/ap/bin/apd",
         "/data/adb/ap/bin/su",
+        // KernelPatch 路径
+        "/system/bin/kp",
         // 系统标准路径
         "/system/bin/su",
         "/system/xbin/su",
@@ -75,16 +77,11 @@ object RootShell {
 
         // 尝试使用which命令查找
         try {
-            val process = Runtime.getRuntime().exec("sh")
-            val os = DataOutputStream(process.outputStream)
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "which su 2>/dev/null || echo 'NOT_FOUND'"))
             val reader = BufferedReader(InputStreamReader(process.inputStream))
-
-            os.writeBytes("which su 2>/dev/null || echo 'NOT_FOUND'\n")
-            os.writeBytes("exit\n")
-            os.flush()
-
             val result = reader.readLine()?.trim()
             process.waitFor()
+            reader.close()
             if (result != null && result != "NOT_FOUND" && File(result).exists()) {
                 Log.d(TAG, "Found su via which: $result")
                 cachedSuPath = result
@@ -104,9 +101,9 @@ object RootShell {
             }
         } catch (_: Exception) {}
 
-        // 最后尝试默认su命令
-        Log.w(TAG, "No su found in known paths, will try default 'su'")
-        return "su"
+        // 尝试通过 sh -c "su" 的方式（ProcessBuilder不会搜索PATH，但sh会）
+        Log.w(TAG, "No su found in known paths, will try 'sh -c su'")
+        return null
     }
 
     /**
@@ -118,19 +115,30 @@ object RootShell {
 
     /**
      * 执行Root命令
+     * 使用 sh -c 方式执行，确保能找到 PATH 中的 su
      */
     fun exec(vararg commands: String): Process? {
-        val suPath = getSuPath() ?: return null
+        val suPath = getSuPath()
+        
         return try {
-            val pb = ProcessBuilder(suPath.split(" "))
-            pb.redirectErrorStream(true)
-
-            // 设置环境变量
-            val env = pb.environment()
-            val currentPath = System.getenv("PATH") ?: ""
-            env["PATH"] = "$currentPath:/system/bin:/system/xbin:/sbin:/su/bin:/magisk/.core/bin:/data/adb/magisk:/data/adb/ksu/bin:/data/adb/ap/bin"
-
-            val process = pb.start()
+            val process: Process
+            if (suPath != null) {
+                // 有明确的su路径，直接使用
+                val pb = ProcessBuilder(suPath)
+                pb.redirectErrorStream(true)
+                val env = pb.environment()
+                val currentPath = System.getenv("PATH") ?: ""
+                env["PATH"] = "$currentPath:/system/bin:/system/xbin:/sbin:/su/bin:/magisk/.core/bin:/data/adb/magisk:/data/adb/ksu/bin:/data/adb/ap/bin"
+                process = pb.start()
+            } else {
+                // 没有找到明确路径，通过 sh -c 执行 su（sh 会搜索 PATH）
+                val pb = ProcessBuilder("sh", "-c", "su")
+                pb.redirectErrorStream(true)
+                val env = pb.environment()
+                val currentPath = System.getenv("PATH") ?: ""
+                env["PATH"] = "$currentPath:/system/bin:/system/xbin:/sbin:/su/bin:/magisk/.core/bin:/data/adb/magisk:/data/adb/ksu/bin:/data/adb/ap/bin"
+                process = pb.start()
+            }
 
             // 执行命令
             val os = DataOutputStream(process.outputStream)
@@ -143,7 +151,26 @@ object RootShell {
             process
         } catch (e: Exception) {
             Log.e(TAG, "Exec failed: ${e.message}")
-            null
+            // 最后回退：尝试 sh -c su
+            try {
+                Log.d(TAG, "Fallback: trying sh -c su")
+                val pb = ProcessBuilder("sh", "-c", "su")
+                pb.redirectErrorStream(true)
+                val env = pb.environment()
+                val currentPath = System.getenv("PATH") ?: ""
+                env["PATH"] = "$currentPath:/system/bin:/system/xbin:/sbin:/su/bin:/magisk/.core/bin:/data/adb/magisk:/data/adb/ksu/bin:/data/adb/ap/bin"
+                val process = pb.start()
+                val os = DataOutputStream(process.outputStream)
+                for (cmd in commands) {
+                    os.writeBytes("$cmd\n")
+                }
+                os.writeBytes("exit\n")
+                os.flush()
+                process
+            } catch (e2: Exception) {
+                Log.e(TAG, "Fallback also failed: ${e2.message}")
+                null
+            }
         }
     }
 
@@ -188,7 +215,8 @@ object RootShell {
         val paths = listOf(
             Pair("/data/adb/magisk/magisk", "Magisk"),
             Pair("/data/adb/ksu/bin/ksu", "KernelSU"),
-            Pair("/data/adb/ap/bin/apd", "APatch")
+            Pair("/data/adb/ap/bin/apd", "APatch"),
+            Pair("/system/bin/kp", "KernelPatch")
         )
         
         for ((path, name) in paths) {
@@ -199,22 +227,18 @@ object RootShell {
         
         // 尝试通过命令检测
         try {
-            val process = Runtime.getRuntime().exec("sh")
-            val os = DataOutputStream(process.outputStream)
-            os.writeBytes("which magisk 2>/dev/null && echo MAGISK\n")
-            os.writeBytes("which ksu 2>/dev/null && echo KSU\n")
-            os.writeBytes("which apd 2>/dev/null && echo APATCH\n")
-            os.writeBytes("exit\n")
-            os.flush()
-            
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", 
+                "which magisk 2>/dev/null && echo MAGISK; which ksu 2>/dev/null && echo KSU; which apd 2>/dev/null && echo APATCH; which kp 2>/dev/null && echo KPATCH"))
             val reader = BufferedReader(InputStreamReader(process.inputStream))
             val output = reader.readText()
             process.waitFor()
+            reader.close()
             
             return when {
                 output.contains("MAGISK") -> "Magisk"
                 output.contains("KSU") -> "KernelSU"
                 output.contains("APATCH") -> "APatch"
+                output.contains("KPATCH") -> "KernelPatch"
                 else -> "未知Root方案"
             }
         } catch (_: Exception) {}
