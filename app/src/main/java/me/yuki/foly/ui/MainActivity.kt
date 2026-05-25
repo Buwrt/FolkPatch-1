@@ -33,8 +33,6 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.animation.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -1101,6 +1099,18 @@ private fun BottomBar(
 
         if (isFloating) {
             val navScrollState = rememberScrollState()
+            
+            // Auto-scroll to selected tab when it changes
+            val density = LocalDensity.current
+            val itemSizePx = with(density) { 56.dp.toPx() }
+            val itemSpacingPx = with(density) { 4.dp.toPx() }
+            LaunchedEffect(effectiveSelectedIndex) {
+                val targetOffset = ((itemSizePx + itemSpacingPx) * effectiveSelectedIndex).toInt()
+                val centerOffset = (navScrollState.maxValue / 2).coerceAtLeast(0)
+                val finalOffset = (targetOffset - centerOffset).coerceIn(0, navScrollState.maxValue)
+                navScrollState.scrollTo(finalOffset)
+            }
+            
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -1334,19 +1344,8 @@ private fun BottomBarContent(
             (itemSpacing * (visibleDestinations.size - 1)) +
             (containerPadding * 2)
 
-    // Auto-scroll to selected item
-    val coroutineScope = rememberCoroutineScope()
-    LaunchedEffect(effectiveSelectedIndex) {
-        scrollState?.let { ss ->
-            coroutineScope.launch {
-                val itemWidthPx = with(LocalDensity.current) { (itemSize + itemSpacing).toPx() }
-                val targetOffset = (itemWidthPx * effectiveSelectedIndex).toInt()
-                val centerOffset = (ss.maxValue / 2).coerceAtLeast(0)
-                val finalOffset = (targetOffset - centerOffset).coerceIn(0, ss.maxValue)
-                ss.scrollTo(finalOffset)
-            }
-        }
-    }
+    // Auto-scroll to selected item (called from Composable context in BottomBar)
+    // This is handled by the caller, not here, since BottomBarContent is not @Composable
 
     Box(
         modifier = Modifier
