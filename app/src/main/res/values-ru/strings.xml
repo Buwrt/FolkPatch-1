@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">Имя настольного приложения</string>
@@ -75,10 +75,10 @@
     <string name="su_exclude_all_title">Исключить все</string>
     <string name="su_exclude_all_confirm">Вы уверены, что хотите исключить все приложения без root-прав?</string>
 
-    <string name="home_learn_apatch">Изучить FolkPatch</string>
-    <string name="home_click_to_learn_apatch">Узнайте о функциях FolkPatch и как их использовать</string>
-    <string name="settings_hide_apatch_card">Скрыть карту "Изучить FolkPatch"</string>
-    <string name="settings_hide_apatch_card_summary">Скрыть карту "Изучить FolkPatch" на главном экране</string>
+    <string name="home_learn_apatch">Изучить FolyPatch</string>
+    <string name="home_click_to_learn_apatch">Узнайте о функциях FolyPatch и как их использовать</string>
+    <string name="settings_hide_apatch_card">Скрыть карту "Изучить FolyPatch"</string>
+    <string name="settings_hide_apatch_card_summary">Скрыть карту "Изучить FolyPatch" на главном экране</string>
 
     <string name="about_source_code"><![CDATA[<p>Просмотреть исходный код на %1$s<p/>Присоединяйтесь к нашему %2$s каналу<p/>Присоединяйтесь к нашей %3$s группе]]></string>
     <string name="send_log">Отправить логи</string>
@@ -177,7 +177,7 @@
     <string name="home_system_version">Версия системы</string>
     <string name="home_kpatch_version">Версия KernelPatch</string>
     <string name="home_su_path">Исполняемый файл su</string>
-    <string name="home_apatch_version">Версия FolkPatch</string>
+    <string name="home_apatch_version">Версия FolyPatch</string>
 
     <string name="kpm">KPModule</string>
     <string name="kpm_kp_not_installed">KernelPatch не установлен</string>
@@ -201,7 +201,7 @@
     <string name="su_selinux_via_hook">Обойти через хук</string>
     <string name="su_pkg_excluded_label">Исключить</string>
     <string name="su_pkg_excluded_setting_title">Исключить изменения</string>
-    <string name="su_pkg_excluded_setting_summary">Включение этой опции позволит FolkPatch восстановить любые файлы, измененные модулями этого приложения.</string>
+    <string name="su_pkg_excluded_setting_summary">Включение этой опции позволит FolyPatch восстановить любые файлы, измененные модулями этого приложения.</string>
     <string name="su_pkg_root_setting_title">Суперпользователь</string>
     <string name="su_pkg_root_setting_summary">Включение этой опции предоставит доступ суперпользователя вашему приложению, позволяя использовать команды SU.</string>
     <string name="su_pkg_normal_setting_title">Обычный режим</string>
@@ -371,14 +371,14 @@
     <string name="patch_select_kpimg_btn">Выбрать KPimg</string>
 
     <string name="home_dialog_auth_fail_title">Ошибка аутентификации</string>
-    <string name="home_dialog_auth_fail_content">Не удалось аутентифицировать SuperKey, что привело к сбою активации FolkPatch.
+    <string name="home_dialog_auth_fail_content">Не удалось аутентифицировать SuperKey, что привело к сбою активации FolyPatch.
 Вот несколько возможных причин сбоя аутентификации—пожалуйста, проверьте, какая из них относится к вам:
 
 \n1. Вы вообще не использовали KernelPatch для патчинга boot.img или забыли, что на самом деле делали.
 \n2. Пропатченный boot.img всё ещё спит на вашем компьютере, ни разу не был прошит в устройство.
 \n3. SuperKey был введён неправильно или содержит загадочные символы, например символы из инопланетных языков.
-\n4. Ваше устройство может быть несовместимо с FolkPatch и KernelPatch, принудительные попытки бесполезны.
-\n5. Вы могли выполнить какие-то загадочные операции—например, использовать определённые модули, исключающие имена пакетов, которые заблокировали FolkPatch, в результате чего вы исключили себя из игры.
+\n4. Ваше устройство может быть несовместимо с FolyPatch и KernelPatch, принудительные попытки бесполезны.
+\n5. Вы могли выполнить какие-то загадочные операции—например, использовать определённые модули, исключающие имена пакетов, которые заблокировали FolyPatch, в результате чего вы исключили себя из игры.
 
 </string>
 
@@ -484,7 +484,7 @@
     <string name="settings_new_app_profile_normal">БЕЗ ROOT</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">Исключить</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">Скрывать статус разблокировки загрузчика в некоторой степени</string>
     <string name="settings_app_title">Заголовок приложения</string>
     <string name="app_title_custom">Пользовательский</string>
@@ -656,7 +656,7 @@
     <string name="auto_backup_failed">Ошибка резервного копирования: %s</string>
     <string name="auto_backup_success">Резервная копия создана: %s</string>
     <string name="settings_auto_backup_boot">Автоматическое резервное копирование Boot</string>
-    <string name="settings_auto_backup_boot_summary">Автоматически копировать Boot в локальное хранилище (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">Автоматически копировать Boot в локальное хранилище (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Auto-added missing strings -->
 
@@ -669,7 +669,7 @@
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">Неофициальная версия</string>
-    <string name="unofficial_version_message">Вы используете FolkPatch, который не является официальным приложением, пожалуйста, скачайте официальное приложение!</string>
+    <string name="unofficial_version_message">Вы используете FolyPatch, который не является официальным приложением, пожалуйста, скачайте официальное приложение!</string>
     <string name="go_to_github">Перейти на Github</string>
     <string name="settings_save_theme">Сохранить тему</string>
     <string name="settings_import_theme">Импортировать тему</string>
@@ -787,7 +787,7 @@
     <string name="settings_category_security_summary">Биометрия, управление суперключами</string>
     <string name="settings_category_backup_summary">Локальное резервное копирование, облачное, WebDAV</string>
     <string name="settings_category_module_summary">Информация о модулях, сортировка, пакетная установка</string>
-    <string name="settings_category_function_summary">Скрытие FolkPatch, служба Umount</string>
+    <string name="settings_category_function_summary">Скрытие FolyPatch, служба Umount</string>
     <string name="settings_category_multimedia_summary">Фоновая музыка, звуки, вибрация</string>
     <string name="settings_music_playback_control">Управление воспроизведением</string>
     <string name="settings_music_looping">Зациклить</string>
@@ -899,7 +899,7 @@
     <string name="webdav_no_logs">Нет логов</string>
     <string name="webdav_clear_logs">Очистить</string>
     <string name="settings_enable_local_backup">Включить локальное резервное копирование</string>
-    <string name="settings_enable_local_backup_summary">Резервное копирование модулей в локальное хранилище (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">Резервное копирование модулей в локальное хранилище (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">Закрыть</string>
 
     <!-- Backup Settings -->

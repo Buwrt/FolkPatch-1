@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">홈 화면 앱 이름</string>
@@ -91,10 +91,10 @@
     <string name="su_exclude_btn">제외</string>
     <string name="su_exclude_reverse_btn">제외 취소</string>
 
-    <string name="home_learn_apatch">FolkPatch 알아보기</string>
-    <string name="home_click_to_learn_apatch">FolkPatch의 기능과 사용 방법을 알아보세요.</string>
-    <string name="settings_hide_apatch_card">FolkPatch 알아보기 카드 숨김</string>
-    <string name="settings_hide_apatch_card_summary">홈 화면에서 FolkPatch 알아보기 카드를 숨깁니다.</string>
+    <string name="home_learn_apatch">FolyPatch 알아보기</string>
+    <string name="home_click_to_learn_apatch">FolyPatch의 기능과 사용 방법을 알아보세요.</string>
+    <string name="settings_hide_apatch_card">FolyPatch 알아보기 카드 숨김</string>
+    <string name="settings_hide_apatch_card_summary">홈 화면에서 FolyPatch 알아보기 카드를 숨깁니다.</string>
 
     <string name="about_source_code"><![CDATA[<p>%1$s에서 소스 코드를 확인하세요<p/>%2$s 채널에 가입하세요<p/>%3$s 그룹에 가입하세요]]></string>
     <string name="send_log">로그 보내기</string>
@@ -192,7 +192,7 @@
     <string name="home_system_version">시스템 버전</string>
     <string name="home_kpatch_version">KernelPatch 버전</string>
     <string name="home_su_path">실행 가능한 su</string>
-    <string name="home_apatch_version">FolkPatch 버전</string>
+    <string name="home_apatch_version">FolyPatch 버전</string>
 
     <string name="kpm">KPM</string>
     <string name="kpm_kp_not_installed">KernelPatch가 설치되지 않음</string>
@@ -216,7 +216,7 @@
     <string name="su_selinux_via_hook">후킹을 통한 우회</string>
     <string name="su_pkg_excluded_label">제외</string>
     <string name="su_pkg_excluded_setting_title">수정 제외</string>
-    <string name="su_pkg_excluded_setting_summary">이 옵션을 활성화하면 이 앱의 모듈에 의해 수정된 모든 파일을 FolkPatch가 복원할 수 있습니다.</string>
+    <string name="su_pkg_excluded_setting_summary">이 옵션을 활성화하면 이 앱의 모듈에 의해 수정된 모든 파일을 FolyPatch가 복원할 수 있습니다.</string>
     <string name="su_pkg_root_setting_title">Superuser</string>
     <string name="su_pkg_root_setting_summary">이 옵션을 활성화하면 앱에 Superuser 권한을 부여하여 su 명령을 사용할 수 있습니다.</string>
     <string name="su_pkg_normal_setting_title">일반 모드</string>
@@ -360,14 +360,14 @@
     <string name="patch_select_kpimg_btn">KPimg 선택</string>
 
     <string name="home_dialog_auth_fail_title">인증 실패</string>
-    <string name="home_dialog_auth_fail_content">SuperKey를 인증할 수 없어 FolkPatch 활성화에 실패했습니다.
+    <string name="home_dialog_auth_fail_content">SuperKey를 인증할 수 없어 FolyPatch 활성화에 실패했습니다.
 가능한 원인은 다음과 같습니다. 해당되는 사항이 있는지 확인하세요:
 
 \n1. KernelPatch를 사용하여 boot.img를 패치하지 않았거나, 무엇을 했는지 잊어버렸습니다.
 \n2. 패치된 boot.img가 기기에 플래싱되지 않고 여전히 컴퓨터에 있습니다.
 \n3. SuperKey를 잘못 입력했거나, 외계어와 같은 기이한 기호가 포함되어 있습니다.
-\n4. 사용 중인 기기가 FolkPatch 및 KernelPatch와 호환되지 않을 수 있습니다. 억지로 시도해도 소용없습니다.
-\n5. FolkPatch를 차단하는 특정 모듈을 사용하여 스스로를 추방하는 등의 이상한 작업을 수행했을 수 있습니다.
+\n4. 사용 중인 기기가 FolyPatch 및 KernelPatch와 호환되지 않을 수 있습니다. 억지로 시도해도 소용없습니다.
+\n5. FolyPatch를 차단하는 특정 모듈을 사용하여 스스로를 추방하는 등의 이상한 작업을 수행했을 수 있습니다.
 
 </string>
 
@@ -464,7 +464,7 @@
     <string name="app_title_apatch_folk">APatch Folk</string>
     <string name="app_title_apatchx">APatch X</string>
     <string name="app_title_apatch">APatch</string>
-    <string name="app_title_folkpatch">FolkPatch</string>
+    <string name="app_title_folkpatch">FolyPatch</string>
     <string name="app_title_kernelpatch">KernelPatch</string>
     <string name="app_title_kernelsu">KernelSU</string>
     <string name="app_title_supersu">SuperSU</string>
@@ -482,7 +482,7 @@
     <string name="settings_new_app_profile_normal">루트 없음</string>
     <string name="settings_new_app_profile_root">루트</string>
     <string name="settings_new_app_profile_exclude">제외</string>
-    <string name="settings_hide_service">FolkPatch 숨김</string>
+    <string name="settings_hide_service">FolyPatch 숨김</string>
     <string name="settings_hide_service_summary">부트로더 잠금 해제 상태를 어느 정도 숨깁니다.</string>
     <!-- Umount Service -->
     <string name="settings_umount_service">Umount Service</string>
@@ -668,7 +668,7 @@
     <string name="auto_backup_failed">자동 백업 실패: %s</string>
     <string name="auto_backup_success">자동 백업됨: %s</string>
     <string name="settings_auto_backup_boot">Boot 자동 백업</string>
-    <string name="settings_auto_backup_boot_summary">로컬 저장소로 Boot를 자동으로 백업합니다. (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">로컬 저장소로 Boot를 자동으로 백업합니다. (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">홈 레이아웃 스타일</string>
@@ -679,7 +679,7 @@
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">비공식 버전</string>
-    <string name="unofficial_version_message">공식 앱이 아닌 FolkPatch를 사용 중입니다. 공식 앱을 다운로드하세요!</string>
+    <string name="unofficial_version_message">공식 앱이 아닌 FolyPatch를 사용 중입니다. 공식 앱을 다운로드하세요!</string>
     <string name="go_to_github">Github로 이동</string>
     <string name="settings_save_theme">테마 저장</string>
     <string name="settings_import_theme">테마 가져오기</string>
@@ -810,7 +810,7 @@
     <string name="settings_category_security_summary">생체 인식, 슈퍼키 관리</string>
     <string name="settings_category_backup_summary">로컬 백업, 클라우드 백업, WebDAV</string>
     <string name="settings_category_module_summary">모듈 정보, 정렬, 일괄 설치</string>
-    <string name="settings_category_function_summary">FolkPatch 숨기기, Umount 서비스</string>
+    <string name="settings_category_function_summary">FolyPatch 숨기기, Umount 서비스</string>
     <string name="settings_category_multimedia_summary">배경 음악, 소리, 진동</string>
     <string name="settings_use_legacy_su_page">단일 페이지 Superuser 인증</string>
     <string name="settings_use_legacy_su_page_summary">Superuser 페이지를 단일 페이지 인증 디자인으로 전환합니다.</string>
@@ -994,7 +994,7 @@
     <string name="webdav_no_logs">로그를 찾을 수 없음</string>
     <string name="webdav_clear_logs">지우기</string>
     <string name="settings_enable_local_backup">로컬 백업 활성화</string>
-    <string name="settings_enable_local_backup_summary">로컬 저장소로 모듈을 백업합니다. (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">로컬 저장소로 모듈을 백업합니다. (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">닫기</string>
 
 

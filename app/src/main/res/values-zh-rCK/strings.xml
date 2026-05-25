@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">餐厅招牌菜</string>
@@ -67,10 +67,10 @@
     <string name="settings_global_namespace_mode_summary">大家伙用同一块地儿备料</string>
     <string name="settings_clear_super_key_dialog">大厨，真要继续干？</string>
 
-    <string name="home_learn_apatch">了解 FolkPatch 餐厅</string>
-    <string name="home_click_to_learn_apatch">了解 FolkPatch 餐厅的功能及烹饪使用方法</string>
-    <string name="settings_hide_apatch_card">隐藏"了解 FolkPatch 餐厅"菜单</string>
-    <string name="settings_hide_apatch_card_summary">隐藏主厨台面的"了解 FolkPatch 餐厅"菜单</string>
+    <string name="home_learn_apatch">了解 FolyPatch 餐厅</string>
+    <string name="home_click_to_learn_apatch">了解 FolyPatch 餐厅的功能及烹饪使用方法</string>
+    <string name="settings_hide_apatch_card">隐藏"了解 FolyPatch 餐厅"菜单</string>
+    <string name="settings_hide_apatch_card_summary">隐藏主厨台面的"了解 FolyPatch 餐厅"菜单</string>
     <string name="settings_grid_working_card_hide_check">不显对勾</string>
     <string name="settings_grid_working_card_hide_check_summary">工牌上的小勾勾或警告全藏起</string>
     <string name="settings_grid_working_card_hide_text">不显状态字</string>
@@ -187,7 +187,7 @@
     <string name="home_system_version">餐厅系统版本</string>
     <string name="home_kpatch_version">酱料版本</string>
     <string name="home_su_path">su 可执行菜谱</string>
-    <string name="home_apatch_version">FolkPatch 餐厅版本</string>
+    <string name="home_apatch_version">FolyPatch 餐厅版本</string>
 
     <string name="kpm">特制酱料</string>
     <string name="kpm_kp_not_installed">未添加秘制酱料</string>
@@ -215,7 +215,7 @@
     <string name="su_exclude_btn">排除</string>
     <string name="su_exclude_reverse_btn">反排除</string>
     <string name="su_pkg_excluded_setting_title">排除修改</string>
-    <string name="su_pkg_excluded_setting_summary">启用此选项将允许 FolkPatch 恢复此餐厅招牌菜修改的任何菜谱。</string>
+    <string name="su_pkg_excluded_setting_summary">启用此选项将允许 FolyPatch 恢复此餐厅招牌菜修改的任何菜谱。</string>
     <string name="su_pkg_root_setting_title">首席大厨权限</string>
     <string name="su_pkg_root_setting_summary">启用该选项为你的餐厅软件启动首席大厨,餐厅软件能够使用 SU 命令</string>
     <string name="su_pkg_normal_setting_title">学徒模式</string>
@@ -252,7 +252,7 @@
     <string name="apm_start_downloading">开始采购: %s</string>
     <string name="apm_new_version_available">新菜谱版本 %s 可用，点击升级烹饪。</string>
 
-    <string name="hide_apatch_manager">隐藏 FolkPatch 管理器</string>
+    <string name="hide_apatch_manager">隐藏 FolyPatch 管理器</string>
     <string name="hide_apatch_manager_summary">烹饪一个随机包名和自定义餐厅名称的代理餐厅软件</string>
     <string name="hide_apatch_dialog_new_manager_name">新管理器名称</string>
     <string name="hide_apatch_dialog_summary">这将作为显示在启动器中的新餐厅软件名称</string>
@@ -294,7 +294,7 @@
     <string name="settings_fold_system_module">折叠餐厅系统招牌菜</string>
     <string name="settings_fold_system_module_summary">点击招牌菜卡片展开/折叠烹饪操作按钮</string>
     <string name="settings_simple_list_bottom_bar">简约列表底栏</string>
-    <string name="settings_simple_list_bottom_bar_summary">招牌菜烹饪操作使用纯图标按钮样式，灵感来自 FolkPatch</string>
+    <string name="settings_simple_list_bottom_bar_summary">招牌菜烹饪操作使用纯图标按钮样式，灵感来自 FolyPatch</string>
     <string name="settings_spliced_card_group">拼接招牌菜</string>
     <string name="settings_spliced_card_group_summary">招牌菜列表使用连续拼接卡片样式</string>
     <string name="apm_install_confirm_title">烹饪招牌菜</string>
@@ -355,13 +355,13 @@
     <string name="patch_select_kpimg_btn">选择 KPimg</string>
 
     <string name="home_dialog_auth_fail_title">验证失败</string>
-    <string name="home_dialog_auth_fail_content">无法验证传世秘方，导致 FolkPatch 激活失败。
+    <string name="home_dialog_auth_fail_content">无法验证传世秘方，导致 FolyPatch 激活失败。
 以下是验证失败的一些可能原因——请对号入座：
 \n1. 您根本没使用 KernelPatch 来烹饪 boot.img，或者忘了自己到底做了啥烹饪操作。
 \n2. 烹饪完的 boot.img 还躺在电脑里睡觉，根本没放进厨房。
 \n3. 传世秘方输错了,或者夹杂了神秘符号，比如来自外星文的字符。
-\n4. 您的厨房设备可能并不兼容 FolkPatch 和 KernelPatch，强行折腾也是徒劳。
-\n5. 您可能搞了一些神秘烹饪操作——比如用了某些排除包名的招牌菜把 FolkPatch 给屏蔽了，结果把自己整出局了。
+\n4. 您的厨房设备可能并不兼容 FolyPatch 和 KernelPatch，强行折腾也是徒劳。
+\n5. 您可能搞了一些神秘烹饪操作——比如用了某些排除包名的招牌菜把 FolyPatch 给屏蔽了，结果把自己整出局了。
 \n请先好好检查一遍，再试一次烹饪。如果问题依旧，欢迎到官方仓库的 issue 页面提问。
 毕竟，有些问题可能纯粹是您自己亲手造成的烹饪事故!
 祝你好运 啊!顺带一提,您点击下面的文档按钮准没错!
@@ -462,7 +462,7 @@
     <string name="settings_new_app_profile_normal">家常</string>
     <string name="settings_new_app_profile_root">招牌</string>
     <string name="settings_new_app_profile_exclude">退菜</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">把Bootloader解锁状态藏起来呗</string>
     <string name="settings_app_title">软件名</string>
     <string name="app_title_custom">自个儿起</string>
@@ -633,7 +633,7 @@
     <string name="auto_backup_failed">留份失败: %s</string>
     <string name="auto_backup_success">留份成功: %s</string>
     <string name="settings_auto_backup_boot">Boot 自动留份</string>
-    <string name="settings_auto_backup_boot_summary">自动把 Boot 留份到本地储物柜 (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">自动把 Boot 留份到本地储物柜 (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">主厨台面风格</string>
@@ -644,7 +644,7 @@
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">非官方版本</string>
-    <string name="unofficial_version_message">您正在用的是第三方 FolkPatch 管理器，可能会出岔子。要吃正宗的，请去官方渠道下正版！</string>
+    <string name="unofficial_version_message">您正在用的是第三方 FolyPatch 管理器，可能会出岔子。要吃正宗的，请去官方渠道下正版！</string>
     <string name="go_to_github">去 Github 瞧瞇瞇</string>
     <string name="settings_save_theme">存起主题</string>
     <string name="settings_import_theme">导入主题</string>
@@ -774,7 +774,7 @@
     <string name="settings_category_security_summary">顾客认证、传世秘方管理</string>
     <string name="settings_category_backup_summary">本地留份、云端留份、WebDAV</string>
     <string name="settings_category_module_summary">招牌菜信息、排序、批量上菜</string>
-    <string name="settings_category_function_summary">FolkPatch隐身、Umount服务</string>
+    <string name="settings_category_function_summary">FolyPatch隐身、Umount服务</string>
     <string name="settings_category_multimedia_summary">背景音乐、音效、振动</string>
     <string name="settings_music_playback_control">音乐控制</string>
 
@@ -919,7 +919,7 @@
     <string name="webdav_no_logs">暂无留份记录</string>
     <string name="webdav_clear_logs">清空记录</string>
     <string name="settings_enable_local_backup">启用本地留份</string>
-    <string name="settings_enable_local_backup_summary">将招牌菜留份到本地储物柜 (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">将招牌菜留份到本地储物柜 (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">关闭</string>
 
     <!-- Script Library Strings -->

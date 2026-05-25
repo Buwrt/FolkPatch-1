@@ -168,7 +168,7 @@
     <string name="home_system_version">システム バージョン</string>
     <string name="home_kpatch_version">KernelPatch バージョン</string>
     <string name="home_su_path">実行可能な su</string>
-    <string name="home_apatch_version">FolkPatch バージョン</string>
+    <string name="home_apatch_version">FolyPatch バージョン</string>
     <string name="kpm">KP モジュール</string>
     <string name="kpm_kp_not_installed">KernelPatch はインストールされていません</string>
     <string name="kpm_add_kpm">KPM を追加</string>
@@ -190,7 +190,7 @@
     <string name="su_selinux_via_hook">フックでバイパス</string>
     <string name="su_pkg_excluded_label">除外</string>
     <string name="su_pkg_excluded_setting_title">変更を除外</string>
-    <string name="su_pkg_excluded_setting_summary">このオプションを有効化すると、FolkPatch はこのアプリのモジュールによって変更されたすべてのファイルを復元できるようになります。</string>
+    <string name="su_pkg_excluded_setting_summary">このオプションを有効化すると、FolyPatch はこのアプリのモジュールによって変更されたすべてのファイルを復元できるようになります。</string>
     <string name="su_pkg_root_setting_title">スーパーユーザー</string>
     <string name="su_pkg_root_setting_summary">このオプションを有効化すると、アプリへのスーパーユーザーアクセスが許可され SU コマンドを使用できるようになります。</string>
     <string name="su_pkg_normal_setting_title">通常モード</string>
@@ -323,15 +323,15 @@
     <string name="patch_custom_kpimg_file">ファイル: %s</string>
     <string name="patch_select_kpimg_btn">KPimg を選択</string>
     <string name="home_dialog_auth_fail_title">認証に失敗しました。</string>
-    <string name="home_dialog_auth_fail_content">SuperKey を認証できないため、FolkPatch の有効化に失敗しました。
+    <string name="home_dialog_auth_fail_content">SuperKey を認証できないため、FolyPatch の有効化に失敗しました。
 認証の失敗について考えられる原因は以下の通りです。
 該当するものをご確認ください:
 
 \n1. KernelPatch を使用して boot.img にパッチを適用していないか、実際にパッチを適用した内容を忘れている。
 \n2. パッチを適用した boot.img がコンピューター上でスリープ状態のままで、デバイスに書き込まれていない。
 \n3. SuperKey が誤って入力されたか、不明な記号 (例: 外国の文字) が含まれている。
-\n4. デバイスが、FolkPatch および KernelPatch と互換性がない可能性。これは強制的に試行しても無理です。
-\n5. FolkPatch をブロックするパッケージ名を除外する特定のモジュールを使用するなど、不明な操作を行った結果、ゲームから脱落した可能性があります。</string>
+\n4. デバイスが、FolyPatch および KernelPatch と互換性がない可能性。これは強制的に試行しても無理です。
+\n5. FolyPatch をブロックするパッケージ名を除外する特定のモジュールを使用するなど、不明な操作を行った結果、ゲームから脱落した可能性があります。</string>
     <string name="home_more_menu_feedback_or_suggestion">フィードバックまたは提案</string>
     <string name="home_more_menu_about">アプリについて</string>
     <string name="home_more_menu_document">ドキュメント</string>
@@ -412,7 +412,7 @@
     <string name="app_title_apatch_folk">APatch Folk</string>
     <string name="app_title_apatchx">APatch X</string>
     <string name="app_title_apatch">APatch</string>
-    <string name="app_title_folkpatch">FolkPatch</string>
+    <string name="app_title_folkpatch">FolyPatch</string>
     <string name="app_title_kernelpatch">KernelPatch</string>
     <string name="app_title_kernelsu">KernelSU</string>
     <string name="app_title_supersu">SuperSU</string>
@@ -429,7 +429,7 @@
     <string name="settings_new_app_profile_normal">ROOTなし</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">除外</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">Bootloader Unlock 状態をある程度非表示にします。</string>
     <!-- Umount Service -->
     <string name="settings_umount_service">Umount Service</string>
@@ -592,7 +592,7 @@
     <string name="auto_backup_failed">自動バックアップが失敗: %s</string>
     <string name="auto_backup_success">自動バックアップが成功: %s</string>
     <string name="settings_auto_backup_boot">boot を自動でバックアップ</string>
-    <string name="settings_auto_backup_boot_summary">boot をローカルストレージに自動でバックアップします (Downloads/FolkPatch/BootBackups)。</string>
+    <string name="settings_auto_backup_boot_summary">boot をローカルストレージに自動でバックアップします (Downloads/FolyPatch/BootBackups)。</string>
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">ホームレイアウトのスタイル</string>
     <string name="settings_home_layout_default">リスト UI</string>
@@ -602,7 +602,7 @@
     <string name="settings_home_layout_circle">サークル UI</string>
     <string name="settings_home_layout_dashboard_pro">ダッシュボード UI</string>
     <string name="unofficial_version_title">非公式なバージョン</string>
-    <string name="unofficial_version_message">非公式な FolkPatch を使用しています。公式のアプリをダウンロードしてください！</string>
+    <string name="unofficial_version_message">非公式な FolyPatch を使用しています。公式のアプリをダウンロードしてください！</string>
     <string name="go_to_github">GitHub を開く</string>
     <string name="settings_save_theme">テーマを保存</string>
     <string name="settings_import_theme">テーマをインポート</string>
@@ -725,7 +725,7 @@
     <string name="settings_category_security_summary">生体認証、スーパーキー管理</string>
     <string name="settings_category_backup_summary">ローカルバックアップ、クラウドバックアップ、WebDAV</string>
     <string name="settings_category_module_summary">モジュール情報、並べ替え、一括インストール</string>
-    <string name="settings_category_function_summary">FolkPatch非表示、Umountサービス</string>
+    <string name="settings_category_function_summary">FolyPatch非表示、Umountサービス</string>
     <string name="settings_category_multimedia_summary">BGM、効果音、バイブレーション</string>
     <string name="settings_use_legacy_su_page">単一ページのスーパーユーザー認証</string>
     <string name="settings_use_legacy_su_page_summary">スーパーユーザーページを単一ページな認証に切り替えます。</string>
@@ -895,7 +895,7 @@
     <string name="webdav_no_logs">ログは見つかりません</string>
     <string name="webdav_clear_logs">消去</string>
     <string name="settings_enable_local_backup">ローカルバックアップを有効化する</string>
-    <string name="settings_enable_local_backup_summary">ローカルストレージにバックアップします (Downloads/FolkPatch/ModuleBackups)。</string>
+    <string name="settings_enable_local_backup_summary">ローカルストレージにバックアップします (Downloads/FolyPatch/ModuleBackups)。</string>
     <string name="close">閉じる</string>
     <string name="script_library">スクリプトライブラリ</string>
     <string name="script_library_title">スクリプトライブラリ</string>

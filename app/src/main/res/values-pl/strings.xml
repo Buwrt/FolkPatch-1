@@ -64,10 +64,10 @@
     <string name="settings_clear_super_key_dialog">Czy na pewno chcesz kontynuować?</string>
     <string name="su_exclude_all_title">Wyklucz wszystkie</string>
     <string name="su_exclude_all_confirm">Czy na pewno chcesz wykluczyć wszystkie aplikacje bez uprawnień root?</string>
-    <string name="home_learn_apatch">Poznaj FolkPatch</string>
-    <string name="home_click_to_learn_apatch">Dowiedz się o funkcjach FolkPatch i jak go używać</string>
-    <string name="settings_hide_apatch_card">Ukryj kartę "Dowiedz się o FolkPatch"</string>
-    <string name="settings_hide_apatch_card_summary">Ukryj kartę "Dowiedz się o FolkPatch" na stronie głównej</string>
+    <string name="home_learn_apatch">Poznaj FolyPatch</string>
+    <string name="home_click_to_learn_apatch">Dowiedz się o funkcjach FolyPatch i jak go używać</string>
+    <string name="settings_hide_apatch_card">Ukryj kartę "Dowiedz się o FolyPatch"</string>
+    <string name="settings_hide_apatch_card_summary">Ukryj kartę "Dowiedz się o FolyPatch" na stronie głównej</string>
     <string name="about_source_code"><![CDATA[<p>Zobacz kod źródłowy na %1$s<p/>Dołącz do naszego kanału %2$s <p/>Dołącz do naszej grupy %3$s]]></string>
     <string name="send_log">Prześlij logi</string>
     <string name="save_log">Zapisz logi</string>
@@ -153,7 +153,7 @@
     <string name="home_system_version">Wersja systemu</string>
     <string name="home_kpatch_version">Wersja KernelPatch</string>
     <string name="home_su_path">Plik wykonywalny su</string>
-    <string name="home_apatch_version">Wersja FolkPatch</string>
+    <string name="home_apatch_version">Wersja FolyPatch</string>
     <string name="kpm">Moduły KP</string>
     <string name="kpm_kp_not_installed">KernelPatch jest niezainstalowany</string>
     <string name="kpm_add_kpm">Dodaj KPM</string>
@@ -175,7 +175,7 @@
     <string name="su_selinux_via_hook">Omiń przez hak</string>
     <string name="su_pkg_excluded_label">Wyklucz</string>
     <string name="su_pkg_excluded_setting_title">Wyklucz modyfikacje</string>
-    <string name="su_pkg_excluded_setting_summary">Włączenie tej opcji umożliwi FolkPatch przywrócenie wszystkich plików zmodyfikowanych przez moduły tej aplikacji.</string>
+    <string name="su_pkg_excluded_setting_summary">Włączenie tej opcji umożliwi FolyPatch przywrócenie wszystkich plików zmodyfikowanych przez moduły tej aplikacji.</string>
     <string name="su_pkg_root_setting_title">Superuser</string>
     <string name="su_pkg_root_setting_summary">Włączenie tej opcji przyzna dostęp do roota Twojej aplikacji, pozwalając na używanie poleceń SU</string>
     <string name="su_pkg_normal_setting_title">Tryb normalny</string>
@@ -234,7 +234,7 @@
     <string name="apm_downloading">Pobieranie modułu %s…</string>
     <string name="apm_start_downloading">Rozpocznij pobieranie: %s</string>
     <string name="apm_new_version_available">Dostępna jest nowa wersja %s. Kliknij, aby uaktualnić.</string>
-    <string name="hide_apatch_manager">Ukryj menedżer FolkPatch</string>
+    <string name="hide_apatch_manager">Ukryj menedżer FolyPatch</string>
     <string name="hide_apatch_manager_summary">Zainstaluj aplikację proxy z losowym ID pakietu i niestandardową etykietą</string>
     <string name="hide_apatch_dialog_new_manager_name">Nowa nazwa menedżera</string>
     <string name="hide_apatch_dialog_summary">Będzie używana jako nowa nazwa aplikacji pokazana w Launcherze</string>
@@ -336,7 +336,7 @@
     <string name="patch_custom_kpimg_file">Plik: %s</string>
     <string name="patch_select_kpimg_btn">Wybierz KPimg</string>
     <string name="home_dialog_auth_fail_title">Uwierzytelnianie nie powiodło się</string>
-    <string name="home_dialog_auth_fail_content">Nie można uwierzytelnić SuperKey, co powoduje niepowodzenie aktywacji FolkPatch. Oto możliwe przyczyny błędu uwierzytelniania — sprawdź, która dotyczy:\n1. Nie użyto KernelPatch do spatchowania pliku boot.img albo nie jest jasne, co dokładnie zostało wykonane.\n2. Spatchowany boot.img nadal znajduje się na komputerze i nie został wgrany (flashowany) na urządzenie.\n3. SuperKey został wpisany nieprawidłowo albo zawiera nietypowe znaki (np. z innych alfabetów).\n4. Urządzenie może nie być kompatybilne z FolkPatch i KernelPatch — dalsze próby mogą nie przynieść efektu.\n5. Mogły zostać wykonane niestandardowe operacje — np. użycie modułów wykluczających nazwy pakietów, co zablokowało działanie FolkPatch.</string>
+    <string name="home_dialog_auth_fail_content">Nie można uwierzytelnić SuperKey, co powoduje niepowodzenie aktywacji FolyPatch. Oto możliwe przyczyny błędu uwierzytelniania — sprawdź, która dotyczy:\n1. Nie użyto KernelPatch do spatchowania pliku boot.img albo nie jest jasne, co dokładnie zostało wykonane.\n2. Spatchowany boot.img nadal znajduje się na komputerze i nie został wgrany (flashowany) na urządzenie.\n3. SuperKey został wpisany nieprawidłowo albo zawiera nietypowe znaki (np. z innych alfabetów).\n4. Urządzenie może nie być kompatybilne z FolyPatch i KernelPatch — dalsze próby mogą nie przynieść efektu.\n5. Mogły zostać wykonane niestandardowe operacje — np. użycie modułów wykluczających nazwy pakietów, co zablokowało działanie FolyPatch.</string>
     <string name="home_more_menu_feedback_or_suggestion">Opinie bądź sugestie</string>
     <string name="home_more_menu_about">O aplikacji</string>
     <string name="home_more_menu_document">Dokumentacja</string>
@@ -417,7 +417,7 @@
     <string name="settings_new_app_profile_normal">BEZ ROOTA</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">Wyklucz</string>
-    <string name="settings_hide_service">Ukryj FolkPatch</string>
+    <string name="settings_hide_service">Ukryj FolyPatch</string>
     <string name="settings_hide_service_summary">Ukryj status odblokowania bootloadera w pewnym stopniu</string>
     <string name="settings_app_title">Tytuł aplikacji</string>
     <string name="app_title_custom">Niestandardowy</string>
@@ -580,9 +580,9 @@ Upewnij się, że aplikacja jest całkowicie zamknięta i ponownie otwarta, aby 
     <string name="auto_backup_failed">Automatyczna kopia zapasowa nie powiodła się: %s</string>
     <string name="auto_backup_success">Automatyczna kopia zapasowa zakończona sukcesem: %s</string>
     <string name="settings_auto_backup_boot">Automatyczna kopia zapasowa Boot</string>
-    <string name="settings_auto_backup_boot_summary">Automatycznie kopiuj Boot do lokalnego magazynu (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">Automatycznie kopiuj Boot do lokalnego magazynu (Downloads/FolyPatch/BootBackups)</string>
     <!-- Auto-added missing strings -->
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">Styl strony głównej</string>
     <string name="settings_home_layout_default">Lista</string>
@@ -593,7 +593,7 @@ Upewnij się, że aplikacja jest całkowicie zamknięta i ponownie otwarta, aby 
     <string name="settings_home_layout_dashboard_pro">Pulpit</string>
     <!-- Unofficial Version Strings -->
     <string name="unofficial_version_title">Wersja nieoficjalna</string>
-    <string name="unofficial_version_message">Używasz FolkPatch, który nie jest oficjalną aplikacją, pobierz oficjalną aplikację!</string>
+    <string name="unofficial_version_message">Używasz FolyPatch, który nie jest oficjalną aplikacją, pobierz oficjalną aplikację!</string>
     <string name="go_to_github">Przejdź na Github</string>
     <string name="settings_save_theme">Zapisz motyw</string>
     <string name="settings_import_theme">Importuj motyw</string>
@@ -704,7 +704,7 @@ Upewnij się, że aplikacja jest całkowicie zamknięta i ponownie otwarta, aby 
     <string name="settings_category_security_summary">Biometria, zarządzanie superkluczami</string>
     <string name="settings_category_backup_summary">Lokalna kopia zapasowa, kopia w chmurze, WebDAV</string>
     <string name="settings_category_module_summary">Informacje o modułach, sortowanie, instalacja wsadowa</string>
-    <string name="settings_category_function_summary">Ukryj FolkPatch, usługa Umount</string>
+    <string name="settings_category_function_summary">Ukryj FolyPatch, usługa Umount</string>
     <string name="settings_category_multimedia_summary">Muzyka w tle, dźwięki, wibracje</string>
     <string name="settings_music_playback_control">Sterowanie odtwarzaniem</string>
     <string name="settings_music_looping">Odtwarzanie w pętli</string>
@@ -812,7 +812,7 @@ Upewnij się, że aplikacja jest całkowicie zamknięta i ponownie otwarta, aby 
     <string name="webdav_no_logs">Nie znaleziono logów.</string>
     <string name="webdav_clear_logs">Wyczyść</string>
     <string name="settings_enable_local_backup">Włącz lokalną kopię zapasową</string>
-    <string name="settings_enable_local_backup_summary">Kopia zapasowa modułów do lokalnej pamięci (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">Kopia zapasowa modułów do lokalnej pamięci (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">Zamknij</string>
     <!-- Backup Settings -->
     <string name="settings_category_backup">Ustawienia kopii zapasowej</string>
@@ -914,7 +914,7 @@ Upewnij się, że aplikacja jest całkowicie zamknięta i ponownie otwarta, aby 
     <string name="loading_themes">Ładowanie motywów…</string>
     <string name="loading_apis">Ładowanie źródeł API…</string>
     <string name="app_title_fpatch">FPatch</string>
-    <string name="app_title_folkpatch">FolkPatch</string>
+    <string name="app_title_folkpatch">FolyPatch</string>
     <string name="app_title_kernelpatch">KernelPatch</string>
     <string name="app_title_kernelsu">KernelSU</string>
     <string name="app_title_supersu">SuperSU</string>

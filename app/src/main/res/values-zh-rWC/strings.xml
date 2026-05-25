@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">仙府应用名称</string>
@@ -68,10 +68,10 @@
     <string name="settings_global_namespace_mode_summary">凡登仙法会，皆启全域洞天挂载结界</string>
     <string name="settings_clear_super_key_dialog">道友确欲破除此秘钥乎？</string>
 
-    <string name="home_learn_apatch">参悟FolkPatch仙法</string>
-    <string name="home_click_to_learn_apatch">探FolkPatch仙法之玄妙，明渡劫登仙之术</string>
-    <string name="settings_hide_apatch_card">隐去「参悟FolkPatch仙法」仙笺</string>
-    <string name="settings_hide_apatch_card_summary">藏起仙府主殿之「参悟FolkPatch仙法」仙笺</string>
+    <string name="home_learn_apatch">参悟FolyPatch仙法</string>
+    <string name="home_click_to_learn_apatch">探FolyPatch仙法之玄妙，明渡劫登仙之术</string>
+    <string name="settings_hide_apatch_card">隐去「参悟FolyPatch仙法」仙笺</string>
+    <string name="settings_hide_apatch_card_summary">藏起仙府主殿之「参悟FolyPatch仙法」仙笺</string>
 
     <string name="about_source_code"><![CDATA[<p>于%1$s观仙法源典<p/>入吾%2$s仙音频道<p/>赴吾%3$s仙友寮阁]]></string>
     <string name="send_log">呈渡劫日志</string>
@@ -169,7 +169,7 @@
     <string name="home_system_version">天道篇次</string>
     <string name="home_kpatch_version">道核符箓篇次</string>
     <string name="home_su_path">登仙令符</string>
-    <string name="home_apatch_version">FolkPatch仙法篇次</string>
+    <string name="home_apatch_version">FolyPatch仙法篇次</string>
 
     <string name="kpm">道核仙符</string>
     <string name="kpm_kp_not_installed">未凝炼道核符箓</string>
@@ -218,7 +218,7 @@
     <string name="su_audit_tab_operations">操作记录</string>
 
     <string name="su_pkg_excluded_setting_title">改仙籍摒除之令</string>
-    <string name="su_pkg_excluded_setting_summary">启此仙令，许FolkPatch仙法复此凡器仙符所改之诸天道文卷。</string>
+    <string name="su_pkg_excluded_setting_summary">启此仙令，许FolyPatch仙法复此凡器仙符所改之诸天道文卷。</string>
     <string name="su_pkg_root_setting_title">登仙至尊</string>
     <string name="su_pkg_root_setting_summary">启此仙令为尔凡器启登仙至尊，凡器能登仙之咒</string>
     <string name="su_pkg_normal_setting_title">凡尘模式</string>
@@ -365,14 +365,14 @@
     <string name="patch_select_kpimg_btn">选择 KPimg</string>
 
     <string name="home_dialog_auth_fail_title">仙籍验败</string>
-    <string name="home_dialog_auth_fail_content">未验登仙秘钥，致 FolkPatch 仙法未成。
+    <string name="home_dialog_auth_fail_content">未验登仙秘钥，致 FolyPatch 仙法未成。
 仙籍验败之由，约有数端——道友可自省之：
 
 \n一、尔根本未以 KernelPatch 仙法炼符补仙躯 boot.img，或忘却自身所为之事。
 \n二、炼符后之仙躯 boot.img 尚卧于凡间电脑之中，根本未引仙入体。
 \n三、登仙秘钥符文舛误，或杂邪魔异符，如来自外域之文字。
-\n四、尔之仙器可能不兼容 FolkPatch 与 KernelPatch 仙法，强行渡劫亦是徒劳。
-\n五、尔或行神秘操作——如用排除仙名之仙法屏蔽 FolkPatch，终致自绝于仙途。
+\n四、尔之仙器可能不兼容 FolyPatch 与 KernelPatch 仙法，强行渡劫亦是徒劳。
+\n五、尔或行神秘操作——如用排除仙名之仙法屏蔽 FolyPatch，终致自绝于仙途。
 \n六、尔或安装与当世仙官兼容有碍之内核仙法，致使仙力冲突！
 \n宜先勘之重试，若仍有天劫，可于仙门官库 issue 仙台问之。
 毕竟，有些劫数可能纯粹是尔亲手种下之因！
@@ -474,7 +474,7 @@
     <string name="settings_new_app_profile_normal">凡体</string>
     <string name="settings_new_app_profile_root">超凡</string>
     <string name="settings_new_app_profile_exclude">驱逐</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">施展障眼法隐藏Bootloader解锁状态</string>
     <string name="settings_app_title">仙器名讳</string>
     <string name="app_title_custom">自赐名讳</string>
@@ -650,7 +650,7 @@
     <string name="auto_backup_failed">自动拓印受阻: %s</string>
     <string name="auto_backup_success">自动拓印圆满: %s</string>
     <string name="settings_auto_backup_boot">自动拓印Boot神印</string>
-    <string name="settings_auto_backup_boot_summary">自动将Boot神印拓印至乾坤戒 (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">自动将Boot神印拓印至乾坤戒 (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Auto-added missing strings -->
 
@@ -665,7 +665,7 @@
 
     <!-- Unofficial Version Strings -->
     <string name="unofficial_version_title">非官制版</string>
-    <string name="unofficial_version_message">君所用之FolkPatch非官制所出，请下载官制正版应用！</string>
+    <string name="unofficial_version_message">君所用之FolyPatch非官制所出，请下载官制正版应用！</string>
     <string name="go_to_github">往Github处</string>
     <string name="settings_save_theme">藏仙府色章</string>
     <string name="settings_import_theme">引仙府色章</string>
@@ -784,7 +784,7 @@
     <string name="settings_category_security_summary">仙灵印记、万法密钥管理</string>
     <string name="settings_category_backup_summary">本地拓印、云端仙录、WebDAV传功</string>
     <string name="settings_category_module_summary">悟道信息、仙序排列、批量灌顶</string>
-    <string name="settings_category_function_summary">FolkPatch隐匿、卸载仙侍</string>
+    <string name="settings_category_function_summary">FolyPatch隐匿、卸载仙侍</string>
     <string name="settings_category_multimedia_summary">背景仙音、法术音效、灵力振动</string>
     <string name="settings_music_playback_control">仙音法阵</string>
     <!-- Theme Store Filter -->
@@ -905,7 +905,7 @@
     <string name="webdav_no_logs">暂无天道录</string>
     <string name="webdav_clear_logs">抹除</string>
     <string name="settings_enable_local_backup">开启洞天备份</string>
-    <string name="settings_enable_local_backup_summary">将符箓备份至本地洞天 (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">将符箓备份至本地洞天 (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">闭关</string>
     <string name="settings_backup_password">禁制口诀</string>
     <string name="settings_backup_password_hint">输入禁制口诀</string>

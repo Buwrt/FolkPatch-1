@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">桌面应用名称</string>
@@ -67,10 +67,10 @@
     <string name="settings_global_namespace_mode_summary">所有 root 会话使用全局挂载命名空间</string>
     <string name="settings_clear_super_key_dialog">确定要继续吗？</string>
 
-    <string name="home_learn_apatch">了解 FolkPatch</string>
-    <string name="home_click_to_learn_apatch">了解 FolkPatch 的功能及使用方法</string>
-    <string name="settings_hide_apatch_card">隐藏"了解 FolkPatch"卡片</string>
-    <string name="settings_hide_apatch_card_summary">隐藏首页的"了解 FolkPatch"卡片</string>
+    <string name="home_learn_apatch">了解 FolyPatch</string>
+    <string name="home_click_to_learn_apatch">了解 FolyPatch 的功能及使用方法</string>
+    <string name="settings_hide_apatch_card">隐藏"了解 FolyPatch"卡片</string>
+    <string name="settings_hide_apatch_card_summary">隐藏首页的"了解 FolyPatch"卡片</string>
     <string name="settings_grid_working_card_hide_check">隐藏状态图标</string>
     <string name="settings_grid_working_card_hide_check_summary">隐藏工作卡片上的对号或警告图标</string>
     <string name="settings_grid_working_card_hide_text">隐藏状态文字</string>
@@ -187,7 +187,7 @@
     <string name="home_system_version">系统版本</string>
     <string name="home_kpatch_version">内核补丁版本</string>
     <string name="home_su_path">su 可执行文件</string>
-    <string name="home_apatch_version">FolkPatch 版本</string>
+    <string name="home_apatch_version">FolyPatch 版本</string>
 
     <string name="kpm">内核模块</string>
     <string name="kpm_kp_not_installed">未安装内核补丁</string>
@@ -215,7 +215,7 @@
     <string name="su_exclude_btn">排除</string>
     <string name="su_exclude_reverse_btn">反排除</string>
     <string name="su_pkg_excluded_setting_title">排除修改</string>
-    <string name="su_pkg_excluded_setting_summary">启用此选项将允许 FolkPatch 恢复此应用模块修改的任何文件。</string>
+    <string name="su_pkg_excluded_setting_summary">启用此选项将允许 FolyPatch 恢复此应用模块修改的任何文件。</string>
     <string name="su_pkg_root_setting_title">超级用户</string>
     <string name="su_pkg_root_setting_summary">启用该选项为你的软件启动超级用户,软件能够使用SU命令</string>
     <string name="su_pkg_normal_setting_title">常规模式</string>
@@ -355,13 +355,13 @@
     <string name="patch_select_kpimg_btn">选择 KPimg</string>
 
     <string name="home_dialog_auth_fail_title">认证失败</string>
-    <string name="home_dialog_auth_fail_content">无法认证超级密钥，导致 FolkPatch 激活失败。  
+    <string name="home_dialog_auth_fail_content">无法认证超级密钥，导致 FolyPatch 激活失败。  
 以下是认证失败的一些可能原因——请对号入座：
 \n1. 您根本没使用 KernelPatch 来修补 boot.img，或者忘了自己到底做了啥。
 \n2. 修补完的 boot.img 还躺在电脑里睡觉，根本没刷进设备。
 \n3. 超级密钥输错了,或者夹杂了神秘符号，比如来自外星文的字符。
-\n4. 您的设备可能并不兼容 FolkPatch 和 KernelPatch，强行折腾也是徒劳。
-\n5. 您可能搞了一些神秘操作——比如用了某些排除包名的模块把 FolkPatch 给屏蔽了，结果把自己整出局了。
+\n4. 您的设备可能并不兼容 FolyPatch 和 KernelPatch，强行折腾也是徒劳。
+\n5. 您可能搞了一些神秘操作——比如用了某些排除包名的模块把 FolyPatch 给屏蔽了，结果把自己整出局了。
 \n请先好好检查一遍，再试一次。如果问题依旧，欢迎到官方仓库的 issue 页面提问。  
 毕竟，有些问题可能纯粹是您自己亲手造成的!
 祝你好运 啊!顺带一提,您点击下面的文档按钮准没错!
@@ -467,7 +467,7 @@
     <string name="settings_new_app_profile_normal">常规</string>
     <string name="settings_new_app_profile_root">超级用户</string>
     <string name="settings_new_app_profile_exclude">排除</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">一定程度上隐藏Bootloader锁解锁状态</string>
     <string name="settings_app_title">应用名称</string>
     <string name="app_title_custom">自定义</string>
@@ -641,7 +641,7 @@
     <string name="auto_backup_failed">自动备份失败: %s</string>
     <string name="auto_backup_success">自动备份成功: %s</string>
     <string name="settings_auto_backup_boot">自动备份Boot</string>
-    <string name="settings_auto_backup_boot_summary">自动将Boot备份到本地存储 (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">自动将Boot备份到本地存储 (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">首页布局样式</string>
@@ -652,7 +652,7 @@
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">非官方版本</string>
-    <string name="unofficial_version_message">您正在使用的 FolkPatch 管理器为第三方版本，可能会造成财产损失，请下载正版APP使用！</string>
+    <string name="unofficial_version_message">您正在使用的 FolyPatch 管理器为第三方版本，可能会造成财产损失，请下载正版APP使用！</string>
     <string name="go_to_github">前往 Github</string>
     <string name="settings_save_theme">保存主题</string>
     <string name="settings_import_theme">导入主题</string>
@@ -786,7 +786,7 @@
     <string name="settings_category_security_summary">生物识别、超级密钥管理</string>
     <string name="settings_category_backup_summary">本地备份、云端备份、WebDAV</string>
     <string name="settings_category_module_summary">模块信息、排序、批量安装</string>
-    <string name="settings_category_function_summary">FolkPatch隐藏、Umount服务</string>
+    <string name="settings_category_function_summary">FolyPatch隐藏、Umount服务</string>
     <string name="settings_category_multimedia_summary">背景音乐、音效、振动</string>
     <string name="settings_music_playback_control">播放控制</string>
 
@@ -962,7 +962,7 @@
     <string name="webdav_no_logs">暂无日志</string>
     <string name="webdav_clear_logs">清除</string>
     <string name="settings_enable_local_backup">启用本地备份</string>
-    <string name="settings_enable_local_backup_summary">将模块备份到本地存储 (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">将模块备份到本地存储 (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">关闭</string>
 
     <!-- Script Library Strings -->

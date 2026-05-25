@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">Masaüstü Uygulama Adı</string>
@@ -91,10 +91,10 @@
 	<string name="su_exclude_btn">Hariç Tut</string>
     <string name="su_exclude_reverse_btn">Tersine Çevir</string>
 
-    <string name="home_learn_apatch">FolkPatch’i Öğren</string>
-    <string name="home_click_to_learn_apatch">FolkPatch özelliklerini ve nasıl kullanılacağını öğrenin</string>
-    <string name="settings_hide_apatch_card">FolkPatch’i Öğren kartını gizle</string>
-    <string name="settings_hide_apatch_card_summary">Ana ekrandaki FolkPatch’i Öğren kartını gizle</string>
+    <string name="home_learn_apatch">FolyPatch’i Öğren</string>
+    <string name="home_click_to_learn_apatch">FolyPatch özelliklerini ve nasıl kullanılacağını öğrenin</string>
+    <string name="settings_hide_apatch_card">FolyPatch’i Öğren kartını gizle</string>
+    <string name="settings_hide_apatch_card_summary">Ana ekrandaki FolyPatch’i Öğren kartını gizle</string>
 
     <string name="about_source_code"><![CDATA[<p>Kaynak kodunu görüntüle: %1$s<p/>%2$s kanalımıza katıl<p/>%3$s grubumuza katıl]]></string>
     <string name="send_log">Günlükleri gönder</string>
@@ -194,7 +194,7 @@
     <string name="home_system_version">Sistem sürümü</string>
     <string name="home_kpatch_version">KernelPatch sürümü</string>
     <string name="home_su_path">Çalıştırılabilir su</string>
-    <string name="home_apatch_version">FolkPatch sürümü</string>
+    <string name="home_apatch_version">FolyPatch sürümü</string>
 
     <string name="kpm">KPModule</string>
     <string name="kpm_kp_not_installed">KernelPatch yüklü değil</string>
@@ -218,7 +218,7 @@
     <string name="su_selinux_via_hook">Hook ile baypas</string>
     <string name="su_pkg_excluded_label">Hariç tut</string>
     <string name="su_pkg_excluded_setting_title">Değişiklikleri hariç tut</string>
-    <string name="su_pkg_excluded_setting_summary">Bu seçenek etkinleştirildiğinde FolkPatch, bu uygulamanın modülleri tarafından değiştirilen dosyaları geri yükleyebilir.</string>
+    <string name="su_pkg_excluded_setting_summary">Bu seçenek etkinleştirildiğinde FolyPatch, bu uygulamanın modülleri tarafından değiştirilen dosyaları geri yükleyebilir.</string>
     <string name="su_pkg_root_setting_title">Superuser</string>
     <string name="su_pkg_root_setting_summary">Bu seçenek etkinleştirildiğinde uygulamaya superuser erişimi verilir ve SU komutlarını kullanmasına izin verilir.</string>
     <string name="su_pkg_normal_setting_title">Normal Mod</string>
@@ -361,14 +361,14 @@
     <string name="patch_select_kpimg_btn">KPimg Seç</string>
 
     <string name="home_dialog_auth_fail_title">Kimlik doğrulama başarısız</string>
-    <string name="home_dialog_auth_fail_content">SuperKey doğrulanamadı, bu da FolkPatch aktivasyonunun başarısız olmasına neden oldu.
+    <string name="home_dialog_auth_fail_content">SuperKey doğrulanamadı, bu da FolyPatch aktivasyonunun başarısız olmasına neden oldu.
 Kimlik doğrulama başarısızlığının bazı olası nedenleri aşağıdadır—lütfen hangisinin sizin için geçerli olduğunu kontrol edin:
 
 \n1. KernelPatch ile boot.img dosyasını düzlemediniz veya gerçekten ne yaptığınızı unuttunuz.
 \n2. Düzeltme yapılmış boot.img hala bilgisayarınızda uyuyor, cihaza asla flashlanmadı.
 \n3. SuperKey yanlış girildi veya gizemli semboller içeriyor, örneğin uzaylı dillerinden karakterler.
-\n4. Cihazınız FolkPatch ve KernelPatch ile uyumlu olmayabilir, zorlama girişleri boşunadır.
-\n5. Bazı gizemli işlemler yapmış olabilirsiniz—örneğin, FolkPatch\'i engelleyen ve sonunda sizi oyunun dışına iten paket adı dışlama modülleri kullanmak gibi.
+\n4. Cihazınız FolyPatch ve KernelPatch ile uyumlu olmayabilir, zorlama girişleri boşunadır.
+\n5. Bazı gizemli işlemler yapmış olabilirsiniz—örneğin, FolyPatch\'i engelleyen ve sonunda sizi oyunun dışına iten paket adı dışlama modülleri kullanmak gibi.
 \nLütfen önce dikkatlice kontrol edin, sonra tekrar deneyin. Sorun devam ederse, sorular sormak için resmi deponun issues sayfasına davetlisiniz.
 Sonuçta, bazı sorunlar tamamen sizin kendi yapmanızdan kaynaklanıyor olabilir!
 Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</string>
@@ -463,7 +463,7 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="app_title_apatch_folk">APatch Folk</string>
     <string name="app_title_apatchx">APatch X</string>
     <string name="app_title_apatch">APatch</string>
-    <string name="app_title_folkpatch">FolkPatch</string>
+    <string name="app_title_folkpatch">FolyPatch</string>
     <string name="app_title_kernelpatch">KernelPatch</string>
     <string name="app_title_kernelsu">KernelSU</string>
     <string name="app_title_supersu">SuperSU</string>
@@ -481,7 +481,7 @@ Bol şans! Ayrıca, aşağıdaki belge butonuna tıklamak kesinlikle doğru!</st
     <string name="settings_new_app_profile_normal">ROOT YOK</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">Hariç tut</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">Bootloader kilidi açık durumunu bir ölçüde gizle</string>
     <string name="settings_app_title">Uygulama Başlığı</string>
     <string name="app_title_custom">Özel</string>
@@ -654,7 +654,7 @@ Komutların çalışması için uygulamanın tamamen kapatılıp yeniden açıld
     <string name="auto_backup_failed">Otomatik yedekleme başarısız: %s</string>
     <string name="auto_backup_success">Otomatik yedekleme başarılı: %s</string>
     <string name="settings_auto_backup_boot">Boot’u Otomatik Yedekle</string>
-    <string name="settings_auto_backup_boot_summary">Boot’u yerel depolamaya otomatik yedekle (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">Boot’u yerel depolamaya otomatik yedekle (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">Ana Sayfa Düzen Stili</string>
@@ -665,7 +665,7 @@ Komutların çalışması için uygulamanın tamamen kapatılıp yeniden açıld
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">Resmi Olmayan Sürüm</string>
-    <string name="unofficial_version_message">Resmi olmayan bir FolkPatch sürümü kullanıyorsunuz, lütfen resmi uygulamayı indirin!</string>
+    <string name="unofficial_version_message">Resmi olmayan bir FolyPatch sürümü kullanıyorsunuz, lütfen resmi uygulamayı indirin!</string>
     <string name="go_to_github">GitHub’a Git</string>
     <string name="settings_save_theme">Temayı Kaydet</string>
     <string name="settings_import_theme">Temayı İçe Aktar</string>
@@ -792,7 +792,7 @@ Komutların çalışması için uygulamanın tamamen kapatılıp yeniden açıld
     <string name="settings_category_security_summary">Biyometrik, süper anahtar yönetimi</string>
     <string name="settings_category_backup_summary">Yerel yedekleme, bulut yedekleme, WebDAV</string>
     <string name="settings_category_module_summary">Modül bilgisi, sıralama, toplu kurulum</string>
-    <string name="settings_category_function_summary">FolkPatch Gizle, Umount hizmeti</string>
+    <string name="settings_category_function_summary">FolyPatch Gizle, Umount hizmeti</string>
     <string name="settings_category_multimedia_summary">Arka plan müziği, sesler, titreşim</string>
     <string name="settings_use_legacy_su_page">Tek sayfalı Superuser yetkilendirmesi</string>
     <string name="settings_use_legacy_su_page_summary">Superuser sayfasını tek sayfalı yetkilendirme tasarımına geçir</string>
@@ -931,7 +931,7 @@ Komutların çalışması için uygulamanın tamamen kapatılıp yeniden açıld
     <string name="webdav_no_logs">Günlük bulunamadı.</string>
     <string name="webdav_clear_logs">Temizle</string>
     <string name="settings_enable_local_backup">Yerel Yedeklemeyi Etkinleştir</string>
-    <string name="settings_enable_local_backup_summary">Modülleri yerel depolamaya yedekle (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">Modülleri yerel depolamaya yedekle (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">Kapat</string>
 
 

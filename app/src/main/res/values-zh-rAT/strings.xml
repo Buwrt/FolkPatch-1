@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">圣光应用名称</string>
@@ -366,13 +366,13 @@
     <string name="patch_select_kpimg_btn">选择 KPimg</string>
 
     <string name="home_dialog_auth_fail_title">祝祷失败</string>
-    <string name="home_dialog_auth_fail_content">无法祝祷圣光之心，导致 FolkPatch 激活失败。
+    <string name="home_dialog_auth_fail_content">无法祝祷圣光之心，导致 FolyPatch 激活失败。
 以下是祝祷失败的一些可能原因——请对号入座：
 \n1. 你根本没使用 KernelPatch 来加持 boot.img，或者忘了自己到底做了啥。
 \n2. 加持完的 boot.img 还躺在电脑里休眠，根本没启圣到设备。
 \n3. 圣光之心输错了，或者夹杂了混沌符号，比如来自异界符文的字符。
-\n4. 你的圣光道具可能并不兼容 FolkPatch 和 KernelPatch，强行施法也是徒劳。
-\n5. 你可能搞了一些神秘操作——比如用了某些排除圣名的魔法把 FolkPatch 给屏蔽了，结果把自己整出局了。
+\n4. 你的圣光道具可能并不兼容 FolyPatch 和 KernelPatch，强行施法也是徒劳。
+\n5. 你可能搞了一些神秘操作——比如用了某些排除圣名的魔法把 FolyPatch 给屏蔽了，结果把自己整出局了。
 \n请先好好检查一遍，再试一次。如果问题依旧，欢迎到官方圣光塔的 issue 页面提问。
 毕竟，有些问题可能纯粹是您自己亲手造成的！
 祝你好运啊！顺带一提，你点击下面的文档按钮准没错！</string>
@@ -472,7 +472,7 @@
     <string name="settings_new_app_profile_normal">凡人</string>
     <string name="settings_new_app_profile_root">圣者</string>
     <string name="settings_new_app_profile_exclude">驱逐</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">以圣光遮蔽Bootloader解锁状态</string>
     <string name="settings_app_title">天使使名称</string>
     <string name="app_title_custom">自定义圣名</string>
@@ -647,7 +647,7 @@
     <string name="auto_backup_failed">星之魔法阵保存失败: %s</string>
     <string name="auto_backup_success">星之魔法阵保存成功: %s</string>
     <string name="settings_auto_backup_boot">自动保存Boot圣器</string>
-    <string name="settings_auto_backup_boot_summary">自动将Boot圣器保存至神圣宝库 (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">自动将Boot圣器保存至神圣宝库 (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Auto-added missing strings -->
 
@@ -662,7 +662,7 @@
 
     <!-- Unofficial Version Strings -->
     <string name="unofficial_version_title">非正统天使工坊✨</string>
-    <string name="unofficial_version_message">你所使用的FolkPatch并非星界认证的正统天使工坊~ 请前往官方天使屋获取正版工坊，以避免魔法反噬或祝福失效！</string>
+    <string name="unofficial_version_message">你所使用的FolyPatch并非星界认证的正统天使工坊~ 请前往官方天使屋获取正版工坊，以避免魔法反噬或祝福失效！</string>
     <string name="go_to_github">前往Github天使屋~☆</string>
     <string name="settings_save_theme">封印魔法主题</string>
     <string name="settings_import_theme">唤醒魔法主题</string>
@@ -768,7 +768,7 @@
     <string name="settings_category_security_summary">天使印记、圣光密钥管理</string>
     <string name="settings_category_backup_summary">本地圣典、云端圣典、WebDAV</string>
     <string name="settings_category_module_summary">魔法信息、天使排列、批量降临</string>
-    <string name="settings_category_function_summary">FolkPatch隐匿、卸载圣侍</string>
+    <string name="settings_category_function_summary">FolyPatch隐匿、卸载圣侍</string>
     <string name="settings_category_multimedia_summary">背景圣歌、天使音效、圣光振动</string>
     
     <!-- Background Music Strings -->
@@ -908,7 +908,7 @@
     <string name="webdav_no_logs">暂无神谕</string>
     <string name="webdav_clear_logs">净化</string>
     <string name="settings_enable_local_backup">开启现世留存</string>
-    <string name="settings_enable_local_backup_summary">将圣物留存于现世 (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">将圣物留存于现世 (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">封印</string>
     <string name="settings_backup_password">封印咒语</string>
     <string name="settings_backup_password_hint">吟唱封印咒语</string>

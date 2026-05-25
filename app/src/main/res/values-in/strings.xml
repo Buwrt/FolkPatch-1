@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">Nama Aplikasi Desktop</string>
@@ -75,10 +75,10 @@
     <string name="su_exclude_all_title">Kecualikan semua</string>
     <string name="su_exclude_all_confirm">Apakah Anda yakin ingin mengecualikan semua aplikasi tanpa hak root?</string>
 
-    <string name="home_learn_apatch">Pelajari FolkPatch</string>
-    <string name="home_click_to_learn_apatch">Pelajari tentang fitur FolkPatch dan cara menggunakannya</string>
-    <string name="settings_hide_apatch_card">Sembunyikan kartu "Pelajari FolkPatch"</string>
-    <string name="settings_hide_apatch_card_summary">Sembunyikan kartu "Pelajari FolkPatch" di layar utama</string>
+    <string name="home_learn_apatch">Pelajari FolyPatch</string>
+    <string name="home_click_to_learn_apatch">Pelajari tentang fitur FolyPatch dan cara menggunakannya</string>
+    <string name="settings_hide_apatch_card">Sembunyikan kartu "Pelajari FolyPatch"</string>
+    <string name="settings_hide_apatch_card_summary">Sembunyikan kartu "Pelajari FolyPatch" di layar utama</string>
 
     <string name="about_source_code"><![CDATA[<p>Lihat kode sumber di %1$s<p/>Bergabunglah dengan saluran %2$s kami<p/>Bergabunglah dengan grup %3$s kami]]></string>
     <string name="send_log">Kirim Log</string>
@@ -177,7 +177,7 @@
     <string name="home_system_version">Versi Sistem</string>
     <string name="home_kpatch_version">Versi KernelPatch</string>
     <string name="home_su_path">File yang dapat dieksekusi su</string>
-    <string name="home_apatch_version">Versi FolkPatch</string>
+    <string name="home_apatch_version">Versi FolyPatch</string>
 
     <string name="kpm">KPModule</string>
     <string name="kpm_kp_not_installed">KernelPatch tidak terinstal</string>
@@ -201,7 +201,7 @@
     <string name="su_selinux_via_hook">Lewati melalui Hook</string>
     <string name="su_pkg_excluded_label">Kecualikan</string>
     <string name="su_pkg_excluded_setting_title">Kecualikan perubahan</string>
-    <string name="su_pkg_excluded_setting_summary">Mengaktifkan opsi ini akan memungkinkan FolkPatch memulihkan setiap file yang dimodifikasi oleh modul aplikasi ini.</string>
+    <string name="su_pkg_excluded_setting_summary">Mengaktifkan opsi ini akan memungkinkan FolyPatch memulihkan setiap file yang dimodifikasi oleh modul aplikasi ini.</string>
     <string name="su_pkg_root_setting_title">Superuser</string>
     <string name="su_pkg_root_setting_summary">Mengaktifkan opsi ini untuk memberikan akses superuser ke aplikasi Anda, aplikasi dapat menggunakan perintah SU</string>
     <string name="su_pkg_normal_setting_title">Mode Normal</string>
@@ -371,13 +371,13 @@
     <string name="patch_select_kpimg_btn">Pilih KPimg</string>
 
     <string name="home_dialog_auth_fail_title">Kesalahan autentikasi</string>
-    <string name="home_dialog_auth_fail_content">Tidak dapat mengautentikasi SuperKey, menyebabkan aktivasi FolkPatch gagal.
+    <string name="home_dialog_auth_fail_content">Tidak dapat mengautentikasi SuperKey, menyebabkan aktivasi FolyPatch gagal.
 Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek mana yang berlaku untuk Anda:
 \n1. Anda sama sekali tidak menggunakan KernelPatch untuk mem-*patch* boot.img, atau lupa apa yang sebenarnya Anda lakukan.
 \n2. boot.img yang sudah di-*patch* masih tidur di komputer Anda, belum di-*flash* ke perangkat.
 \n3. SuperKey dimasukkan secara tidak benar, atau mengandung simbol misterius, seperti karakter dari bahasa alien.
-\n4. Perangkat Anda mungkin tidak kompatibel dengan FolkPatch dan KernelPatch, usaha paksa adalah sia-sia.
-\n5. Anda mungkin melakukan beberapa operasi misterius—seperti menggunakan modul tertentu yang mengecualikan nama paket yang memblokir FolkPatch, mengakibatkan Anda mengeluarkan diri sendiri dari permainan.
+\n4. Perangkat Anda mungkin tidak kompatibel dengan FolyPatch dan KernelPatch, usaha paksa adalah sia-sia.
+\n5. Anda mungkin melakukan beberapa operasi misterius—seperti menggunakan modul tertentu yang mengecualikan nama paket yang memblokir FolyPatch, mengakibatkan Anda mengeluarkan diri sendiri dari permainan.
 
 </string>
 
@@ -477,7 +477,7 @@ Berikut adalah beberapa kemungkinan penyebab kegagalan autentikasi—silakan cek
     <string name="settings_new_app_profile_normal">TANPA ROOT</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">Kecualikan</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">Sembunyikan status buka kunci bootloader sampai tingkat tertentu</string>
     <string name="settings_app_title">Judul Aplikasi</string>
     <string name="app_title_custom">Kustom</string>
@@ -645,7 +645,7 @@ Pastikan aplikasi ditutup sepenuhnya dan dimulai ulang untuk menjalankan perinta
     <string name="auto_backup_failed">Pencadangan otomatis gagal: %s</string>
     <string name="auto_backup_success">Pencadangan otomatis berhasil: %s</string>
     <string name="settings_auto_backup_boot">Backup Otomatis Boot</string>
-    <string name="settings_auto_backup_boot_summary">Otomatis mem-backup Boot ke penyimpanan lokal (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">Otomatis mem-backup Boot ke penyimpanan lokal (Downloads/FolyPatch/BootBackups)</string>
 
     <string name="settings_home_layout_style">Gaya tata letak utama</string>
     <string name="settings_home_layout_default">ListUI</string>
@@ -655,7 +655,7 @@ Pastikan aplikasi ditutup sepenuhnya dan dimulai ulang untuk menjalankan perinta
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">Versi Tidak Resmi</string>
-    <string name="unofficial_version_message">Anda menggunakan FolkPatch, yang bukan aplikasi resmi, harap unduh aplikasi resmi!</string>
+    <string name="unofficial_version_message">Anda menggunakan FolyPatch, yang bukan aplikasi resmi, harap unduh aplikasi resmi!</string>
     <string name="go_to_github">Buka Github</string>
     <string name="settings_save_theme">Simpan Tema</string>
     <string name="settings_import_theme">Impor Tema</string>
@@ -768,7 +768,7 @@ Pastikan aplikasi ditutup sepenuhnya dan dimulai ulang untuk menjalankan perinta
     <string name="settings_category_security_summary">Biometrik, manajemen superkey</string>
     <string name="settings_category_backup_summary">Cadangan lokal, cadangan awan, WebDAV</string>
     <string name="settings_category_module_summary">Info modul, pengurutan, pemasangan batch</string>
-    <string name="settings_category_function_summary">Sembunyikan FolkPatch, layanan Umount</string>
+    <string name="settings_category_function_summary">Sembunyikan FolyPatch, layanan Umount</string>
     <string name="settings_category_multimedia_summary">Musik latar, suara, getaran</string>
     <string name="settings_music_playback_control">Kontrol Pemutaran</string>
     <string name="settings_music_looping">Putar berulang</string>
@@ -904,7 +904,7 @@ Pastikan aplikasi ditutup sepenuhnya dan dimulai ulang untuk menjalankan perinta
     <string name="webdav_no_logs">Tidak ada log</string>
     <string name="webdav_clear_logs">Hapus</string>
     <string name="settings_enable_local_backup">Aktifkan Backup Lokal</string>
-    <string name="settings_enable_local_backup_summary">Backup modul ke penyimpanan lokal (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">Backup modul ke penyimpanan lokal (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">Tutup</string>
 
     <string name="patch_output_written_to"> Patch berhasil, file ditulis ke </string>

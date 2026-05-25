@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">Nombre de la aplicación de escritorio</string>
@@ -112,10 +112,10 @@
     <string name="su_audit_tab_usage">Registro de uso</string>
     <string name="su_audit_tab_operations">Registro de operaciones</string>
 
-    <string name="home_learn_apatch">Aprender FolkPatch</string>
-    <string name="home_click_to_learn_apatch">Aprende sobre las características de FolkPatch y cómo usarlo</string>
-    <string name="settings_hide_apatch_card">Ocultar tarjeta Aprender FolkPatch</string>
-    <string name="settings_hide_apatch_card_summary">Oculta la tarjeta de aprendizaje de FolkPatch en la pantalla de inicio</string>
+    <string name="home_learn_apatch">Aprender FolyPatch</string>
+    <string name="home_click_to_learn_apatch">Aprende sobre las características de FolyPatch y cómo usarlo</string>
+    <string name="settings_hide_apatch_card">Ocultar tarjeta Aprender FolyPatch</string>
+    <string name="settings_hide_apatch_card_summary">Oculta la tarjeta de aprendizaje de FolyPatch en la pantalla de inicio</string>
 
     <string name="about_source_code"><![CDATA[<p>Ver código fuente en %1$s<p/>Únete a nuestro canal de %2$s<p/>Únete a nuestro grupo de %3$s]]></string>
     <string name="send_log">Enviar registros</string>
@@ -215,7 +215,7 @@
     <string name="home_system_version">Versión del sistema</string>
     <string name="home_kpatch_version">Versión KernelPatch</string>
     <string name="home_su_path">Ejecutable su</string>
-    <string name="home_apatch_version">Versión FolkPatch</string>
+    <string name="home_apatch_version">Versión FolyPatch</string>
 
     <string name="kpm">KPModule</string>
     <string name="kpm_kp_not_installed">KernelPatch no instalado</string>
@@ -239,7 +239,7 @@
     <string name="su_selinux_via_hook">Omitir mediante hook</string>
     <string name="su_pkg_excluded_label">Excluir</string>
     <string name="su_pkg_excluded_setting_title">Excluir modificaciones</string>
-    <string name="su_pkg_excluded_setting_summary">Habilitar esta opción permitirá a FolkPatch restaurar cualquier archivo modificado por los módulos de esta app.</string>
+    <string name="su_pkg_excluded_setting_summary">Habilitar esta opción permitirá a FolyPatch restaurar cualquier archivo modificado por los módulos de esta app.</string>
     <string name="su_pkg_root_setting_title">Superusuario</string>
     <string name="su_pkg_root_setting_summary">Habilitar esta opción para otorgar acceso de superusuario a tu app, permitiendo usar comandos SU</string>
     <string name="su_pkg_normal_setting_title">Modo normal</string>
@@ -377,15 +377,15 @@
     <string name="patch_select_kpimg_btn">Seleccionar KPimg</string>
 
     <string name="home_dialog_auth_fail_title">Error de autenticación</string>
-    <string name="home_dialog_auth_fail_content">No se pudo autenticar la SuperKey, causando que la activación de FolkPatch falle.
+    <string name="home_dialog_auth_fail_content">No se pudo autenticar la SuperKey, causando que la activación de FolyPatch falle.
 Aquí hay algunas posibles razones para el fallo de autenticación—por favor verifica cuál se aplica a ti:
 
 
 \n1. No usaste KernelPatch para parchear boot.img en absoluto, o olvidaste lo que realmente hiciste.
 \n2. El boot.img parcheado todavía está durmiendo en tu computadora, nunca fue flasheado al dispositivo.
 \n3. La SuperKey fue ingresada incorrectamente, o contiene símbolos misteriosos, como caracteres de idiomas alienígenas.
-\n4. Tu dispositivo puede no ser compatible con FolkPatch y KernelPatch, los intentos forzados son en vano.
-\n5. Puede que hayas hecho algunas operaciones misteriosas—como usar ciertos módulos que excluyen nombres de paquetes que bloquearon FolkPatch, resultando en sacarte a ti mismo del juego.
+\n4. Tu dispositivo puede no ser compatible con FolyPatch y KernelPatch, los intentos forzados son en vano.
+\n5. Puede que hayas hecho algunas operaciones misteriosas—como usar ciertos módulos que excluyen nombres de paquetes que bloquearon FolyPatch, resultando en sacarte a ti mismo del juego.
 
 </string>
 
@@ -486,7 +486,7 @@ Aquí hay algunas posibles razones para el fallo de autenticación—por favor v
     <string name="settings_new_app_profile_normal">SIN ROOT</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">Excluir</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">Ocultar el estado de desbloqueo del bootloader hasta cierto punto</string>
     <string name="settings_app_title">Título de la App</string>
     <string name="app_title_custom">Personalizado</string>
@@ -656,7 +656,7 @@ Por ejemplo, los KPM que previenen la modificación de particiones solo pueden u
     <string name="auto_backup_failed">Fallo en auto-respaldo: %s</string>
     <string name="auto_backup_success">Auto-respaldo exitoso: %s</string>
     <string name="settings_auto_backup_boot">Auto-respaldo de Boot</string>
-    <string name="settings_auto_backup_boot_summary">Respaldar automáticamente Boot al almacenamiento local (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">Respaldar automáticamente Boot al almacenamiento local (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">Estilo de Diseño de Inicio</string>
@@ -667,7 +667,7 @@ Por ejemplo, los KPM que previenen la modificación de particiones solo pueden u
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">Versión No Oficial</string>
-    <string name="unofficial_version_message">Estás usando FolkPatch que no es una app oficial, ¡por favor descarga la app oficial!</string>
+    <string name="unofficial_version_message">Estás usando FolyPatch que no es una app oficial, ¡por favor descarga la app oficial!</string>
     <string name="go_to_github">Ir a Github</string>
     <string name="settings_save_theme">Guardar tema</string>
     <string name="settings_import_theme">Importar tema</string>
@@ -790,7 +790,7 @@ Por ejemplo, los KPM que previenen la modificación de particiones solo pueden u
     <string name="settings_category_security_summary">Biometría, gestión de superclaves</string>
     <string name="settings_category_backup_summary">Copia de seguridad local, en la nube, WebDAV</string>
     <string name="settings_category_module_summary">Info de módulos, ordenación, instalación por lotes</string>
-    <string name="settings_category_function_summary">Ocultar FolkPatch, servicio Umount</string>
+    <string name="settings_category_function_summary">Ocultar FolyPatch, servicio Umount</string>
     <string name="settings_category_multimedia_summary">Música de fondo, sonidos, vibración</string>
     <string name="settings_music_playback_control">Control de Reproducción</string>
 
@@ -902,7 +902,7 @@ Por ejemplo, los KPM que previenen la modificación de particiones solo pueden u
     <string name="webdav_no_logs">No hay registros</string>
     <string name="webdav_clear_logs">Borrar</string>
     <string name="settings_enable_local_backup">Habilitar copia de seguridad local</string>
-    <string name="settings_enable_local_backup_summary">Copia de seguridad en almacenamiento local (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">Copia de seguridad en almacenamiento local (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">Cerrar</string>
 
     <!-- Backup Settings -->

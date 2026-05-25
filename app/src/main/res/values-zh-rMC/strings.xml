@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">出生点名牌</string>
@@ -68,10 +68,10 @@
     <string name="settings_global_namespace_mode_summary">所有OP会话共享全局区块挂载空间</string>
     <string name="settings_clear_super_key_dialog">你确定吗？这操作比扔末影珍珠还刺激，不可逆的！</string>
 
-    <string name="home_learn_apatch">探索 FolkPatch 这片大陆</string>
-    <string name="home_click_to_learn_apatch">看看 FolkPatch 能在你的世界里搞出什么花样</string>
-    <string name="settings_hide_apatch_card">拆掉"了解 FolkPatch"告示牌</string>
-    <string name="settings_hide_apatch_card_summary">把主世界那块"了解 FolkPatch"告示牌拆了吧，碍事</string>
+    <string name="home_learn_apatch">探索 FolyPatch 这片大陆</string>
+    <string name="home_click_to_learn_apatch">看看 FolyPatch 能在你的世界里搞出什么花样</string>
+    <string name="settings_hide_apatch_card">拆掉"了解 FolyPatch"告示牌</string>
+    <string name="settings_hide_apatch_card_summary">把主世界那块"了解 FolyPatch"告示牌拆了吧，碍事</string>
     <string name="settings_grid_working_card_hide_check">藏起状态图标</string>
     <string name="settings_grid_working_card_hide_check_summary">把合成台面板上的对勾和苦力怕脸藏起来</string>
     <string name="settings_grid_working_card_hide_text">藏起状态文字</string>
@@ -116,7 +116,7 @@
     <string name="home_installing">合成中，稍等…</string>
 
     <string name="kpatch_version">基岩核心版本: %s</string>
-    <string name="apatch_version">FolkPatch版本: %s</string>
+    <string name="apatch_version">FolyPatch版本: %s</string>
 
     <string name="kpatch_version_update" formatted="false">基岩核心版本: %s -&gt; %s</string>
     <string name="kpatch_shadow_path_title">kpatch</string>
@@ -188,7 +188,7 @@
     <string name="home_system_version">系统版本</string>
     <string name="home_kpatch_version">基岩补丁</string>
     <string name="home_su_path">OP指令</string>
-    <string name="home_apatch_version">FolkPatch</string>
+    <string name="home_apatch_version">FolyPatch</string>
 
     <string name="kpm">红石组件</string>
     <string name="kpm_kp_not_installed">基岩核心还没打补丁呢</string>
@@ -216,7 +216,7 @@
     <string name="su_exclude_btn">屏蔽</string>
     <string name="su_exclude_reverse_btn">解除屏蔽</string>
     <string name="su_pkg_excluded_setting_title">屏蔽修改</string>
-    <string name="su_pkg_excluded_setting_summary">启用后，FolkPatch 会恢复此应用被模组篡改过的文件</string>
+    <string name="su_pkg_excluded_setting_summary">启用后，FolyPatch 会恢复此应用被模组篡改过的文件</string>
     <string name="su_pkg_root_setting_title">授予OP权限</string>
     <string name="su_pkg_root_setting_summary">给应用发个OP，让它能跑管理员指令</string>
     <string name="su_pkg_normal_setting_title">生存模式</string>
@@ -354,14 +354,14 @@
     <string name="patch_select_kpimg_btn">选择 KPimg</string>
 
     <string name="home_dialog_auth_fail_title">身份验证失败</string>
-    <string name="home_dialog_auth_fail_content">OP密钥验证失败，FolkPatch 无法激活！
+    <string name="home_dialog_auth_fail_content">OP密钥验证失败，FolyPatch 无法激活！
 以下是失败的可能原因——请逐一排查：
 
 \n1. 您可能根本没用 KernelPatch 锻造过 boot.img，或者忘了做过什么。
 \n2. 锻造好的 boot.img 还躺在电脑里，根本没刷进设备。
 \n3. OP密钥输错了，或者夹杂了来自末地的特殊字符。
-\n4. 您的设备可能不兼容 FolkPatch 和 KernelPatch。
-\n5. 某些模组可能屏蔽了 FolkPatch，导致它被踢出了世界。
+\n4. 您的设备可能不兼容 FolyPatch 和 KernelPatch。
+\n5. 某些模组可能屏蔽了 FolyPatch，导致它被踢出了世界。
 \n请仔细检查后重试。如果仍然不行，到官方仓库的 issue 页面提问。
 祝你好运！点击下方的Wiki按钮也没错！
 </string>
@@ -462,7 +462,7 @@
     <string name="settings_new_app_profile_normal">生存</string>
     <string name="settings_new_app_profile_root">创造</string>
     <string name="settings_new_app_profile_exclude">移除</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">把Bootloader解锁状态藏起来，别让别人看到</string>
     <string name="settings_app_title">应用名称</string>
     <string name="app_title_custom">自定义</string>
@@ -633,7 +633,7 @@
     <string name="auto_backup_failed">自动备份失败: %s</string>
     <string name="auto_backup_success">自动备份成功: %s</string>
     <string name="settings_auto_backup_boot">自动备份Boot区块</string>
-    <string name="settings_auto_backup_boot_summary">自动将Boot区块备份到本地存储 (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">自动将Boot区块备份到本地存储 (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- 主世界布局 -->
     <string name="settings_home_layout_style">主世界布局</string>
@@ -644,7 +644,7 @@
     <string name="settings_home_layout_circle">CircleUI</string>
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="unofficial_version_title">这不是正版！</string>
-    <string name="unofficial_version_message">你用的这个 FolkPatch 不是官方的，可能不安全，建议去官方渠道下正版。</string>
+    <string name="unofficial_version_message">你用的这个 FolyPatch 不是官方的，可能不安全，建议去官方渠道下正版。</string>
     <string name="go_to_github">前往Github</string>
     <string name="settings_save_theme">保存资源包</string>
     <string name="settings_import_theme">导入资源包</string>
@@ -778,7 +778,7 @@
     <string name="settings_category_security_summary">生物识别、OP密钥管理</string>
     <string name="settings_category_backup_summary">本地存档、云端存档、WebDAV</string>
     <string name="settings_category_module_summary">模组信息、排序、批量安装</string>
-    <string name="settings_category_function_summary">FolkPatch隐藏、Umount服务</string>
+    <string name="settings_category_function_summary">FolyPatch隐藏、Umount服务</string>
     <string name="settings_category_multimedia_summary">背景唱片、音效、振动</string>
     <string name="settings_music_playback_control">唱片机控制</string>
 
@@ -951,7 +951,7 @@
     <string name="webdav_no_logs">暂无日志</string>
     <string name="webdav_clear_logs">清除</string>
     <string name="settings_enable_local_backup">开启本地备份</string>
-    <string name="settings_enable_local_backup_summary">把模组备份到本地 (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">把模组备份到本地 (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">关了</string>
 
     <!-- 脚本库（数据包脚本库） -->

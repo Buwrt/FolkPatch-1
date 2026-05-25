@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">Desktop App Name</string>
@@ -91,10 +91,10 @@
     <string name="su_exclude_btn">Exclude</string>
     <string name="su_exclude_reverse_btn">Reverse</string>
 
-    <string name="home_learn_apatch">Learn FolkPatch</string>
-    <string name="home_click_to_learn_apatch">Learn about the features of FolkPatch and how to use</string>
-    <string name="settings_hide_apatch_card">Hide Learn FolkPatch card</string>
-    <string name="settings_hide_apatch_card_summary">Hide the Learn FolkPatch card on the home screen</string>
+    <string name="home_learn_apatch">Learn FolyPatch</string>
+    <string name="home_click_to_learn_apatch">Learn about the features of FolyPatch and how to use</string>
+    <string name="settings_hide_apatch_card">Hide Learn FolyPatch card</string>
+    <string name="settings_hide_apatch_card_summary">Hide the Learn FolyPatch card on the home screen</string>
 
     <string name="about_source_code"><![CDATA[<p>View source code at %1$s<p/>Join our %2$s channel<p/>Join our %3$s group]]></string>
     <string name="send_log">Send logs</string>
@@ -192,7 +192,7 @@
     <string name="home_system_version">System version</string>
     <string name="home_kpatch_version">KernelPatch version</string>
     <string name="home_su_path">Executable su</string>
-    <string name="home_apatch_version">FolkPatch version</string>
+    <string name="home_apatch_version">FolyPatch version</string>
 
     <string name="kpm">KPModule</string>
     <string name="kpm_kp_not_installed">KernelPatch not installed</string>
@@ -216,7 +216,7 @@
     <string name="su_selinux_via_hook">Bypass via hook</string>
     <string name="su_pkg_excluded_label">Exclude</string>
     <string name="su_pkg_excluded_setting_title">Exclude modifications</string>
-    <string name="su_pkg_excluded_setting_summary">Enabling this option will allow FolkPatch to restore any files modified by the modules of this app.</string>
+    <string name="su_pkg_excluded_setting_summary">Enabling this option will allow FolyPatch to restore any files modified by the modules of this app.</string>
     <string name="su_pkg_root_setting_title">Superuser</string>
     <string name="su_pkg_root_setting_summary">Enabling this option grants superuser access to your app, allowing it to use SU commands.</string>
     <string name="su_pkg_normal_setting_title">Normal Mode</string>
@@ -360,14 +360,14 @@
     <string name="patch_select_kpimg_btn">Select KPimg</string>
 
     <string name="home_dialog_auth_fail_title">Authentication failed</string>
-    <string name="home_dialog_auth_fail_content">Unable to authenticate the SuperKey, causing FolkPatch activation to fail.
+    <string name="home_dialog_auth_fail_content">Unable to authenticate the SuperKey, causing FolyPatch activation to fail.
 Here are some possible reasons for authentication failure—please check which one applies to you:
 
 \n1. You didn\'t use KernelPatch to patch boot.img at all, or forgot what you actually did.
 \n2. The patched boot.img is still sitting on your computer sleeping, never flashed to the device.
 \n3. The SuperKey was entered incorrectly, or contains mysterious symbols, like characters from alien languages.
-\n4. Your device may not be compatible with FolkPatch and KernelPatch,强行折腾 is futile.
-\n5. You may have done some mysterious operations—like using certain modules that exclude package names that blocked FolkPatch, resulting in putting yourself out of the game.
+\n4. Your device may not be compatible with FolyPatch and KernelPatch,强行折腾 is futile.
+\n5. You may have done some mysterious operations—like using certain modules that exclude package names that blocked FolyPatch, resulting in putting yourself out of the game.
 
 </string>
 
@@ -469,7 +469,7 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="app_title_apatch_folk">APatch Folk</string>
     <string name="app_title_apatchx">APatch X</string>
     <string name="app_title_apatch">APatch</string>
-    <string name="app_title_folkpatch">FolkPatch</string>
+    <string name="app_title_folkpatch">FolyPatch</string>
     <string name="app_title_kernelpatch">KernelPatch</string>
     <string name="app_title_kernelsu">KernelSU</string>
     <string name="app_title_supersu">SuperSU</string>
@@ -487,7 +487,7 @@ Here are some possible reasons for authentication failure—please check which o
     <string name="settings_new_app_profile_normal">NO ROOT</string>
     <string name="settings_new_app_profile_root">ROOT</string>
     <string name="settings_new_app_profile_exclude">Exclude</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">Hide Bootloader unlock status to some extent</string>
     <string name="settings_kernel_spoof">Kernel Spoof Config</string>
     <string name="settings_kernel_spoof_summary">Spoof kernel version and build time</string>
@@ -717,7 +717,7 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="auto_backup_failed">Auto backup failed: %s</string>
     <string name="auto_backup_success">Auto backup success: %s</string>
     <string name="settings_auto_backup_boot">Auto Backup Boot</string>
-    <string name="settings_auto_backup_boot_summary">Automatically backup Boot to local storage (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">Automatically backup Boot to local storage (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Home Layout Strings -->
     <string name="settings_home_layout_style">Home Layout Style</string>
@@ -729,7 +729,7 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="settings_home_layout_dashboard_pro">DashboardUI</string>
     <string name="settings_home_layout_stats">StatsUI</string>
     <string name="unofficial_version_title">Unofficial Version</string>
-    <string name="unofficial_version_message">You are using FolkPatch which is not an official app, please download the official app!</string>
+    <string name="unofficial_version_message">You are using FolyPatch which is not an official app, please download the official app!</string>
     <string name="go_to_github">Go to Github</string>
     <string name="settings_save_theme">Save theme</string>
     <string name="settings_import_theme">Import theme</string>
@@ -860,7 +860,7 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="settings_category_security_summary">Biometric, superkey management</string>
     <string name="settings_category_backup_summary">Local backup, cloud backup, WebDAV</string>
     <string name="settings_category_module_summary">Module info, sorting, batch install</string>
-    <string name="settings_category_function_summary">FolkPatch Hide, Umount service</string>
+    <string name="settings_category_function_summary">FolyPatch Hide, Umount service</string>
     <string name="settings_category_multimedia_summary">Background music, sounds, vibration</string>
     <string name="settings_use_legacy_su_page">Single-page Superuser authorization</string>
     <string name="settings_use_legacy_su_page_summary">Superuser page switched to single-page authorization design</string>
@@ -1051,7 +1051,7 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="webdav_no_logs">No logs found.</string>
     <string name="webdav_clear_logs">Clear</string>
     <string name="settings_enable_local_backup">Enable Local Backup</string>
-    <string name="settings_enable_local_backup_summary">Backup modules to local storage (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">Backup modules to local storage (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">Close</string>
 
 

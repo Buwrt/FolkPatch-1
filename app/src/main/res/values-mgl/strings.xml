@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">FolkPatch</string>
+    <string name="app_name" translatable="false">FolyPatch</string>
     <string name="app_name_fpatch">FPatch</string>
 
     <string name="desktop_app_name">魔法应用名称</string>
@@ -367,15 +367,15 @@
     <string name="patch_select_kpimg_btn">选择 KPimg</string>
 
     <string name="home_dialog_auth_fail_title">认证失败</string>
-    <string name="home_dialog_auth_fail_content">无法认证心之密钥，导致 FolkPatch 激活失败。
+    <string name="home_dialog_auth_fail_content">无法认证心之密钥，导致 FolyPatch 激活失败。
 以下是认证失败的一些可能原因——请对号入座：
 
 
 \n1. 你根本没使用心之契约来附魔 boot.img，或者忘了自己到底做了啥。
 \n2. 附魔完的 boot.img 还躺在电脑里睡觉，根本没激活进魔法道具。
 \n3. 心之密钥输错了，或者夹杂了混沌符号，比如来自异界符文的字符。
-\n4. 你的魔法道具可能并不兼容 FolkPatch 和心之契约，强行施法也是徒勞。
-\n5. 你可能搞了一些神秘操作——比如用了某些排除咒语的魔法把 FolkPatch 给屏蔽了，结果把自己整出局了。
+\n4. 你的魔法道具可能并不兼容 FolyPatch 和心之契约，强行施法也是徒勞。
+\n5. 你可能搞了一些神秘操作——比如用了某些排除咒语的魔法把 FolyPatch 给屏蔽了，结果把自己整出局了。
 \n请先好好检查一遍，再试一次。如果问题依旧，欢迎到官方魔法塔的 issue 页面提问。
 毕竟，有些问题可能纯粹是您自己亲手造成的！
 祝你好运啊！顺带一提，你点击下面的魔导书按钮准没错！</string>
@@ -480,7 +480,7 @@
     <string name="settings_new_app_profile_normal">日常形态</string>
     <string name="settings_new_app_profile_root">魔法形态</string>
     <string name="settings_new_app_profile_exclude">驱逐</string>
-    <string name="settings_hide_service">FolkPatch Hide</string>
+    <string name="settings_hide_service">FolyPatch Hide</string>
     <string name="settings_hide_service_summary">用魔法阵隐藏Bootloader解锁状态</string>
     <string name="settings_app_title">魔法使名称</string>
     <string name="app_title_custom">自定义魔法名</string>
@@ -655,7 +655,7 @@
     <string name="auto_backup_failed">星之魔法阵保存失败: %s</string>
     <string name="auto_backup_success">星之魔法阵保存成功: %s</string>
     <string name="settings_auto_backup_boot">自动封印Boot圣物</string>
-    <string name="settings_auto_backup_boot_summary">自动将Boot圣物封印至魔法宝箱 (Downloads/FolkPatch/BootBackups)</string>
+    <string name="settings_auto_backup_boot_summary">自动将Boot圣物封印至魔法宝箱 (Downloads/FolyPatch/BootBackups)</string>
 
     <!-- Auto-added missing strings -->
 
@@ -670,7 +670,7 @@
 
     <!-- Unofficial Version Strings -->
     <string name="unofficial_version_title">非正统魔法工坊✨</string>
-    <string name="unofficial_version_message">你所使用的FolkPatch并非星界认证的正统魔法工坊~ 请前往官方魔法屋获取正版工坊，以避免魔法反噬或契约失效！</string>
+    <string name="unofficial_version_message">你所使用的FolyPatch并非星界认证的正统魔法工坊~ 请前往官方魔法屋获取正版工坊，以避免魔法反噬或契约失效！</string>
     <string name="go_to_github">前往Github星界魔法屋~☆</string>
     <string name="settings_save_theme">封印魔法主题</string>
     <string name="settings_import_theme">唤醒魔法主题</string>
@@ -787,7 +787,7 @@
     <string name="settings_category_security_summary">魔法印记、万法密钥管理</string>
     <string name="settings_category_backup_summary">本地魔法书、云端魔法书、WebDAV</string>
     <string name="settings_category_module_summary">魔法信息、星序排列、批量施法</string>
-    <string name="settings_category_function_summary">FolkPatch隐匿、卸载魔法侍从</string>
+    <string name="settings_category_function_summary">FolyPatch隐匿、卸载魔法侍从</string>
     <string name="settings_category_multimedia_summary">背景魔法颂歌、魔法音效、魔力振动</string>
     <string name="settings_music_playback_control">颂歌控法阵</string>
     <string name="settings_music_looping">无限吟唱</string>
@@ -905,7 +905,7 @@
     <string name="webdav_no_logs">魔法书是空的</string>
     <string name="webdav_clear_logs">遗忘</string>
     <string name="settings_enable_local_backup">开启现世留影</string>
-    <string name="settings_enable_local_backup_summary">将道具留影在现世 (Downloads/FolkPatch/ModuleBackups)</string>
+    <string name="settings_enable_local_backup_summary">将道具留影在现世 (Downloads/FolyPatch/ModuleBackups)</string>
     <string name="close">合上魔法书</string>
     <string name="settings_backup_password">守护咒语</string>
     <string name="settings_backup_password_hint">吟唱守护咒语</string>

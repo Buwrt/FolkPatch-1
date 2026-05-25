@@ -66,6 +66,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.rememberUpdatedState
 import android.content.SharedPreferences
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -820,54 +821,67 @@ class MainActivity : AppCompatActivity() {
                     // 6个标签始终全部显示，不可隐藏
                     val visibleDestinations = BottomBarDestination.entries
 
-                    // Swipe navigation helper - improved for better sensitivity
+                    // Swipe tab navigation via NestedScrollConnection
                     val navigator = navController.rememberDestinationsNavigator()
                     val currentBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = currentBackStackEntry?.destination?.route
                     val isOnMainTab = currentRoute in visibleDestinations.map { it.direction.route }
                     val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
-                    
-                    val swipeModifier = Modifier.pointerInput(visibleDestinations, currentRoute) {
-                        awaitEachGesture {
-                            val down = awaitFirstDown(requireUnconsumed = false)
-                            var accumulatedDrag = 0f
+
+                    // Use rememberUpdatedState so the NestedScrollConnection always reads latest values
+                    val isOnMainTabState = rememberUpdatedState(isOnMainTab)
+                    val currentIndexState = rememberUpdatedState(currentIndex)
+
+                    val tabSwipeConnection = remember(navigator, visibleDestinations) {
+                        object : NestedScrollConnection {
+                            var accumulatedHorizontal = 0f
                             var navigated = false
 
-                            do {
-                                val event = awaitPointerEvent()
-                                val change = event.changes.firstOrNull() ?: break
-                                val drag = change.position.x - change.previousPosition.x
-                                accumulatedDrag += drag
-                                change.consume()
+                            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                                if (source != NestedScrollSource.UserInput) return Offset.Zero
+                                if (!isOnMainTabState.value || navigated) return Offset.Zero
 
-                                if (!isOnMainTab || navigated) continue
+                                accumulatedHorizontal += available.x
+                                val threshold = 120f
 
-                                val swipeThreshold = with(this@awaitEachGesture) { 120.dp.toPx() }
+                                val idx = currentIndexState.value
                                 when {
-                                    accumulatedDrag < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
+                                    accumulatedHorizontal < -threshold && idx < visibleDestinations.size - 1 -> {
                                         navigated = true
-                                        val nextDest = visibleDestinations[currentIndex + 1]
-                                        navigator.navigate(nextDest.direction) {
+                                        navigator.navigate(visibleDestinations[idx + 1].direction) {
                                             popUpTo(NavGraphs.root) { saveState = true }
                                             launchSingleTop = true
                                             restoreState = true
                                         }
                                     }
-                                    accumulatedDrag > swipeThreshold && currentIndex > 0 -> {
+                                    accumulatedHorizontal > threshold && idx > 0 -> {
                                         navigated = true
-                                        val prevDest = visibleDestinations[currentIndex - 1]
-                                        navigator.navigate(prevDest.direction) {
+                                        navigator.navigate(visibleDestinations[idx - 1].direction) {
                                             popUpTo(NavGraphs.root) { saveState = true }
                                             launchSingleTop = true
                                             restoreState = true
                                         }
                                     }
                                 }
-                            } while (event.changes.any { it.pressed })
+                                return Offset.Zero
+                            }
+
+                            override suspend fun onPreFling(available: Velocity): Velocity {
+                                accumulatedHorizontal = 0f
+                                navigated = false
+                                return Velocity.Zero
+                            }
                         }
                     }
 
-                    Box(modifier = Modifier.fillMaxSize().then(swipeModifier)) {
+                    // Reset state when tab changes
+                    DisposableEffect(currentRoute) {
+                        tabSwipeConnection.accumulatedHorizontal = 0f
+                        tabSwipeConnection.navigated = false
+                        onDispose { }
+                    }
+
+                    Box(modifier = Modifier.fillMaxSize().nestedScroll(tabSwipeConnection)) {
                         val baseContentModifier = Modifier
                             .navBarLiquefiable(
                                 if (shouldExposeContentToLiquid) floatingLiquidState else null
@@ -1772,69 +1786,6 @@ private fun createNavTransitions(
             } else {
                 fadeOut(animationSpec = tween(340))
             }
-        }
-    }
-}
-
-/**
- * Creates a modifier that detects horizontal swipes to navigate between bottom bar destinations.
- */
-@Composable
-private fun rememberSwipeNavigationModifier(
-    navController: NavHostController,
-    visibleDestinations: List<BottomBarDestination>
-): Modifier {
-    val navigator = navController.rememberDestinationsNavigator()
-    val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route
-    val density = LocalDensity.current
-
-    // Only enable swipe on main tab pages
-    val isOnMainTabPage = currentRoute in visibleDestinations.map { it.direction.route }
-
-    if (!isOnMainTabPage) return Modifier
-
-    val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
-    if (currentIndex == -1) return Modifier
-
-    val swipeThresholdPx = with(density) { 120.dp.toPx() }
-
-    return Modifier.pointerInput(visibleDestinations, currentRoute) {
-        awaitEachGesture {
-            awaitFirstDown(requireUnconsumed = false)
-            var accumulatedDrag = 0f
-            var navigated = false
-
-            do {
-                val event = awaitPointerEvent()
-                val change = event.changes.firstOrNull() ?: break
-                val drag = change.position.x - change.previousPosition.x
-                accumulatedDrag += drag
-                change.consume()
-
-                if (navigated) continue
-
-                when {
-                    accumulatedDrag < -swipeThresholdPx && currentIndex < visibleDestinations.size - 1 -> {
-                        navigated = true
-                        val nextDestination = visibleDestinations[currentIndex + 1]
-                        navigator.navigate(nextDestination.direction) {
-                            popUpTo(NavGraphs.root) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                    accumulatedDrag > swipeThresholdPx && currentIndex > 0 -> {
-                        navigated = true
-                        val prevDestination = visibleDestinations[currentIndex - 1]
-                        navigator.navigate(prevDestination.direction) {
-                            popUpTo(NavGraphs.root) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
-                }
-            } while (event.changes.any { it.pressed })
         }
     }
 }
