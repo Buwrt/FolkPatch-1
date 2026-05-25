@@ -119,7 +119,7 @@ object RootShell {
      * 执行命令并返回结果
      */
     fun execWithOutput(vararg commands: String): Pair<Int, String> {
-        val process = exec(*commands) ?: return -1 to "Failed to get root"
+        val process = exec(*commands) ?: return Pair(-1, "Failed to get root")
 
         return try {
             val reader = BufferedReader(InputStreamReader(process.inputStream))
@@ -130,10 +130,10 @@ object RootShell {
             }
 
             val exitCode = process.waitFor()
-            exitCode to output.toString()
+            Pair(exitCode, output.toString())
         } catch (e: Exception) {
             Log.e(TAG, "Read output failed: ${e.message}")
-            -1 to e.message ?: "Unknown error"
+            Pair(-1, e.message ?: "Unknown error")
         }
     }
 
