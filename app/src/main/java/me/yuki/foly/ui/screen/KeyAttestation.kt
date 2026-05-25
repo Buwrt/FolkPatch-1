@@ -37,7 +37,8 @@ import io.github.vvb2060.keyattestation.attestation.RootOfTrust
 import io.github.vvb2060.keyattestation.attestation.RootPublicKey
 import io.github.vvb2060.keyattestation.repository.AttestationData
 import io.github.vvb2060.keyattestation.repository.FolkAttestationHelper
-import me.yuki.foly.util.APatchCli
+import me.yuki.foly.util.rootShellForResult
+import me.yuki.foly.util.getRootShell
 import java.io.InputStream
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -1465,7 +1466,7 @@ class KeyAttestationViewModel : ViewModel() {
         executor.execute {
             try {
                 // 先尝试通过 root shell 检查（处理 /data 分区权限）
-                val result = APatchCli.rootShellForResult("cat $KEYBOX_PATH 2>/dev/null; echo EXIT_CODE=\$?")
+                val result = rootShellForResult("cat $KEYBOX_PATH 2>/dev/null; echo EXIT_CODE=\$?")
                 if (result.isSuccess) {
                     val output = result.out.joinToString("\n")
                     if (output.contains("EXIT_CODE=0") && !output.contains("No such file")) {
@@ -1519,12 +1520,12 @@ class KeyAttestationViewModel : ViewModel() {
                 var success = false
                 var errorMsg: String? = null
 
-                // Method 1: 通过 APatchCli root shell 写入（推荐方式）
+                // Method 1: 通过 root shell 写入（推荐方式）
                 try {
-                    val shell = APatchCli.getRootShell(false)
-                    if (shell != null) {
+                    val shell = getRootShell(false)
+                    if (shell.isRoot) {
                         val base64Content = android.util.Base64.encodeToString(content, android.util.Base64.NO_WRAP)
-                        val result = APatchCli.rootShellForResult(
+                        val result = rootShellForResult(
                             "mkdir -p /data/adb/tricky_store",
                             "echo '$base64Content' | base64 -d > $KEYBOX_PATH",
                             "chmod 644 $KEYBOX_PATH",

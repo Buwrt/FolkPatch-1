@@ -349,7 +349,11 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
                 // Copy kptools to cache if not exists
                 val kptools = File(patchDir, "kptools")
                 if (!kptools.exists()) {
-                    apApp.assets.open("kptools").writeTo(kptools)
+                    apApp.assets.open("kptools").use { input ->
+                        kptools.outputStream().use { output ->
+                            input.copyTo(output)
+                        }
+                    }
                     kptools.setExecutable(true)
                 }
                 
