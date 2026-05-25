@@ -826,7 +826,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
 
-                    // Swipe navigation helper
+                    // Swipe navigation helper - improved for better sensitivity
                     val navigator = navController.rememberDestinationsNavigator()
                     val currentBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = currentBackStackEntry?.destination?.route
@@ -834,32 +834,38 @@ class MainActivity : AppCompatActivity() {
                     val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
                     
                     val swipeModifier = Modifier.pointerInput(visibleDestinations, currentRoute) {
-                        detectHorizontalDragGestures { change, dragAmount ->
-                            change.consume()
-                            if (!isOnMainTab) return@detectHorizontalDragGestures
-                            
-                            val swipeThreshold = 100f
-                            when {
-                                dragAmount < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
-                                    // Swipe left -> next tab
-                                    val nextDest = visibleDestinations[currentIndex + 1]
-                                    navigator.navigate(nextDest.direction) {
-                                        popUpTo(NavGraphs.root) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
+                        detectHorizontalDragGestures(
+                            onDragStart = { },
+                            onDragEnd = { },
+                            onDragCancel = { },
+                            onHorizontalDrag = { change, dragAmount ->
+                                change.consume()
+                                if (!isOnMainTab) return@detectHorizontalDragGestures
+                                
+                                // Lower threshold for easier swiping (50f instead of 100f)
+                                val swipeThreshold = 50f
+                                when {
+                                    dragAmount < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
+                                        // Swipe left -> next tab
+                                        val nextDest = visibleDestinations[currentIndex + 1]
+                                        navigator.navigate(nextDest.direction) {
+                                            popUpTo(NavGraphs.root) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
                                     }
-                                }
-                                dragAmount > swipeThreshold && currentIndex > 0 -> {
-                                    // Swipe right -> previous tab
-                                    val prevDest = visibleDestinations[currentIndex - 1]
-                                    navigator.navigate(prevDest.direction) {
-                                        popUpTo(NavGraphs.root) { saveState = true }
-                                        launchSingleTop = true
-                                        restoreState = true
+                                    dragAmount > swipeThreshold && currentIndex > 0 -> {
+                                        // Swipe right -> previous tab
+                                        val prevDest = visibleDestinations[currentIndex - 1]
+                                        navigator.navigate(prevDest.direction) {
+                                            popUpTo(NavGraphs.root) { saveState = true }
+                                            launchSingleTop = true
+                                            restoreState = true
+                                        }
                                     }
                                 }
                             }
-                        }
+                        )
                     }
 
                     Box(modifier = Modifier.fillMaxSize().then(swipeModifier)) {

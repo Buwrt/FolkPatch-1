@@ -47,6 +47,7 @@ import me.yuki.foly.APApplication
 import me.yuki.foly.R
 import me.yuki.foly.apApp
 import me.yuki.foly.data.ScriptInfo
+import me.yuki.foly.util.RootShell
 import me.yuki.foly.util.getSafeDownloadsDir
 import me.yuki.foly.util.ui.AnsiUtils
 import me.yuki.foly.util.ui.LocalSnackbarHost
@@ -121,22 +122,26 @@ fun ScriptExecutionLogScreen(
                 }
 
               
+                // Use RootShell to get proper su path
                 if (p == null) {
                     try {
-                        val pb = ProcessBuilder("su")
-                        pb.redirectErrorStream(true)
-                        pb.environment()?.apply {
-                            set("PATH", System.getenv("PATH") ?: "" + ":/system_ext/bin:/vendor/bin:${APApplication.APATCH_FOLDER}bin")
-                            set("BUSYBOX", "${APApplication.APATCH_FOLDER}bin/busybox")
+                        val suPath = RootShell.getSuPath()
+                        if (suPath != null) {
+                            val pb = ProcessBuilder(suPath.split(" "))
+                            pb.redirectErrorStream(true)
+                            pb.environment()?.apply {
+                                set("PATH", (System.getenv("PATH") ?: "") + ":/system/bin:/system/xbin:/sbin:/data/adb/magisk:/data/adb/ksu/bin:/data/adb/ap/bin")
+                                set("BUSYBOX", "${APApplication.APATCH_FOLDER}bin/busybox")
+                            }
+                            p = pb.start()
                         }
-                        p = pb.start()
                     } catch (e: Exception) {
-                        // Continue
+                        // Continue to next attempt
                     }
                 }
 
-              
-                if (p == null) {
+                // Try APatch kpatch method if available
+                if (p == null && APApplication.superKey.isNotEmpty()) {
                     try {
                         val kpatchPath = apApp.applicationInfo.nativeLibraryDir + File.separator + "libkpatch.so"
                         val pb = ProcessBuilder(
@@ -148,7 +153,7 @@ fun ScriptExecutionLogScreen(
                         )
                         pb.redirectErrorStream(true)
                         val env = pb.environment()
-                        env?.set("PATH", System.getenv("PATH") ?: "" + ":/system_ext/bin:/vendor/bin:${APApplication.APATCH_FOLDER}bin")
+                        env?.set("PATH", (System.getenv("PATH") ?: "") + ":/system/bin:/system/xbin:/sbin:/data/adb/magisk:/data/adb/ksu/bin:/data/adb/ap/bin")
                         env?.set("BUSYBOX", "${APApplication.APATCH_FOLDER}bin/busybox")
                         p = pb.start()
                     } catch (e: Exception) {
@@ -156,14 +161,13 @@ fun ScriptExecutionLogScreen(
                     }
                 }
 
-               
+                // Final fallback - try basic su
                 if (p == null) {
                     try {
                         val pb = ProcessBuilder("su")
                         pb.redirectErrorStream(true)
                         val env = pb.environment()
-                        env?.set("PATH", System.getenv("PATH") ?: "" + ":/system_ext/bin:/vendor/bin:${APApplication.APATCH_FOLDER}bin")
-                        env?.set("BUSYBOX", "${APApplication.APATCH_FOLDER}bin/busybox")
+                        env?.set("PATH", (System.getenv("PATH") ?: "") + ":/system/bin:/system/xbin:/sbin")
                         p = pb.start()
                     } catch (e: Exception) {
                         throw e // Rethrow if all failed

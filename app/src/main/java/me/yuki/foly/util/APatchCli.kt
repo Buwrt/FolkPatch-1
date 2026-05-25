@@ -103,6 +103,7 @@ fun createRootShell(globalMnt: Boolean = false): Shell {
         "/su/bin/su",
         "/magisk/.core/bin/su",
         "/sbin/.magisk/mirror/system/bin/su",
+        "/data/adb/magisk/magisk",
         "/data/adb/ksu/bin/ksu",
         "/data/adb/ap/bin/apd"
     )
@@ -116,7 +117,14 @@ fun createRootShell(globalMnt: Boolean = false): Shell {
             if (result.isSuccess) {
                 Log.i(TAG, "Found working SU at: $suPath")
                 return try {
-                    if (globalMnt) {
+                    if (suPath.contains("magisk")) {
+                        // Magisk specific: use magisk su
+                        if (globalMnt) {
+                            buildWithTimeout(builder, suPath, "su", "-mm")
+                        } else {
+                            buildWithTimeout(builder, suPath, "su")
+                        }
+                    } else if (globalMnt) {
                         buildWithTimeout(builder, suPath, "-mm")
                     } else {
                         buildWithTimeout(builder, suPath)
@@ -131,13 +139,34 @@ fun createRootShell(globalMnt: Boolean = false): Shell {
         }
     }
 
-    // Fallback to original APatch method
-    return try {
-        buildWithTimeout(
-            builder, SUPERCMD, APApplication.superKey, "-Z", APApplication.MAGISK_SCONTEXT
-        )
+    // Try generic 'su' command (works on most rooted devices)
+    try {
+        Log.i(TAG, "Trying generic su command")
+        if (globalMnt) {
+            return buildWithTimeout(builder, "su", "-mm")
+        } else {
+            return buildWithTimeout(builder, "su")
+        }
     } catch (e: Throwable) {
-        Log.e(TAG, "su failed: ", e)
+        Log.w(TAG, "Generic su failed: ${e.message}")
+    }
+
+    // Fallback to original APatch method if available
+    return try {
+        // Check if SUPERCMD exists
+        val checkShell = Shell.Builder.create().build("sh")
+        val checkResult = checkShell.newJob().add("test -x $SUPERCMD").exec()
+        checkShell.close()
+        
+        if (checkResult.isSuccess) {
+            buildWithTimeout(
+                builder, SUPERCMD, APApplication.superKey, "-Z", APApplication.MAGISK_SCONTEXT
+            )
+        } else {
+            throw IOException("SUPERCMD not available")
+        }
+    } catch (e: Throwable) {
+        Log.e(TAG, "APatch method failed: ", e)
         return try {
             Log.e(TAG, "retry compat kpatch su")
             if (globalMnt) {
