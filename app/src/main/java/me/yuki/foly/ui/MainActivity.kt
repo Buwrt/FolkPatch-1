@@ -813,18 +813,8 @@ class MainActivity : AppCompatActivity() {
                         onUserScroll = { resetBottomBarAutoHide() }
                     )
 
-                    // Compute visible destinations for swipe navigation
-                    val kPatchReady = state != APApplication.State.UNKNOWN_STATE
-                    val aPatchReady = state == APApplication.State.ANDROIDPATCH_INSTALLED
-                    val visibleDestinations = BottomBarDestination.entries.filter { destination ->
-                        when {
-                            destination == BottomBarDestination.AModule && !showNavApm -> false
-                            destination == BottomBarDestination.KModule && !showNavKpm -> false
-                            destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
-                            (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
-                            else -> true
-                        }
-                    }
+                    // 6个标签始终全部显示，不可隐藏
+                    val visibleDestinations = BottomBarDestination.entries
 
                     // Swipe navigation helper - improved for better sensitivity
                     val navigator = navController.rememberDestinationsNavigator()
@@ -1026,19 +1016,8 @@ private fun BottomBar(
         targetState = state,
         label = "BottomBarStateCrossfade"
     ) { state ->
-        val kPatchReady = state != APApplication.State.UNKNOWN_STATE
-        val aPatchReady = state == APApplication.State.ANDROIDPATCH_INSTALLED
-
-        // Determine visible destinations
-        val visibleDestinations = BottomBarDestination.entries.filter { destination ->
-            when {
-                destination == BottomBarDestination.AModule && !showNavApm -> false
-                destination == BottomBarDestination.KModule && !showNavKpm -> false
-                destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
-                (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
-                else -> true
-            }
-        }
+        // 6个标签始终全部显示，不可隐藏
+        val visibleDestinations = BottomBarDestination.entries
 
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = currentBackStackEntry?.destination?.route
@@ -1534,18 +1513,8 @@ private fun NavigationRailBar(navController: NavHostController) {
         targetState = state,
         label = "NavigationRailStateCrossfade"
     ) { state ->
-        val kPatchReady = state != APApplication.State.UNKNOWN_STATE
-        val aPatchReady = state == APApplication.State.ANDROIDPATCH_INSTALLED
-
-        val visibleDestinations = BottomBarDestination.entries.filter { destination ->
-            when {
-                destination == BottomBarDestination.AModule && !showNavApm -> false
-                destination == BottomBarDestination.KModule && !showNavKpm -> false
-                destination == BottomBarDestination.SuperUser && !showNavSuperUser -> false
-                (destination.kPatchRequired && !kPatchReady) || (destination.aPatchRequired && !aPatchReady) -> false
-                else -> true
-            }
-        }
+        // 6个标签始终全部显示，不可隐藏
+        val visibleDestinations = BottomBarDestination.entries
 
         val currentBackStackEntry by navController.currentBackStackEntryAsState()
         val currentRoute = currentBackStackEntry?.destination?.route
