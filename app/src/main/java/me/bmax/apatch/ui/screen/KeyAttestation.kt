@@ -67,7 +67,7 @@ fun KeyAttestationScreen(navigator: DestinationsNavigator) {
 
     // File saver for saving certificate
     val fileSaverLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.CreateDocument()
+        ActivityResultContracts.CreateDocument("*/*")
     ) { uri: Uri? ->
         uri?.let {
             viewModel.saveCertificateToUri(context.contentResolver.openOutputStream(it))
