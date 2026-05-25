@@ -2,7 +2,7 @@ package io.github.vvb2060.keyattestation
 
 import android.app.Application
 import android.content.Context
-import me.bmax.apatch.apApp
+import me.yuki.foly.apApp
 
 /**
  * Bridge class to adapt KeyAttestation code to FolkPatch's Application

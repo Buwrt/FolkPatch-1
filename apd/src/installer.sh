@@ -290,7 +290,7 @@ request_zip_size_check() {
 
 boot_actions() {
   if [ ! -f "$NVBASE/jq" ]; then
-    local apk_path=$(find /data/app -name "base.apk" -path "*/me.yuki.folk-*" 2>/dev/null | head -n 1)
+    local apk_path=$(find /data/app -name "base.apk" -path "*/me.yuki.foly-*" 2>/dev/null | head -n 1)
     if [ -n "$apk_path" ] && [ -f "$apk_path" ]; then
       # Extract jq from APK assets
       mkdir -p /data/local/tmp/jq_extract

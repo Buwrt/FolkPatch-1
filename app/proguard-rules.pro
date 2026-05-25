@@ -18,7 +18,7 @@
 -keep,allowobfuscation,allowoptimization class org.ini4j.spi.** { *; }
 
 # Keep native methods and JNI classes
--keep class me.bmax.apatch.Natives {
+-keep class me.yuki.foly.Natives {
     *;
 }
 
@@ -26,19 +26,19 @@
     native <methods>;
 }
 
--keep class me.bmax.apatch.Natives$Profile { *; }
--keep class me.bmax.apatch.Natives$KPMCtlRes { *; }
+-keep class me.yuki.foly.Natives$Profile { *; }
+-keep class me.yuki.foly.Natives$KPMCtlRes { *; }
 
 # Keep RootServices
--keep class me.bmax.apatch.services.RootServices { *; }
+-keep class me.yuki.foly.services.RootServices { *; }
 
 # Keep AIDL interfaces
--keep class me.bmax.apatch.IAPRootService { *; }
--keep class me.bmax.apatch.IAPRootService$Stub { *; }
+-keep class me.yuki.foly.IAPRootService { *; }
+-keep class me.yuki.foly.IAPRootService$Stub { *; }
 -keep class rikka.parcelablelist.ParcelableListSlice { *; }
 # Keep ScriptInfo for Gson serialization in release
--keep class me.bmax.apatch.data.ScriptInfo { *; }
--keepclassmembers class me.bmax.apatch.data.ScriptInfo { *; }
+-keep class me.yuki.foly.data.ScriptInfo { *; }
+-keepclassmembers class me.yuki.foly.data.ScriptInfo { *; }
 
 # Gson
 -keepattributes Signature
@@ -54,20 +54,20 @@
 }
 
 # Keep Umount configuration classes
--keep class me.bmax.apatch.ui.component.UmountConfig { *; }
--keep class me.bmax.apatch.ui.component.UmountConfigManager { *; }
--keep class me.bmax.apatch.ui.screen.UmountConfigScreen { *; }
+-keep class me.yuki.foly.ui.component.UmountConfig { *; }
+-keep class me.yuki.foly.ui.component.UmountConfigManager { *; }
+-keep class me.yuki.foly.ui.screen.UmountConfigScreen { *; }
 
--keepclassmembers class me.bmax.apatch.ui.component.UmountConfigManager {
+-keepclassmembers class me.yuki.foly.ui.component.UmountConfigManager {
     public static *;
 }
 
--keepclassmembers class me.bmax.apatch.ui.component.UmountConfig {
+-keepclassmembers class me.yuki.foly.ui.component.UmountConfig {
     public <init>(boolean, java.lang.String);
 }
 
 # Keep Umount destination
--keep class me.bmax.apatch.ui.screen.destinations.UmountConfigScreenDestination { *; }
+-keep class me.yuki.foly.ui.screen.destinations.UmountConfigScreenDestination { *; }
 
 -repackageclasses
 -allowaccessmodification

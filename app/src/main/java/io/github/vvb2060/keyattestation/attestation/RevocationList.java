@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
 import io.github.vvb2060.keyattestation.AppApplication;
-import me.bmax.apatch.R;
+import me.yuki.foly.R;
 
 public record RevocationList(String status, String reason) {
     private static final JSONObject data = getStatus();

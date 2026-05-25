@@ -72,7 +72,7 @@ val baseArgs = mutableListOf(
 ).apply { if (ccache != null) add("-DANDROID_CCACHE=$ccache") }
 
 android {
-    namespace = "me.bmax.apatch"
+    namespace = "me.yuki.foly"
     signingConfigs {
         create("release") {
             storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE") ?: "debug.keystore")
@@ -140,7 +140,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "me.yuki.folk"
+        applicationId = "me.yuki.foly"
         minSdk = androidMinSdkVersion
         targetSdk = androidTargetSdkVersion
         versionCode = managerVersionCode
