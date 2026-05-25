@@ -33,6 +33,8 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.animation.animateScrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -155,6 +157,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.window.DialogProperties
 import me.yuki.foly.R
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -1097,6 +1100,7 @@ private fun BottomBar(
         }
 
         if (isFloating) {
+            val navScrollState = rememberScrollState()
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -1121,10 +1125,10 @@ private fun BottomBar(
                 ) {
                     val isCustomBg = BackgroundConfig.isCustomBackgroundEnabled
                     if (isGlassEnabled) {
-                        val glassShape = CircleShape
+                        val glassShape = MaterialTheme.shapes.large
                         Surface(
                             modifier = Modifier
-                                .wrapContentWidth()
+                                .fillMaxWidth()
                                 .clip(glassShape)
                                 .navBarGlassEffect(
                                     shape = glassShape,
@@ -1150,12 +1154,13 @@ private fun BottomBar(
                                 currentRoute = currentRoute,
                                 navController = navController,
                                 context = context,
-                                onUserInteraction = onUserInteraction
+                                onUserInteraction = onUserInteraction,
+                                scrollState = navScrollState
                             )
                         }
                     } else {
                         Surface(
-                            modifier = Modifier.wrapContentWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                             shape = MaterialTheme.shapes.large,
                             color = containerColor,
                             tonalElevation = if (isCustomBg) 0.dp else 3.dp,
@@ -1176,7 +1181,8 @@ private fun BottomBar(
                                 currentRoute = currentRoute,
                                 navController = navController,
                                 context = context,
-                                onUserInteraction = onUserInteraction
+                                onUserInteraction = onUserInteraction,
+                                scrollState = navScrollState
                             )
                         }
                     }
@@ -1287,7 +1293,8 @@ private fun BottomBarContent(
     currentRoute: String?,
     navController: NavHostController,
     context: android.content.Context,
-    onUserInteraction: (() -> Unit)? = null
+    onUserInteraction: (() -> Unit)? = null,
+    scrollState: androidx.compose.foundation.ScrollState? = null
 ) {
     val navigator = navController.rememberDestinationsNavigator()
     val itemSize = 56.dp
@@ -1327,9 +1334,25 @@ private fun BottomBarContent(
             (itemSpacing * (visibleDestinations.size - 1)) +
             (containerPadding * 2)
 
+    // Auto-scroll to selected item
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(effectiveSelectedIndex) {
+        scrollState?.let { ss ->
+            coroutineScope.launch {
+                val itemWidthPx = with(LocalDensity.current) { (itemSize + itemSpacing).toPx() }
+                val targetOffset = (itemWidthPx * effectiveSelectedIndex).toInt()
+                val centerOffset = (ss.maxValue / 2).coerceAtLeast(0)
+                val finalOffset = (targetOffset - centerOffset).coerceIn(0, ss.maxValue)
+                ss.scrollTo(finalOffset)
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
-            .width(navBarWidth)
+            .then(
+                if (scrollState != null) Modifier.fillMaxWidth() else Modifier.width(navBarWidth)
+            )
             .height(72.dp)
     ) {
         Box(
@@ -1412,7 +1435,11 @@ private fun BottomBarContent(
 
             // Navigation items
             Row(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .then(
+                        if (scrollState != null) Modifier.horizontalScroll(scrollState) else Modifier
+                    ),
                 horizontalArrangement = Arrangement.spacedBy(itemSpacing),
                 verticalAlignment = Alignment.CenterVertically
             ) {
