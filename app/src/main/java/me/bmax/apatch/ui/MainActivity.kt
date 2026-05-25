@@ -72,6 +72,8 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.Velocity
@@ -812,6 +814,9 @@ class MainActivity : AppCompatActivity() {
                             )
 
                         if (useNavigationRail) {
+                            // Swipe navigation state for rail mode
+                            val swipeModifier = rememberSwipeNavigationModifier(navController, visibleDestinations)
+                            
                             Row(modifier = Modifier.fillMaxSize()) {
                                 NavigationRailBar(navController)
                                 CompositionLocalProvider(
@@ -825,7 +830,7 @@ class MainActivity : AppCompatActivity() {
                                     LocalIsFloatingNavMode provides isFloatingMode
                                 ) {
                                     DestinationsNavHost(
-                                        modifier = Modifier.weight(1f).then(baseContentModifier),
+                                        modifier = Modifier.weight(1f).then(baseContentModifier).then(swipeModifier),
                                         navGraph = NavGraphs.root,
                                         navController = navController,
                                         engine = rememberNavHostEngine(navHostContentAlignment = Alignment.TopCenter),
@@ -834,6 +839,9 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }
                         } else {
+                            // Swipe navigation state
+                            val swipeModifier = rememberSwipeNavigationModifier(navController, visibleDestinations)
+                            
                             CompositionLocalProvider(
                                 LocalSnackbarHost provides snackBarHostState,
                                 LocalScrollState provides if (isFloatingMode) ScrollState(
@@ -845,7 +853,7 @@ class MainActivity : AppCompatActivity() {
                                 LocalIsFloatingNavMode provides isFloatingMode
                             ) {
                                 DestinationsNavHost(
-                                    modifier = Modifier.fillMaxSize().then(baseContentModifier),
+                                    modifier = Modifier.fillMaxSize().then(baseContentModifier).then(swipeModifier),
                                     navGraph = NavGraphs.root,
                                     navController = navController,
                                     engine = rememberNavHostEngine(navHostContentAlignment = Alignment.TopCenter),
@@ -1710,6 +1718,55 @@ private fun createNavTransitions(
                 scaleOut(targetScale = 0.9f) + fadeOut()
             } else {
                 fadeOut(animationSpec = tween(340))
+            }
+        }
+    }
+}
+
+/**
+ * Creates a modifier that detects horizontal swipes to navigate between bottom bar destinations.
+ */
+@Composable
+private fun rememberSwipeNavigationModifier(
+    navController: NavHostController,
+    visibleDestinations: List<BottomBarDestination>
+): Modifier {
+    val navigator = navController.rememberDestinationsNavigator()
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
+    
+    // Only enable swipe on main tab pages
+    val isOnMainTabPage = currentRoute in visibleDestinations.map { it.direction.route }
+    
+    if (!isOnMainTabPage) return Modifier
+    
+    val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
+    if (currentIndex == -1) return Modifier
+    
+    return Modifier.pointerInput(visibleDestinations, currentRoute) {
+        detectHorizontalDragGestures { change, dragAmount ->
+            change.consume()
+            
+            val swipeThreshold = 100f
+            when {
+                dragAmount < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
+                    // Swipe left -> go to next tab
+                    val nextDestination = visibleDestinations[currentIndex + 1]
+                    navigator.navigate(nextDestination.direction) {
+                        popUpTo(NavGraphs.root) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
+                dragAmount > swipeThreshold && currentIndex > 0 -> {
+                    // Swipe right -> go to previous tab
+                    val prevDestination = visibleDestinations[currentIndex - 1]
+                    navigator.navigate(prevDestination.direction) {
+                        popUpTo(NavGraphs.root) { saveState = true }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                }
             }
         }
     }
