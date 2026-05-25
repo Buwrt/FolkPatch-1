@@ -56,7 +56,7 @@ enum class BottomBarDestination(
         R.string.kpm,
         Icons.Filled.Archive,
         Icons.Outlined.Archive,
-        true,
+        false,
         false
     ),
     SuperUser(
@@ -64,7 +64,7 @@ enum class BottomBarDestination(
         R.string.su_title,
         Icons.Filled.AdminPanelSettings,
         Icons.Outlined.AdminPanelSettings,
-        true,
+        false,
         false
     ),
     AModule(
@@ -73,7 +73,7 @@ enum class BottomBarDestination(
         Icons.Filled.Extension,
         Icons.Outlined.Extension,
         false,
-        true
+        false
     ),
     Settings(
         SettingScreenDestination,
