@@ -80,6 +80,7 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.calculateCentroid
 import androidx.compose.foundation.gestures.calculateCentroidSize
 import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -821,41 +822,36 @@ class MainActivity : AppCompatActivity() {
                     // 6个标签始终全部显示，不可隐藏
                     val visibleDestinations = BottomBarDestination.entries
 
-                    // Swipe tab navigation via NestedScrollConnection
+                    // Swipe tab navigation via pointerInput (直接检测触摸手势，不依赖滚动事件)
                     val navigator = navController.rememberDestinationsNavigator()
                     val currentBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = currentBackStackEntry?.destination?.route
                     val isOnMainTab = currentRoute in visibleDestinations.map { it.direction.route }
                     val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
 
-                    // Use rememberUpdatedState so the NestedScrollConnection always reads latest values
+                    // Use rememberUpdatedState so the pointerInput always reads latest values
                     val isOnMainTabState = rememberUpdatedState(isOnMainTab)
                     val currentIndexState = rememberUpdatedState(currentIndex)
 
-                    val tabSwipeConnection = remember(navigator, visibleDestinations) {
-                        object : NestedScrollConnection {
-                            var accumulatedHorizontal = 0f
-                            var navigated = false
-
-                            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                                if (source != NestedScrollSource.UserInput) return Offset.Zero
-                                if (!isOnMainTabState.value || navigated) return Offset.Zero
-
-                                accumulatedHorizontal += available.x
-                                val threshold = 120f
-
+                    val tabSwipeModifier = Modifier.pointerInput(visibleDestinations, currentRoute) {
+                        if (!isOnMainTab) return@pointerInput
+                        detectHorizontalDragGestures(
+                            onDragStart = { },
+                            onDragEnd = { },
+                            onDragCancel = { },
+                            onHorizontalDrag = { change, dragAmount ->
+                                change.consume()
                                 val idx = currentIndexState.value
+                                val threshold = 80f
                                 when {
-                                    accumulatedHorizontal < -threshold && idx < visibleDestinations.size - 1 -> {
-                                        navigated = true
+                                    dragAmount < -threshold && idx < visibleDestinations.size - 1 -> {
                                         navigator.navigate(visibleDestinations[idx + 1].direction) {
                                             popUpTo(NavGraphs.root) { saveState = true }
                                             launchSingleTop = true
                                             restoreState = true
                                         }
                                     }
-                                    accumulatedHorizontal > threshold && idx > 0 -> {
-                                        navigated = true
+                                    dragAmount > threshold && idx > 0 -> {
                                         navigator.navigate(visibleDestinations[idx - 1].direction) {
                                             popUpTo(NavGraphs.root) { saveState = true }
                                             launchSingleTop = true
@@ -863,25 +859,11 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                                return Offset.Zero
                             }
-
-                            override suspend fun onPreFling(available: Velocity): Velocity {
-                                accumulatedHorizontal = 0f
-                                navigated = false
-                                return Velocity.Zero
-                            }
-                        }
+                        )
                     }
 
-                    // Reset state when tab changes
-                    DisposableEffect(currentRoute) {
-                        tabSwipeConnection.accumulatedHorizontal = 0f
-                        tabSwipeConnection.navigated = false
-                        onDispose { }
-                    }
-
-                    Box(modifier = Modifier.fillMaxSize().nestedScroll(tabSwipeConnection)) {
+                    Box(modifier = Modifier.fillMaxSize().then(tabSwipeModifier)) {
                         val baseContentModifier = Modifier
                             .navBarLiquefiable(
                                 if (shouldExposeContentToLiquid) floatingLiquidState else null
