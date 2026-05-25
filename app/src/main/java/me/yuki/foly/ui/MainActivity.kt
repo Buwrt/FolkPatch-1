@@ -74,7 +74,11 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroid
+import androidx.compose.foundation.gestures.calculateCentroidSize
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
@@ -824,19 +828,24 @@ class MainActivity : AppCompatActivity() {
                     val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
                     
                     val swipeModifier = Modifier.pointerInput(visibleDestinations, currentRoute) {
-                        detectHorizontalDragGestures(
-                            onDragStart = { },
-                            onDragEnd = { },
-                            onDragCancel = { },
-                            onHorizontalDrag = { change, dragAmount ->
+                        awaitEachGesture {
+                            val down = awaitFirstDown(requireUnconsumed = false)
+                            var accumulatedDrag = 0f
+                            var navigated = false
+
+                            do {
+                                val event = awaitPointerEvent()
+                                val change = event.changes.firstOrNull() ?: break
+                                val drag = change.position.x - change.previousPosition.x
+                                accumulatedDrag += drag
                                 change.consume()
-                                if (!isOnMainTab) return@detectHorizontalDragGestures
-                                
-                                // Lower threshold for easier swiping (50f instead of 100f)
-                                val swipeThreshold = 50f
+
+                                if (!isOnMainTab || navigated) continue
+
+                                val swipeThreshold = with(this@awaitEachGesture) { 120.dp.toPx() }
                                 when {
-                                    dragAmount < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
-                                        // Swipe left -> next tab
+                                    accumulatedDrag < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
+                                        navigated = true
                                         val nextDest = visibleDestinations[currentIndex + 1]
                                         navigator.navigate(nextDest.direction) {
                                             popUpTo(NavGraphs.root) { saveState = true }
@@ -844,8 +853,8 @@ class MainActivity : AppCompatActivity() {
                                             restoreState = true
                                         }
                                     }
-                                    dragAmount > swipeThreshold && currentIndex > 0 -> {
-                                        // Swipe right -> previous tab
+                                    accumulatedDrag > swipeThreshold && currentIndex > 0 -> {
+                                        navigated = true
                                         val prevDest = visibleDestinations[currentIndex - 1]
                                         navigator.navigate(prevDest.direction) {
                                             popUpTo(NavGraphs.root) { saveState = true }
@@ -854,8 +863,8 @@ class MainActivity : AppCompatActivity() {
                                         }
                                     }
                                 }
-                            }
-                        )
+                            } while (event.changes.any { it.pressed })
+                        }
                     }
 
                     Box(modifier = Modifier.fillMaxSize().then(swipeModifier)) {
@@ -1778,40 +1787,54 @@ private fun rememberSwipeNavigationModifier(
     val navigator = navController.rememberDestinationsNavigator()
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = currentBackStackEntry?.destination?.route
-    
+    val density = LocalDensity.current
+
     // Only enable swipe on main tab pages
     val isOnMainTabPage = currentRoute in visibleDestinations.map { it.direction.route }
-    
+
     if (!isOnMainTabPage) return Modifier
-    
+
     val currentIndex = visibleDestinations.indexOfFirst { it.direction.route == currentRoute }
     if (currentIndex == -1) return Modifier
-    
+
+    val swipeThresholdPx = with(density) { 120.dp.toPx() }
+
     return Modifier.pointerInput(visibleDestinations, currentRoute) {
-        detectHorizontalDragGestures { change, dragAmount ->
-            change.consume()
-            
-            val swipeThreshold = 100f
-            when {
-                dragAmount < -swipeThreshold && currentIndex < visibleDestinations.size - 1 -> {
-                    // Swipe left -> go to next tab
-                    val nextDestination = visibleDestinations[currentIndex + 1]
-                    navigator.navigate(nextDestination.direction) {
-                        popUpTo(NavGraphs.root) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
+        awaitEachGesture {
+            awaitFirstDown(requireUnconsumed = false)
+            var accumulatedDrag = 0f
+            var navigated = false
+
+            do {
+                val event = awaitPointerEvent()
+                val change = event.changes.firstOrNull() ?: break
+                val drag = change.position.x - change.previousPosition.x
+                accumulatedDrag += drag
+                change.consume()
+
+                if (navigated) continue
+
+                when {
+                    accumulatedDrag < -swipeThresholdPx && currentIndex < visibleDestinations.size - 1 -> {
+                        navigated = true
+                        val nextDestination = visibleDestinations[currentIndex + 1]
+                        navigator.navigate(nextDestination.direction) {
+                            popUpTo(NavGraphs.root) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                    accumulatedDrag > swipeThresholdPx && currentIndex > 0 -> {
+                        navigated = true
+                        val prevDestination = visibleDestinations[currentIndex - 1]
+                        navigator.navigate(prevDestination.direction) {
+                            popUpTo(NavGraphs.root) { saveState = true }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
                     }
                 }
-                dragAmount > swipeThreshold && currentIndex > 0 -> {
-                    // Swipe right -> go to previous tab
-                    val prevDestination = visibleDestinations[currentIndex - 1]
-                    navigator.navigate(prevDestination.direction) {
-                        popUpTo(NavGraphs.root) { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            }
+            } while (event.changes.any { it.pressed })
         }
     }
 }
