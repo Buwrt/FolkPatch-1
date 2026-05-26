@@ -1128,6 +1128,7 @@ Please ensure the app is completely closed and reopened for the commands to exec
 
     <!-- Key Attestation -->
     <string name="key_attestation">密钥认证</string>
+    <string name="env_detect">环境检测</string>
     <string name="ka_generate">生成认证</string>
     <string name="ka_save">保存</string>
     <string name="ka_load">加载</string>

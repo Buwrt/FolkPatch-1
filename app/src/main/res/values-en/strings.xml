@@ -2,6 +2,7 @@
 <resources>
     <!-- Key Attestation (English fallback) -->
     <string name="key_attestation">Key Attestation</string>
+    <string name="env_detect">Env Detect</string>
     <string name="ka_generate">Generate</string>
     <string name="ka_save">Save</string>
     <string name="ka_load">Load</string>
