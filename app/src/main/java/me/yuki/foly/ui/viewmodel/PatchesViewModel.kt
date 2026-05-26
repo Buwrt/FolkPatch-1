@@ -463,8 +463,36 @@ class PatchesViewModel : ViewModel() {
         }
     }
     fun isSuExecutable(): Boolean {
-        val suFile = File("/system/bin/su")
-        return suFile.exists() && suFile.canExecute()
+        // 检查所有可能的 su 路径，兼容 Magisk/KernelSU/APatch/KernelPatch
+        val suPaths = listOf(
+            "/system/bin/su",
+            "/system/xbin/su",
+            "/sbin/su",
+            "/su/bin/su",
+            "/magisk/.core/bin/su",
+            "/sbin/.magisk/mirror/system/bin/su",
+            "/data/adb/magisk/magisk",
+            "/data/adb/ksu/bin/ksu",
+            "/data/adb/ksu/bin/su",
+            "/data/adb/ap/bin/apd",
+            "/data/adb/ap/bin/su",
+            "/system/bin/kp"
+        )
+        for (path in suPaths) {
+            val suFile = File(path)
+            if (suFile.exists() && suFile.canExecute()) {
+                return true
+            }
+        }
+        // 最后尝试通过 sh -c which su
+        return try {
+            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "which su 2>/dev/null"))
+            val output = process.inputStream.bufferedReader().readText().trim()
+            process.waitFor()
+            output.isNotEmpty() && File(output).exists()
+        } catch (_: Exception) {
+            false
+        }
     }
     fun doPatch(mode: PatchMode, useKey: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -543,12 +571,17 @@ class PatchesViewModel : ViewModel() {
 
             if (mode == PatchMode.PATCH_AND_INSTALL || mode == PatchMode.INSTALL_TO_NEXT_SLOT) {
 
-                val KPCheck = getShell().newJob().add("truncate ${APApplication.superKey} -Z u:r:magisk:s0 -c whoami").exec()
+                // 检查是否安装了 KernelPatch 内核模块
+                // truncate 是 KP 的超级命令，只有 KP 内核模块安装后才能用于提权
+                val KPCheck = getShell().newJob().add("truncate ${APApplication.superKey} -Z u:r:magisk:s0 -c id").exec()
+                val isKPInstalled = KPCheck.isSuccess && KPCheck.out.any { it.contains("uid=0") }
 
-                if (KPCheck.isSuccess && !isSuExecutable()) {
+                if (isKPInstalled && !isSuExecutable()) {
+                    // KernelPatch 内核模块已安装，且没有传统 su，使用 KP 超级命令
                     patchCommand.addAll(0, listOf(APApplication.SUPERCMD, APApplication.superKey, "-Z", APApplication.MAGISK_SCONTEXT, "-c"))
                     patchCommand.addAll(listOf(superkey, srcBoot.path, "true"))
                 } else {
+                    // 使用 busybox sh 执行修补脚本（兼容 Magisk/KernelSU/APatch）
                     patchCommand = mutableListOf("./busybox", "sh", "boot_patch.sh")
                     patchCommand.addAll(listOf(superkey, srcBoot.path, "true"))
                     isKpOld = true
