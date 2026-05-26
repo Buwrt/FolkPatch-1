@@ -1367,7 +1367,9 @@ private fun BottomBarContent(
                 val stretchPx = with(density) { (22.dp * waterStretch).toPx() }
 
                 // Calculate offset: each item position = (itemSize + spacing) * index
-                val indicatorOffset = (itemSizePx + itemSpacingPx) * animatedSelectedIndex
+                // Subtract scroll offset so indicator follows buttons when scrolled
+                val scrollOffsetPx = scrollState?.value?.toFloat() ?: 0f
+                val indicatorOffset = (itemSizePx + itemSpacingPx) * animatedSelectedIndex - scrollOffsetPx
                 val stretchOffset = if (moveDirection < 0f) -stretchPx else 0f
 
                 Box(
