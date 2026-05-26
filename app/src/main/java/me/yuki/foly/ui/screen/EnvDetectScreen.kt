@@ -1,8 +1,8 @@
 package me.yuki.foly.ui.screen
 
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,75 +21,157 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import me.yuki.foly.R
-import me.yuki.foly.util.RootShell
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import me.yuki.foly.R
+import me.yuki.foly.util.RootShell
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 
 /**
- * 环境检测页面 - 集成牛头32检测和Ruru检测
- * 检测Root状态、Magisk/Xposed框架、Bootloader解锁、系统完整性等
+ * 环境检测页面 - 参考真实 NativeTest 和 Ruru 检测工具
+ * 提供完整的 Root/Hook/系统环境检测
  */
-data class DetectItem(
+
+// 检测结果枚举
+enum class DetectStatus {
+    SAFE,       // 安全/未检测到
+    RISK,       // 风险/已检测到
+    WARNING,    // 警告
+    UNKNOWN     // 未知/检测失败
+}
+
+// 检测分类
+data class DetectCategory(
     val name: String,
-    val category: String,
-    var result: DetectResult = DetectResult.PENDING,
-    var detail: String = ""
+    val icon: @Composable () -> Unit,
+    val items: List<DetectItem>
 )
 
-enum class DetectResult {
-    PASS,       // 通过/安全
-    FAIL,       // 未通过/检测到
-    WARNING,    // 警告
-    PENDING,    // 待检测
-    ERROR       // 检测出错
-}
+data class DetectItem(
+    val id: String,
+    val name: String,
+    val description: String = "",
+    var status: DetectStatus = DetectStatus.UNKNOWN,
+    var detail: String = "",
+    var isDetecting: Boolean = false
+)
 
 @Destination<RootGraph>
 @Composable
 fun EnvDetectScreen(navigator: DestinationsNavigator) {
     val context = LocalContext.current
     var isDetecting by remember { mutableStateOf(false) }
-    var detectItems by remember { mutableStateOf(listOf<DetectItem>()) }
+    var detectProgress by remember { mutableStateOf(0f) }
+    var overallStatus by remember { mutableStateOf<DetectStatus?>(null) }
 
-    // 初始化检测项
-    val allItems = remember {
+    // 定义所有检测项（参考真实 NativeTest 和 Ruru）
+    val categories = remember {
         listOf(
-            // === 牛头32检测项 ===
-            DetectItem("Root 权限检测", "牛头32"),
-            DetectItem("su 路径检测", "牛头32"),
-            DetectItem("Magisk 检测", "牛头32"),
-            DetectItem("KernelSU 检测", "牛头32"),
-            DetectItem("APatch 检测", "牛头32"),
-            DetectItem("Xposed 框架检测", "牛头32"),
-            DetectItem("LSPosed 检测", "牛头32"),
-            DetectItem("Bootloader 解锁检测", "牛头32"),
-            DetectItem("系统完整性检测", "牛头32"),
-            DetectItem("Debug 模式检测", "牛头32"),
-            DetectItem("开发者选项检测", "牛头32"),
-            DetectItem("USB 调试检测", "牛头32"),
-            DetectItem("允许安装未知来源检测", "牛头32"),
-            // === Ruru检测项 ===
-            DetectItem("Root 管理应用检测", "Ruru"),
-            DetectItem("Magisk Manager 检测", "Ruru"),
-            DetectItem("KernelSU Manager 检测", "Ruru"),
-            DetectItem("APatch Manager 检测", "Ruru"),
-            DetectItem("SuperSU 检测", "Ruru"),
-            DetectItem("KingRoot 检测", "Ruru"),
-            DetectItem("Dangerous Props 检测", "Ruru"),
-            DetectItem("SELinux 状态检测", "Ruru"),
-            DetectItem("/system 分区可写检测", "Ruru"),
-            DetectItem("风险属性检测", "Ruru"),
-            DetectItem("Hook 框架特征检测", "Ruru"),
+            // === Root 权限检测 ===
+            DetectCategory(
+                name = "Root 权限",
+                icon = { Icon(Icons.Default.Security, null, tint = MaterialTheme.colorScheme.primary) }
+            ) {
+                listOf(
+                    DetectItem("root_access", "Root 权限", "检测设备是否获取 Root 权限"),
+                    DetectItem("su_binary", "su 二进制文件", "检测 su 命令是否存在"),
+                    DetectItem("magisk", "Magisk", "检测 Magisk 框架"),
+                    DetectItem("kernelsu", "KernelSU", "检测 KernelSU 框架"),
+                    DetectItem("apatch", "APatch", "检测 APatch 框架"),
+                    DetectItem("superuser", "SuperSU", "检测 SuperSU"),
+                    DetectItem("kingroot", "KingRoot", "检测 KingRoot"),
+                )
+            },
+            // === Hook 框架检测 ===
+            DetectCategory(
+                name = "Hook 框架",
+                icon = { Icon(Icons.Default.Warning, null, tint = Color(0xFFFF9800)) }
+            ) {
+                listOf(
+                    DetectItem("xposed", "Xposed", "检测 Xposed 框架"),
+                    DetectItem("lsposed", "LSPosed", "检测 LSPosed 模块"),
+                    DetectItem("edxposed", "EdXposed", "检测 EdXposed 框架"),
+                    DetectItem("frida", "Frida", "检测 Frida 动态插桩工具"),
+                    DetectItem("substrate", "Substrate", "检测 Cydia Substrate"),
+                )
+            },
+            // === 可疑应用检测 ===
+            DetectCategory(
+                name = "可疑应用",
+                icon = { Icon(Icons.Default.Error, null, tint = Color(0xFFF44336)) }
+            ) {
+                listOf(
+                    DetectItem("magisk_app", "Magisk Manager", "检测 Magisk 管理器应用"),
+                    DetectItem("kernelsu_app", "KernelSU Manager", "检测 KernelSU 管理器"),
+                    DetectItem("apatch_app", "APatch", "检测 APatch 应用"),
+                    DetectItem("supersu_app", "SuperSU", "检测 SuperSU 应用"),
+                    DetectItem("lsposed_app", "LSPosed Manager", "检测 LSPosed 管理器"),
+                    DetectItem("xposed_app", "Xposed Installer", "检测 Xposed 安装器"),
+                    DetectItem("hide_app", "隐藏应用列表", "检测 HideMyApplist"),
+                    DetectItem("shamiko", "Shamiko", "检测 Shamiko 模块"),
+                )
+            },
+            // === 系统环境检测 ===
+            DetectCategory(
+                name = "系统环境",
+                icon = { Icon(Icons.Default.CheckCircle, null, tint = Color(0xFF4CAF50)) }
+            ) {
+                listOf(
+                    DetectItem("bootloader", "Bootloader 状态", "检测 Bootloader 是否解锁"),
+                    DetectItem("selinux", "SELinux", "检测 SELinux 安全策略状态"),
+                    DetectItem("system_rw", "/system 可写", "检测系统分区是否可写"),
+                    DetectItem("debuggable", "Debug 模式", "检测系统是否处于 Debug 模式"),
+                    DetectItem("test_keys", "Test Keys", "检测是否使用测试签名"),
+                    DetectItem("dangerous_props", "危险属性", "检测 ro.debuggable 等危险属性"),
+                )
+            },
+            // === 开发者选项检测 ===
+            DetectCategory(
+                name = "开发者选项",
+                icon = { Icon(Icons.Default.Warning, null, tint = Color(0xFFFF9800)) }
+            ) {
+                listOf(
+                    DetectItem("dev_options", "开发者选项", "检测开发者选项是否开启"),
+                    DetectItem("usb_debug", "USB 调试", "检测 USB 调试是否开启"),
+                    DetectItem("adb_enabled", "ADB 调试", "检测 ADB 是否启用"),
+                    DetectItem("mock_location", "模拟位置", "检测是否允许模拟位置"),
+                )
+            },
+            // === 内存/进程检测 ===
+            DetectCategory(
+                name = "内存进程",
+                icon = { Icon(Icons.Default.Security, null, tint = MaterialTheme.colorScheme.secondary) }
+            ) {
+                listOf(
+                    DetectItem("maps_check", "Maps 扫描", "扫描 /proc/self/maps 中的异常"),
+                    DetectItem("zygote", "Zygote 注入", "检测 Zygote 进程是否被注入"),
+                    DetectItem("ptrace", "Ptrace 状态", "检测 Ptrace 反调试状态"),
+                )
+            }
         )
+    }
+
+    // 扁平化的检测项列表（用于状态管理）
+    var allItems by remember { mutableStateOf(categories.flatMap { it.items }) }
+
+    // 计算总体状态
+    LaunchedEffect(allItems) {
+        val checked = allItems.filter { it.status != DetectStatus.UNKNOWN }
+        if (checked.isNotEmpty()) {
+            overallStatus = when {
+                checked.any { it.status == DetectStatus.RISK } -> DetectStatus.RISK
+                checked.any { it.status == DetectStatus.WARNING } -> DetectStatus.WARNING
+                checked.all { it.status == DetectStatus.SAFE } -> DetectStatus.SAFE
+                else -> DetectStatus.UNKNOWN
+            }
+        }
     }
 
     Scaffold(
@@ -101,7 +183,9 @@ fun EnvDetectScreen(navigator: DestinationsNavigator) {
                         onClick = {
                             if (!isDetecting) {
                                 isDetecting = true
-                                detectItems = allItems.map { it.copy(result = DetectResult.PENDING, detail = "") }
+                                allItems = allItems.map { 
+                                    it.copy(status = DetectStatus.UNKNOWN, detail = "", isDetecting = false) 
+                                }
                             }
                         },
                         enabled = !isDetecting
@@ -117,93 +201,45 @@ fun EnvDetectScreen(navigator: DestinationsNavigator) {
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            // 检测状态概览
-            if (detectItems.isNotEmpty()) {
-                val passCount = detectItems.count { it.result == DetectResult.PASS }
-                val failCount = detectItems.count { it.result == DetectResult.FAIL }
-                val warnCount = detectItems.count { it.result == DetectResult.WARNING }
-                val totalCount = detectItems.size
-                val checkedCount = detectItems.count { it.result != DetectResult.PENDING }
+            // 总体状态卡片
+            OverallStatusCard(
+                status = overallStatus,
+                isDetecting = isDetecting,
+                progress = detectProgress,
+                totalCount = allItems.size,
+                checkedCount = allItems.count { it.status != DetectStatus.UNKNOWN },
+                riskCount = allItems.count { it.status == DetectStatus.RISK },
+                warningCount = allItems.count { it.status == DetectStatus.WARNING }
+            )
 
-                Card(
+            // 检测进度条
+            if (isDetecting) {
+                LinearProgressIndicator(
+                    progress = { detectProgress },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = when {
-                            failCount > 0 -> MaterialTheme.colorScheme.errorContainer
-                            warnCount > 0 -> MaterialTheme.colorScheme.tertiaryContainer
-                            checkedCount == totalCount -> MaterialTheme.colorScheme.primaryContainer
-                            else -> MaterialTheme.colorScheme.surfaceVariant
-                        }
-                    )
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            when {
-                                failCount > 0 -> Icons.Default.Error
-                                warnCount > 0 -> Icons.Default.Warning
-                                checkedCount == totalCount -> Icons.Default.CheckCircle
-                                else -> Icons.Default.Security
-                            },
-                            contentDescription = null,
-                            tint = when {
-                                failCount > 0 -> MaterialTheme.colorScheme.error
-                                warnCount > 0 -> MaterialTheme.colorScheme.tertiary
-                                checkedCount == totalCount -> MaterialTheme.colorScheme.primary
-                                else -> MaterialTheme.colorScheme.onSurfaceVariant
-                            }
-                        )
-                        Spacer(modifier = Modifier.width(12.dp))
-                        Column {
-                            Text(
-                                text = when {
-                                    isDetecting -> "正在检测中... ($checkedCount/$totalCount)"
-                                    checkedCount == 0 -> "点击右上角刷新按钮开始检测"
-                                    failCount > 0 -> "检测完成：发现 $failCount 项风险"
-                                    warnCount > 0 -> "检测完成：$warnCount 项警告"
-                                    else -> "检测完成：全部通过 ✓"
-                                },
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            if (checkedCount > 0) {
-                                Text(
-                                    text = "通过 $passCount / 警告 $warnCount / 风险 $failCount",
-                                    style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-                }
+                )
             }
 
             // 检测结果列表
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                // 按分类分组
-                val grouped = detectItems.groupBy { it.category }
-                grouped.forEach { (category, items) ->
+                categories.forEach { category ->
                     item {
-                        Text(
-                            text = if (category == "牛头32") "🐂 牛头32 NativeTest" else "🔍 Ruru 检测",
-                            style = MaterialTheme.typography.titleSmall,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
-                        )
+                        CategoryHeader(category)
                     }
-                    items(items) { item ->
-                        DetectItemCard(item)
+                    items(category.items) { item ->
+                        val currentItem = allItems.find { it.id == item.id } ?: item
+                        DetectItemCard(
+                            item = currentItem,
+                            onClick = {
+                                // 可以展开详情
+                            }
+                        )
                     }
                 }
             }
@@ -213,72 +249,210 @@ fun EnvDetectScreen(navigator: DestinationsNavigator) {
     // 执行检测
     LaunchedEffect(isDetecting) {
         if (isDetecting) {
+            val total = allItems.size
+            var completed = 0
+
+            allItems = allItems.map { item ->
+                item.copy(isDetecting = true)
+            }
+
             val results = withContext(Dispatchers.IO) {
                 allItems.map { item ->
-                    val (result, detail) = runDetection(context, item.name)
-                    item.copy(result = result, detail = detail)
+                    val (status, detail) = runRealDetection(context, item.id)
+                    completed++
+                    detectProgress = completed.toFloat() / total
+                    item.copy(
+                        status = status,
+                        detail = detail,
+                        isDetecting = false
+                    )
                 }
             }
-            detectItems = results
+
+            allItems = results
             isDetecting = false
+            detectProgress = 1f
         }
     }
 }
 
 @Composable
-private fun DetectItemCard(item: DetectItem) {
+private fun OverallStatusCard(
+    status: DetectStatus?,
+    isDetecting: Boolean,
+    progress: Float,
+    totalCount: Int,
+    checkedCount: Int,
+    riskCount: Int,
+    warningCount: Int
+) {
+    val cardColor = when {
+        isDetecting -> MaterialTheme.colorScheme.surfaceVariant
+        status == DetectStatus.RISK -> Color(0xFFFFEBEE)
+        status == DetectStatus.WARNING -> Color(0xFFFFF8E1)
+        status == DetectStatus.SAFE -> Color(0xFFE8F5E9)
+        else -> MaterialTheme.colorScheme.surfaceVariant
+    }
+
+    val iconColor = when {
+        isDetecting -> MaterialTheme.colorScheme.primary
+        status == DetectStatus.RISK -> Color(0xFFF44336)
+        status == DetectStatus.WARNING -> Color(0xFFFF9800)
+        status == DetectStatus.SAFE -> Color(0xFF4CAF50)
+        else -> MaterialTheme.colorScheme.onSurfaceVariant
+    }
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        colors = CardDefaults.cardColors(containerColor = cardColor)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    when {
+                        isDetecting -> Icons.Default.Refresh
+                        status == DetectStatus.RISK -> Icons.Default.Error
+                        status == DetectStatus.WARNING -> Icons.Default.Warning
+                        status == DetectStatus.SAFE -> Icons.Default.CheckCircle
+                        else -> Icons.Default.Security
+                    },
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(48.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column {
+                    Text(
+                        text = when {
+                            isDetecting -> "正在检测... ${(progress * 100).toInt()}%"
+                            status == DetectStatus.RISK -> "⚠️ 检测到风险环境"
+                            status == DetectStatus.WARNING -> "⚡ 存在警告项"
+                            status == DetectStatus.SAFE -> "✓ 环境安全"
+                            else -> "点击刷新开始检测"
+                        },
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = iconColor
+                    )
+                    if (!isDetecting && checkedCount > 0) {
+                        Text(
+                            text = "已检测 $checkedCount/$totalCount 项 | 风险 $riskCount | 警告 $warningCount",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+            }
+
+            if (!isDetecting && status != null) {
+                Spacer(modifier = Modifier.height(12.dp))
+                Text(
+                    text = when (status) {
+                        DetectStatus.RISK -> "检测到 Root/Hook 框架，建议在使用敏感应用前隐藏环境"
+                        DetectStatus.WARNING -> "发现部分可疑配置，建议检查开发者选项设置"
+                        DetectStatus.SAFE -> "未检测到 Root 或 Hook 框架，环境相对安全"
+                        else -> ""
+                    },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoryHeader(category: DetectCategory) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        category.icon()
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = category.name,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
+        )
+    }
+}
+
+@Composable
+private fun DetectItemCard(
+    item: DetectItem,
+    onClick: () -> Unit
+) {
     val bgColor by animateColorAsState(
-        when (item.result) {
-            DetectResult.PASS -> Color(0xFFE8F5E9)
-            DetectResult.FAIL -> Color(0xFFFFEBEE)
-            DetectResult.WARNING -> Color(0xFFFFF8E1)
-            DetectResult.ERROR -> Color(0xFFFBE9E7)
-            DetectResult.PENDING -> MaterialTheme.colorScheme.surface
+        when (item.status) {
+            DetectStatus.SAFE -> Color(0xFFE8F5E9)
+            DetectStatus.RISK -> Color(0xFFFFEBEE)
+            DetectStatus.WARNING -> Color(0xFFFFF8E1)
+            DetectStatus.UNKNOWN -> MaterialTheme.colorScheme.surface
         },
         label = "bgColor"
     )
-    val iconColor = when (item.result) {
-        DetectResult.PASS -> Color(0xFF4CAF50)
-        DetectResult.FAIL -> Color(0xFFF44336)
-        DetectResult.WARNING -> Color(0xFFFF9800)
-        DetectResult.ERROR -> Color(0xFF795548)
-        DetectResult.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+
+    val iconColor = when (item.status) {
+        DetectStatus.SAFE -> Color(0xFF4CAF50)
+        DetectStatus.RISK -> Color(0xFFF44336)
+        DetectStatus.WARNING -> Color(0xFFFF9800)
+        DetectStatus.UNKNOWN -> MaterialTheme.colorScheme.onSurfaceVariant
     }
-    val statusText = when (item.result) {
-        DetectResult.PASS -> "安全"
-        DetectResult.FAIL -> "检测到"
-        DetectResult.WARNING -> "警告"
-        DetectResult.ERROR -> "出错"
-        DetectResult.PENDING -> "待检测"
+
+    val statusText = when (item.status) {
+        DetectStatus.SAFE -> "安全"
+        DetectStatus.RISK -> "风险"
+        DetectStatus.WARNING -> "警告"
+        DetectStatus.UNKNOWN -> if (item.isDetecting) "检测中..." else "未检测"
     }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = bgColor)
+        colors = CardDefaults.cardColors(containerColor = bgColor),
+        onClick = onClick
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 10.dp),
+                .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                when (item.result) {
-                    DetectResult.PASS -> Icons.Default.CheckCircle
-                    DetectResult.FAIL -> Icons.Default.Close
-                    DetectResult.WARNING -> Icons.Default.Warning
-                    DetectResult.ERROR -> Icons.Default.Error
-                    DetectResult.PENDING -> Icons.Default.Security
-                },
-                contentDescription = null,
-                tint = iconColor,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(10.dp))
+            if (item.isDetecting) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp
+                )
+            } else {
+                Icon(
+                    when (item.status) {
+                        DetectStatus.SAFE -> Icons.Default.CheckCircle
+                        DetectStatus.RISK -> Icons.Default.Close
+                        DetectStatus.WARNING -> Icons.Default.Warning
+                        DetectStatus.UNKNOWN -> Icons.Default.Security
+                    },
+                    contentDescription = null,
+                    tint = iconColor,
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.width(12.dp))
+
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = item.name,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )
                 if (item.detail.isNotEmpty()) {
@@ -290,9 +464,10 @@ private fun DetectItemCard(item: DetectItem) {
                     )
                 }
             }
+
             Text(
                 text = statusText,
-                style = MaterialTheme.typography.labelSmall,
+                style = MaterialTheme.typography.labelLarge,
                 color = iconColor,
                 fontWeight = FontWeight.Bold
             )
@@ -300,447 +475,525 @@ private fun DetectItemCard(item: DetectItem) {
     }
 }
 
-/**
- * 执行单项检测
- */
-private fun runDetection(context: android.content.Context, name: String): Pair<DetectResult, String> {
+// ==================== 真实检测实现 ====================
+
+private fun runRealDetection(context: android.content.Context, id: String): Pair<DetectStatus, String> {
     return try {
-        when (name) {
-            "Root 权限检测" -> detectRootAccess()
-            "su 路径检测" -> detectSuPath()
-            "Magisk 检测" -> detectMagisk()
-            "KernelSU 检测" -> detectKernelSU()
-            "APatch 检测" -> detectAPatch()
-            "Xposed 框架检测" -> detectXposed()
-            "LSPosed 检测" -> detectLSPosed()
-            "Bootloader 解锁检测" -> detectBootloader()
-            "系统完整性检测" -> detectSystemIntegrity()
-            "Debug 模式检测" -> detectDebugMode()
-            "开发者选项检测" -> detectDeveloperOptions(context)
-            "USB 调试检测" -> detectUsbDebugging(context)
-            "允许安装未知来源检测" -> detectUnknownSources(context)
-            "Root 管理应用检测" -> detectRootApps(context)
-            "Magisk Manager 检测" -> detectAppInstalled(context, "com.topjohnwu.magisk", "Magisk Manager")
-            "KernelSU Manager 检测" -> detectAppInstalled(context, "me.weishu.kernelsu", "KernelSU Manager")
-            "APatch Manager 检测" -> detectAppInstalled(context, "me.bmax.apatch", "APatch")
-            "SuperSU 检测" -> detectAppInstalled(context, "eu.chainfire.supersu", "SuperSU")
-            "KingRoot 检测" -> detectAppInstalled(context, "com.kingroot.kinguser", "KingRoot")
-            "Dangerous Props 检测" -> detectDangerousProps()
-            "SELinux 状态检测" -> detectSELinux()
-            "/system 分区可写检测" -> detectSystemWritable()
-            "风险属性检测" -> detectRiskyProps()
-            "Hook 框架特征检测" -> detectHookFramework(context)
-            else -> Pair(DetectResult.ERROR, "未知检测项")
+        when (id) {
+            // === Root 权限检测 ===
+            "root_access" -> detectRootAccess()
+            "su_binary" -> detectSuBinary()
+            "magisk" -> detectMagisk()
+            "kernelsu" -> detectKernelSU()
+            "apatch" -> detectAPatch()
+            "superuser" -> detectSuperSU()
+            "kingroot" -> detectKingRoot()
+
+            // === Hook 框架检测 ===
+            "xposed" -> detectXposed()
+            "lsposed" -> detectLSPosed()
+            "edxposed" -> detectEdXposed()
+            "frida" -> detectFrida()
+            "substrate" -> detectSubstrate()
+
+            // === 可疑应用检测 ===
+            "magisk_app" -> detectAppInstalled(context, "com.topjohnwu.magisk", "Magisk")
+            "kernelsu_app" -> detectAppInstalled(context, "me.weishu.kernelsu", "KernelSU")
+            "apatch_app" -> detectAppInstalled(context, "me.bmax.apatch", "APatch")
+            "supersu_app" -> detectAppInstalled(context, "eu.chainfire.supersu", "SuperSU")
+            "lsposed_app" -> detectAppInstalled(context, "org.lsposed.manager", "LSPosed")
+            "xposed_app" -> detectAppInstalled(context, "de.robv.android.xposed.installer", "Xposed")
+            "hide_app" -> detectAppInstalled(context, "com.tsng.hidemyapplist", "隐藏应用列表")
+            "shamiko" -> detectShamiko()
+
+            // === 系统环境检测 ===
+            "bootloader" -> detectBootloader()
+            "selinux" -> detectSELinux()
+            "system_rw" -> detectSystemWritable()
+            "debuggable" -> detectDebuggable()
+            "test_keys" -> detectTestKeys()
+            "dangerous_props" -> detectDangerousProps()
+
+            // === 开发者选项检测 ===
+            "dev_options" -> detectDevOptions(context)
+            "usb_debug" -> detectUsbDebug(context)
+            "adb_enabled" -> detectAdbEnabled(context)
+            "mock_location" -> detectMockLocation(context)
+
+            // === 内存进程检测 ===
+            "maps_check" -> detectMapsAnomaly()
+            "zygote" -> detectZygoteInjection()
+            "ptrace" -> detectPtrace()
+
+            else -> Pair(DetectStatus.UNKNOWN, "未知检测项")
         }
     } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测出错: ${e.message}")
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
     }
 }
 
-// ==================== 牛头32检测实现 ====================
+// === Root 权限检测 ===
 
-private fun detectRootAccess(): Pair<DetectResult, String> {
+private fun detectRootAccess(): Pair<DetectStatus, String> {
     return try {
-        val hasRoot = RootShell.hasRoot()
-        if (hasRoot) {
-            val rootType = RootShell.detectRootType()
-            Pair(DetectResult.FAIL, "设备已Root ($rootType)")
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "su -c 'id' 2>/dev/null"))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        val exitCode = process.waitFor()
+
+        if (exitCode == 0 && output.contains("uid=0")) {
+            Pair(DetectStatus.RISK, "已获取 Root 权限: $output")
         } else {
-            Pair(DetectResult.PASS, "未检测到Root权限")
+            Pair(DetectStatus.SAFE, "未获取 Root 权限")
         }
     } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
+        Pair(DetectStatus.SAFE, "无法执行 su 命令")
     }
 }
 
-private fun detectSuPath(): Pair<DetectResult, String> {
+private fun detectSuBinary(): Pair<DetectStatus, String> {
     val suPaths = listOf(
-        "/system/bin/su", "/system/xbin/su", "/sbin/su", "/su/bin/su",
-        "/magisk/.core/bin/su", "/data/adb/magisk/magisk",
-        "/data/adb/ksu/bin/ksu", "/data/adb/ksu/bin/su",
-        "/data/adb/ap/bin/apd", "/data/adb/ap/bin/su",
-        "/system/bin/kp"
+        "/system/bin/su", "/system/xbin/su", "/sbin/su",
+        "/su/bin/su", "/data/local/xbin/su", "/data/local/bin/su",
+        "/system/sbin/su", "/vendor/bin/su", "/system/sd/xbin/su"
     )
+
     val found = suPaths.filter { File(it).exists() }
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未发现su路径")
+        Pair(DetectStatus.SAFE, "未发现 su 二进制文件")
     } else {
-        Pair(DetectResult.FAIL, "发现 ${found.size} 个su路径: ${found.joinToString(", ")}")
+        Pair(DetectStatus.RISK, "发现 su: ${found.first()}")
     }
 }
 
-private fun detectMagisk(): Pair<DetectResult, String> {
+private fun detectMagisk(): Pair<DetectStatus, String> {
     val magiskPaths = listOf(
-        "/data/adb/magisk", "/sbin/.magisk", "/magisk"
+        "/data/adb/magisk", "/sbin/.magisk", "/dev/.magisk",
+        "/data/adb/modules", "/data/adb/post-fs-data.d"
     )
     val found = magiskPaths.filter { File(it).exists() }
-    return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未检测到Magisk")
+
+    // 检查 Magisk 进程
+    val hasMagiskProcess = try {
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "ps -A | grep -i magisk 2>/dev/null"))
+        val output = process.inputStream.bufferedReader().readText()
+        process.waitFor()
+        output.isNotEmpty()
+    } catch (_: Exception) { false }
+
+    return if (found.isEmpty() && !hasMagiskProcess) {
+        Pair(DetectStatus.SAFE, "未检测到 Magisk")
     } else {
-        Pair(DetectResult.FAIL, "检测到Magisk: ${found.joinToString(", ")}")
+        val details = mutableListOf<String>()
+        if (found.isNotEmpty()) details.add("路径: ${found.first()}")
+        if (hasMagiskProcess) details.add("进程运行中")
+        Pair(DetectStatus.RISK, "检测到 Magisk (${details.joinToString(", ")})")
     }
 }
 
-private fun detectKernelSU(): Pair<DetectResult, String> {
-    val ksuPaths = listOf(
-        "/data/adb/ksu", "/data/adb/ksu/bin/ksu"
-    )
+private fun detectKernelSU(): Pair<DetectStatus, String> {
+    val ksuPaths = listOf("/data/adb/ksu", "/data/adb/ksu/bin/ksu")
     val found = ksuPaths.filter { File(it).exists() }
+
+    // 检查 KernelSU 模块
+    val hasModules = File("/data/adb/modules").exists()
+
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未检测到KernelSU")
+        Pair(DetectStatus.SAFE, "未检测到 KernelSU")
     } else {
-        Pair(DetectResult.FAIL, "检测到KernelSU: ${found.joinToString(", ")}")
+        Pair(DetectStatus.RISK, "检测到 KernelSU${if (hasModules) " (有模块)" else ""}")
     }
 }
 
-private fun detectAPatch(): Pair<DetectResult, String> {
-    val apPaths = listOf(
-        "/data/adb/ap", "/data/adb/ap/bin/apd"
-    )
+private fun detectAPatch(): Pair<DetectStatus, String> {
+    val apPaths = listOf("/data/adb/ap", "/data/adb/ap/bin/apd")
     val found = apPaths.filter { File(it).exists() }
+
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未检测到APatch")
+        Pair(DetectStatus.SAFE, "未检测到 APatch")
     } else {
-        Pair(DetectResult.FAIL, "检测到APatch: ${found.joinToString(", ")}")
+        Pair(DetectStatus.RISK, "检测到 APatch")
     }
 }
 
-private fun detectXposed(): Pair<DetectResult, String> {
-    // 检查 Xposed 框架特征
+private fun detectSuperSU(): Pair<DetectStatus, String> {
+    val paths = listOf("/system/app/Superuser", "/system/xbin/daemonsu")
+    val found = paths.filter { File(it).exists() }
+
+    return if (found.isEmpty()) {
+        Pair(DetectStatus.SAFE, "未检测到 SuperSU")
+    } else {
+        Pair(DetectStatus.RISK, "检测到 SuperSU")
+    }
+}
+
+private fun detectKingRoot(): Pair<DetectStatus, String> {
+    val paths = listOf(
+        "/system/app/Kinguser",
+        "/data/data/com.kingroot.kinguser"
+    )
+    val found = paths.filter { File(it).exists() }
+
+    return if (found.isEmpty()) {
+        Pair(DetectStatus.SAFE, "未检测到 KingRoot")
+    } else {
+        Pair(DetectStatus.RISK, "检测到 KingRoot")
+    }
+}
+
+// === Hook 框架检测 ===
+
+private fun detectXposed(): Pair<DetectStatus, String> {
     val xposedPaths = listOf(
         "/system/framework/XposedBridge.jar",
         "/system/lib/libxposed_art.so",
-        "/system/framework/XposedInstaller.apk"
+        "/system/lib64/libxposed_art.so",
+        "/data/data/de.robv.android.xposed.installer"
     )
     val found = xposedPaths.filter { File(it).exists() }
-    // 检查 Xposed 相关属性
-    val propCheck = try {
+
+    // 检查 Xposed 属性
+    val hasXposedProp = try {
         val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop ro.build.xposed 2>/dev/null"))
-        val output = process.inputStream.bufferedReader().readText().trim()
-        output.isNotEmpty()
+        process.inputStream.bufferedReader().readText().trim().isNotEmpty()
     } catch (_: Exception) { false }
-    
-    return if (found.isEmpty() && !propCheck) {
-        Pair(DetectResult.PASS, "未检测到Xposed框架")
+
+    return if (found.isEmpty() && !hasXposedProp) {
+        Pair(DetectStatus.SAFE, "未检测到 Xposed")
     } else {
-        val details = mutableListOf<String>()
-        if (found.isNotEmpty()) details.add("路径: ${found.joinToString(", ")}")
-        if (propCheck) details.add("属性: ro.build.xposed")
-        Pair(DetectResult.FAIL, "检测到Xposed: ${details.joinToString("; ")}")
+        Pair(DetectStatus.RISK, "检测到 Xposed 框架")
     }
 }
 
-private fun detectLSPosed(): Pair<DetectResult, String> {
-    val lsposedPaths = listOf(
-        "/data/adb/lspd", "/data/adb/modules/lsposed"
+private fun detectLSPosed(): Pair<DetectStatus, String> {
+    val paths = listOf(
+        "/data/adb/lspd",
+        "/data/adb/modules/zygisk_lsposed",
+        "/data/adb/modules/riru_lsposed"
     )
-    val found = lsposedPaths.filter { File(it).exists() }
+    val found = paths.filter { File(it).exists() }
+
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未检测到LSPosed")
+        Pair(DetectStatus.SAFE, "未检测到 LSPosed")
     } else {
-        Pair(DetectResult.FAIL, "检测到LSPosed: ${found.joinToString(", ")}")
+        Pair(DetectStatus.RISK, "检测到 LSPosed")
     }
 }
 
-private fun detectBootloader(): Pair<DetectResult, String> {
+private fun detectEdXposed(): Pair<DetectStatus, String> {
+    val paths = listOf(
+        "/data/adb/modules/riru_edxposed",
+        "/data/adb/modules/edxposed"
+    )
+    val found = paths.filter { File(it).exists() }
+
+    return if (found.isEmpty()) {
+        Pair(DetectStatus.SAFE, "未检测到 EdXposed")
+    } else {
+        Pair(DetectStatus.RISK, "检测到 EdXposed")
+    }
+}
+
+private fun detectFrida(): Pair<DetectStatus, String> {
+    // 检查 Frida 特征
+    val fridaIndicators = listOf(
+        "frida-server", "frida-gadget", "frida-agent"
+    )
+
     return try {
-        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop ro.boot.flash.locked 2>/dev/null; getprop ro.boot.verifiedbootstate 2>/dev/null; getprop ro.boot.veritymode 2>/dev/null"))
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c",
+            "cat /proc/self/maps 2>/dev/null | grep -i frida | head -1"))
         val output = process.inputStream.bufferedReader().readText().trim()
         process.waitFor()
-        
-        val isLocked = output.contains("1") || output.contains("verified") || output.contains("enforcing")
-        if (isLocked) {
-            Pair(DetectResult.PASS, "Bootloader 已锁定")
+
+        if (output.isNotEmpty()) {
+            Pair(DetectStatus.RISK, "内存中发现 Frida 特征")
         } else {
-            // 检查其他方式
-            val process2 = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop ro.boot.verifiedbootstate 2>/dev/null"))
-            val vbs = process2.inputStream.bufferedReader().readText().trim()
-            process2.waitFor()
-            
-            if (vbs.contains("orange") || vbs.contains("disabled")) {
-                Pair(DetectResult.FAIL, "Bootloader 已解锁 (verifiedbootstate=$vbs)")
-            } else if (vbs.isNotEmpty()) {
-                Pair(DetectResult.WARNING, "状态: $vbs")
+            // 检查进程
+            val psProcess = Runtime.getRuntime().exec(arrayOf("sh", "-c",
+                "ps -A | grep -i frida 2>/dev/null | head -1"))
+            val psOutput = psProcess.inputStream.bufferedReader().readText().trim()
+            psProcess.waitFor()
+
+            if (psOutput.isNotEmpty()) {
+                Pair(DetectStatus.RISK, "发现 Frida 进程")
             } else {
-                Pair(DetectResult.WARNING, "无法确定Bootloader状态")
+                Pair(DetectStatus.SAFE, "未检测到 Frida")
             }
         }
     } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
+        Pair(DetectStatus.SAFE, "无法检测 Frida")
     }
 }
 
-private fun detectSystemIntegrity(): Pair<DetectResult, String> {
-    return try {
-        // 检查系统关键文件是否被修改
-        val systemFiles = listOf(
-            "/system/bin/app_process",
-            "/system/bin/servicemanager",
-            "/system/framework/boot.jar",
-            "/system/framework/services.jar"
-        )
-        val modified = mutableListOf<String>()
-        for (file in systemFiles) {
-            val f = File(file)
-            if (f.exists()) {
-                // 检查文件大小是否异常（简单检测）
-                if (f.length() == 0L) {
-                    modified.add("$file (空文件)")
-                }
-            }
-        }
-        if (modified.isEmpty()) {
-            Pair(DetectResult.PASS, "系统文件完整性正常")
-        } else {
-            Pair(DetectResult.FAIL, "发现异常: ${modified.joinToString("; ")}")
-        }
-    } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
-    }
-}
-
-private fun detectDebugMode(): Pair<DetectResult, String> {
-    return try {
-        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop ro.debuggable 2>/dev/null"))
-        val output = process.inputStream.bufferedReader().readText().trim()
-        process.waitFor()
-        if (output == "1") {
-            Pair(DetectResult.FAIL, "系统处于Debug模式")
-        } else {
-            Pair(DetectResult.PASS, "系统非Debug模式")
-        }
-    } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
-    }
-}
-
-private fun detectDeveloperOptions(context: android.content.Context): Pair<DetectResult, String> {
-    return try {
-        val enabled = android.provider.Settings.Global.getInt(
-            context.contentResolver,
-            android.provider.Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0
-        ) == 1
-        if (enabled) {
-            Pair(DetectResult.WARNING, "开发者选项已开启")
-        } else {
-            Pair(DetectResult.PASS, "开发者选项未开启")
-        }
-    } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
-    }
-}
-
-private fun detectUsbDebugging(context: android.content.Context): Pair<DetectResult, String> {
-    return try {
-        val enabled = android.provider.Settings.Global.getInt(
-            context.contentResolver,
-            android.provider.Settings.Global.ADB_ENABLED, 0
-        ) == 1
-        if (enabled) {
-            Pair(DetectResult.WARNING, "USB调试已开启")
-        } else {
-            Pair(DetectResult.PASS, "USB调试未开启")
-        }
-    } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
-    }
-}
-
-private fun detectUnknownSources(context: android.content.Context): Pair<DetectResult, String> {
-    return try {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Android 8.0+ 每个应用独立控制，检查是否安装了未知来源的应用
-            Pair(DetectResult.PASS, "Android 8.0+ 每应用独立控制")
-        } else {
-            val enabled = android.provider.Settings.Global.getInt(
-                context.contentResolver,
-                android.provider.Settings.Global.INSTALL_NON_MARKET_APPS, 0
-            ) == 1
-            if (enabled) {
-                Pair(DetectResult.WARNING, "允许安装未知来源应用")
-            } else {
-                Pair(DetectResult.PASS, "未允许安装未知来源")
-            }
-        }
-    } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
-    }
-}
-
-// ==================== Ruru检测实现 ====================
-
-private fun detectRootApps(context: android.content.Context): Pair<DetectResult, String> {
-    val rootAppPackages = listOf(
-        "com.topjohnwu.magisk",   // Magisk
-        "me.weishu.kernelsu",      // KernelSU
-        "me.bmax.apatch",          // APatch
-        "eu.chainfire.supersu",    // SuperSU
-        "com.kingroot.kinguser",   // KingRoot
-        "com.noshufou.android.su", // SuperUser
-        "com.koushikdutta.superuser", // SuperUser
-        "com.thirdparty.superuser", // SuperUser
-        "com.yellowes.su",         // YellowES SuperUser
-        "com.chainfire.supersu",   // SuperSU (alt)
-        "de.robv.android.xposed.installer", // Xposed Installer
-        "org.lsposed.manager",     // LSPosed
-        "io.github.vvb2060.magisk", // Alpha Magisk
+private fun detectSubstrate(): Pair<DetectStatus, String> {
+    val paths = listOf(
+        "/system/lib/libsubstrate.so",
+        "/system/lib/libsubstrate-dvm.so"
     )
-    
-    val pm = context.packageManager
-    val found = mutableListOf<String>()
-    for (pkg in rootAppPackages) {
-        try {
-            pm.getPackageInfo(pkg, 0)
-            found.add(pkg)
-        } catch (_: PackageManager.NameNotFoundException) {}
-    }
-    
+    val found = paths.filter { File(it).exists() }
+
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未发现Root管理应用")
+        Pair(DetectStatus.SAFE, "未检测到 Substrate")
     } else {
-        Pair(DetectResult.FAIL, "发现 ${found.size} 个Root应用: ${found.joinToString(", ")}")
+        Pair(DetectStatus.RISK, "检测到 Substrate")
     }
 }
 
-private fun detectAppInstalled(context: android.content.Context, packageName: String, appName: String): Pair<DetectResult, String> {
+// === 应用检测 ===
+
+private fun detectAppInstalled(context: android.content.Context, packageName: String, appName: String): Pair<DetectStatus, String> {
     return try {
         context.packageManager.getPackageInfo(packageName, 0)
-        Pair(DetectResult.FAIL, "$appName 已安装 ($packageName)")
+        Pair(DetectStatus.RISK, "$appName 已安装 ($packageName)")
     } catch (_: PackageManager.NameNotFoundException) {
-        Pair(DetectResult.PASS, "$appName 未安装")
+        Pair(DetectStatus.SAFE, "$appName 未安装")
     }
 }
 
-private fun detectDangerousProps(): Pair<DetectResult, String> {
-    val dangerousProps = listOf(
-        "ro.debuggable" to "1",
-        "ro.secure" to "0",
-        "service.bootanim.exit" to "1",
-        "ro.build.tags" to "test-keys",
-        "ro.build.type" to "eng",
+private fun detectShamiko(): Pair<DetectStatus, String> {
+    val shamikoPaths = listOf(
+        "/data/adb/modules/zygisk_shamiko",
+        "/data/adb/modules/shamiko"
     )
-    
-    val found = mutableListOf<String>()
-    for ((prop, value) in dangerousProps) {
-        try {
-            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop $prop 2>/dev/null"))
-            val output = process.inputStream.bufferedReader().readText().trim()
-            process.waitFor()
-            if (output == value) {
-                found.add("$prop=$output")
-            }
-        } catch (_: Exception) {}
-    }
-    
+    val found = shamikoPaths.filter { File(it).exists() }
+
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未发现危险属性")
+        Pair(DetectStatus.SAFE, "未检测到 Shamiko")
     } else {
-        Pair(DetectResult.FAIL, "发现 ${found.size} 个危险属性: ${found.joinToString("; ")}")
+        Pair(DetectStatus.RISK, "检测到 Shamiko (Magisk 隐藏模块)")
     }
 }
 
-private fun detectSELinux(): Pair<DetectResult, String> {
+// === 系统环境检测 ===
+
+private fun detectBootloader(): Pair<DetectStatus, String> {
+    return try {
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c",
+            "getprop ro.boot.verifiedbootstate 2>/dev/null; getprop ro.boot.flash.locked 2>/dev/null"))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        process.waitFor()
+
+        when {
+            output.contains("orange") -> Pair(DetectStatus.RISK, "Bootloader 已解锁 (orange)")
+            output.contains("1") -> Pair(DetectStatus.SAFE, "Bootloader 已锁定")
+            output.contains("0") -> Pair(DetectStatus.RISK, "Bootloader 未锁定")
+            else -> Pair(DetectStatus.UNKNOWN, "无法确定状态")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+private fun detectSELinux(): Pair<DetectStatus, String> {
     return try {
         val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getenforce 2>/dev/null"))
         val output = process.inputStream.bufferedReader().readText().trim()
         process.waitFor()
+
         when (output) {
-            "Enforcing" -> Pair(DetectResult.PASS, "SELinux 状态: Enforcing (强制)")
-            "Permissive" -> Pair(DetectResult.FAIL, "SELinux 状态: Permissive (宽容)")
-            "Disabled" -> Pair(DetectResult.FAIL, "SELinux 状态: Disabled (禁用)")
-            else -> Pair(DetectResult.WARNING, "SELinux 状态: $output")
+            "Enforcing" -> Pair(DetectStatus.SAFE, "SELinux: Enforcing (强制模式)")
+            "Permissive" -> Pair(DetectStatus.RISK, "SELinux: Permissive (宽容模式)")
+            "Disabled" -> Pair(DetectStatus.RISK, "SELinux: Disabled (已禁用)")
+            else -> Pair(DetectStatus.UNKNOWN, "SELinux 状态: $output")
         }
     } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
     }
 }
 
-private fun detectSystemWritable(): Pair<DetectResult, String> {
+private fun detectSystemWritable(): Pair<DetectStatus, String> {
     return try {
-        val testFile = File("/system/test_folkpatch_rw")
-        val canWrite = try {
-            testFile.createNewFile()
-        } catch (_: Exception) { false }
-        
-        if (canWrite) {
-            testFile.delete()
-            Pair(DetectResult.FAIL, "/system 分区可写")
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c",
+            "mount | grep ' /system ' 2>/dev/null | head -1"))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        process.waitFor()
+
+        if (output.contains("rw,")) {
+            Pair(DetectStatus.RISK, "/system 以读写模式挂载")
+        } else if (output.contains("ro,")) {
+            Pair(DetectStatus.SAFE, "/system 以只读模式挂载")
         } else {
-            // 检查 mount 状态
-            val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "mount | grep ' /system ' 2>/dev/null"))
-            val output = process.inputStream.bufferedReader().readText().trim()
-            process.waitFor()
-            if (output.contains("rw,")) {
-                Pair(DetectResult.FAIL, "/system 以读写模式挂载")
+            // 尝试写入测试
+            val testFile = File("/system/.test_write_${System.currentTimeMillis()}")
+            val canWrite = try {
+                testFile.createNewFile()
+            } catch (_: Exception) { false }
+            if (canWrite) {
+                testFile.delete()
+                Pair(DetectStatus.RISK, "/system 可写")
             } else {
-                Pair(DetectResult.PASS, "/system 分区只读")
+                Pair(DetectStatus.SAFE, "/system 只读")
             }
         }
     } catch (e: Exception) {
-        Pair(DetectResult.ERROR, "检测失败: ${e.message}")
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
     }
 }
 
-private fun detectRiskyProps(): Pair<DetectResult, String> {
-    val riskyProps = listOf(
-        "ro.build.selinux",
-        "persist.sys.safemode",
-        "ro.allow.mock.location",
-        "ro.hardware",
+private fun detectDebuggable(): Pair<DetectStatus, String> {
+    return try {
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop ro.debuggable 2>/dev/null"))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        process.waitFor()
+
+        if (output == "1") {
+            Pair(DetectStatus.RISK, "ro.debuggable=1 (Debug 模式)")
+        } else {
+            Pair(DetectStatus.SAFE, "ro.debuggable=0")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+private fun detectTestKeys(): Pair<DetectStatus, String> {
+    return try {
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop ro.build.tags 2>/dev/null"))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        process.waitFor()
+
+        if (output.contains("test-keys")) {
+            Pair(DetectStatus.WARNING, "使用测试签名 (test-keys)")
+        } else if (output.contains("release-keys")) {
+            Pair(DetectStatus.SAFE, "使用发布签名 (release-keys)")
+        } else {
+            Pair(DetectStatus.UNKNOWN, "签名类型: $output")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+private fun detectDangerousProps(): Pair<DetectStatus, String> {
+    val dangerous = listOf(
+        "ro.debuggable" to "1",
+        "ro.secure" to "0",
+        "ro.allow.mock.location" to "1"
     )
-    
+
     val found = mutableListOf<String>()
-    for (prop in riskyProps) {
+    for ((prop, badValue) in dangerous) {
         try {
             val process = Runtime.getRuntime().exec(arrayOf("sh", "-c", "getprop $prop 2>/dev/null"))
-            val output = process.inputStream.bufferedReader().readText().trim()
+            val value = process.inputStream.bufferedReader().readText().trim()
             process.waitFor()
-            if (output.isNotEmpty() && output != "0" && output != "false") {
-                found.add("$prop=$output")
+            if (value == badValue) {
+                found.add("$prop=$value")
             }
         } catch (_: Exception) {}
     }
-    
+
     return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未发现风险属性")
+        Pair(DetectStatus.SAFE, "未发现危险属性")
     } else {
-        Pair(DetectResult.WARNING, "发现 ${found.size} 个属性: ${found.joinToString("; ")}")
+        Pair(DetectStatus.WARNING, "发现: ${found.joinToString(", ")}")
     }
 }
 
-private fun detectHookFramework(context: android.content.Context): Pair<DetectResult, String> {
-    val found = mutableListOf<String>()
-    
-    // 检查内存中的 Hook 特征
-    try {
+// === 开发者选项检测 ===
+
+private fun detectDevOptions(context: android.content.Context): Pair<DetectStatus, String> {
+    return try {
+        val enabled = Settings.Global.getInt(context.contentResolver, Settings.Global.DEVELOPMENT_SETTINGS_ENABLED, 0) == 1
+        if (enabled) {
+            Pair(DetectStatus.WARNING, "开发者选项已开启")
+        } else {
+            Pair(DetectStatus.SAFE, "开发者选项未开启")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+private fun detectUsbDebug(context: android.content.Context): Pair<DetectStatus, String> {
+    return try {
+        val enabled = Settings.Global.getInt(context.contentResolver, Settings.Global.ADB_ENABLED, 0) == 1
+        if (enabled) {
+            Pair(DetectStatus.WARNING, "USB 调试已开启")
+        } else {
+            Pair(DetectStatus.SAFE, "USB 调试未开启")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+private fun detectAdbEnabled(context: android.content.Context): Pair<DetectStatus, String> {
+    return detectUsbDebug(context)
+}
+
+private fun detectMockLocation(context: android.content.Context): Pair<DetectStatus, String> {
+    return try {
+        val enabled = Settings.Secure.getInt(context.contentResolver, Settings.Secure.ALLOW_MOCK_LOCATION, 0) == 1
+        if (enabled) {
+            Pair(DetectStatus.WARNING, "允许模拟位置")
+        } else {
+            Pair(DetectStatus.SAFE, "未允许模拟位置")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+// === 内存/进程检测 ===
+
+private fun detectMapsAnomaly(): Pair<DetectStatus, String> {
+    return try {
         val process = Runtime.getRuntime().exec(arrayOf("sh", "-c",
-            "cat /proc/self/maps 2>/dev/null | grep -iE 'xposed|substrate|frida|lsposed|riru|zygisk' | head -5"))
+            "cat /proc/self/maps 2>/dev/null | grep -iE 'xposed|frida|substrate|lsposed|riru|zygisk|magisk' | head -3"))
         val output = process.inputStream.bufferedReader().readText().trim()
         process.waitFor()
+
         if (output.isNotEmpty()) {
-            found.add("内存映射: ${output.lines().firstOrNull() ?: ""}")
+            val firstLine = output.lines().firstOrNull() ?: ""
+            Pair(DetectStatus.RISK, "内存中发现异常: ${firstLine.take(50)}")
+        } else {
+            Pair(DetectStatus.SAFE, "内存映射正常")
         }
-    } catch (_: Exception) {}
-    
-    // 检查已安装的 Hook 框架应用
-    val hookPackages = listOf(
-        "de.robv.android.xposed.installer",
-        "org.lsposed.manager",
-        "org.meowcat.edxposed.manager",
-        "com.tsng.hidemyapplist",
-        "btools.hideapp",
-    )
-    val pm = context.packageManager
-    for (pkg in hookPackages) {
-        try {
-            pm.getPackageInfo(pkg, 0)
-            found.add(pkg)
-        } catch (_: PackageManager.NameNotFoundException) {}
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
     }
-    
-    return if (found.isEmpty()) {
-        Pair(DetectResult.PASS, "未检测到Hook框架")
-    } else {
-        Pair(DetectResult.FAIL, "发现 ${found.size} 项Hook特征: ${found.joinToString("; ")}")
+}
+
+private fun detectZygoteInjection(): Pair<DetectStatus, String> {
+    // 检查 Zygote 进程是否异常
+    return try {
+        val process = Runtime.getRuntime().exec(arrayOf("sh", "-c",
+            "ps -A | grep -E 'zygote|zygisk' 2>/dev/null | head -3"))
+        val output = process.inputStream.bufferedReader().readText().trim()
+        process.waitFor()
+
+        if (output.contains("zygisk") || output.lines().size > 2) {
+            Pair(DetectStatus.WARNING, "发现 Zygote 相关异常进程")
+        } else {
+            Pair(DetectStatus.SAFE, "Zygote 进程正常")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
+    }
+}
+
+private fun detectPtrace(): Pair<DetectStatus, String> {
+    // 检查是否被 ptrace 附加
+    return try {
+        val statusFile = File("/proc/self/status")
+        if (statusFile.exists()) {
+            val content = statusFile.readText()
+            val tracerPid = content.lines()
+                .find { it.startsWith("TracerPid:") }
+                ?.substringAfter(":")
+                ?.trim()
+                ?: "0"
+
+            if (tracerPid != "0") {
+                Pair(DetectStatus.RISK, "被进程 $tracerPid 调试附加")
+            } else {
+                Pair(DetectStatus.SAFE, "未被调试")
+            }
+        } else {
+            Pair(DetectStatus.UNKNOWN, "无法读取状态")
+        }
+    } catch (e: Exception) {
+        Pair(DetectStatus.UNKNOWN, "检测失败: ${e.message}")
     }
 }
