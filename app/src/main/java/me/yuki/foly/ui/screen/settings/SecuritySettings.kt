@@ -1,13 +1,22 @@
 package me.yuki.foly.ui.screen.settings
 
 import androidx.biometric.BiometricPrompt
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Fingerprint
 import androidx.compose.material.icons.filled.Shield
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import me.yuki.foly.APApplication
@@ -33,6 +42,33 @@ fun SecuritySettingsContent(
         androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG or
                 androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL
     ) == androidx.biometric.BiometricManager.BIOMETRIC_SUCCESS
+
+    if (!canAuthenticate) {
+        // 设备不支持生物识别，显示提示
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 24.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Warning,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.error
+            )
+            Text(
+                text = "设备不支持生物识别",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+            Text(
+                text = "当前设备未检测到指纹传感器或未注册生物识别信息，生物识别登录功能不可用。\n\n如需使用此功能，请在系统设置中添加指纹或面容。",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+        return
+    }
 
     SplicedColumnGroup(flat = flat, highlightKey = highlightKey) {
         item(key = "security_biometric_login", visible = canAuthenticate) {
