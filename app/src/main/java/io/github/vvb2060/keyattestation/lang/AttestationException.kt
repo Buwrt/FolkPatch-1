@@ -1,6 +1,6 @@
 package io.github.vvb2060.keyattestation.lang
 
-import io.github.vvb2060.keyattestation.R
+import me.yuki.foly.R
 
 class AttestationException(code: Int, cause: Throwable) : RuntimeException(cause) {
 
