@@ -290,4 +290,40 @@ public class AttestationRepository {
             Log.w(AppApplication.TAG, "Set RKP hostname error.", e);
         }
     }
+
+    @SuppressWarnings("unchecked")
+    public static AttestationData generateAttestation() throws Exception {
+        var keyStore = new AndroidKeyStore();
+        var alias = AppApplication.TAG;
+
+        var data = keyStore.generateKeyPair(alias, null, false, false, false, 0, false);
+        if (data != null) {
+            try (var it = new ObjectInputStream(new ByteArrayInputStream(data))) {
+                throw (Exception) it.readObject();
+            }
+        }
+
+        var certChain = keyStore.getCertificateChain(alias);
+        if (certChain == null) {
+            throw new ProviderException("Unable to get certificate chain");
+        }
+
+        var factory = CertificateFactory.getInstance("X.509");
+        var certs = (List<X509Certificate>) factory.generateCertificates(new ByteArrayInputStream(certChain));
+        if (certs.isEmpty()) {
+            throw new CertificateException("No certificate");
+        }
+
+        return AttestationData.parseCertificateChain(certs);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static AttestationData loadAttestationData(byte[] bytes) throws Exception {
+        var factory = CertificateFactory.getInstance("X.509");
+        var certs = (List<X509Certificate>) factory.generateCertificates(new ByteArrayInputStream(bytes));
+        if (certs.isEmpty()) {
+            throw new CertificateException("No certificate");
+        }
+        return AttestationData.parseCertificateChain(certs);
+    }
 }
