@@ -421,7 +421,7 @@ dependencies {
     implementation(libs.com.github.topjohnwu.libsu.io)
 
     implementation(libs.dev.rikka.rikkax.parcelablelist)
-    implementation("dev.rikka.rikkax.recyclerview:recyclerview:1.3.2")
+    implementation("dev.rikka.rikkax.recyclerview:recyclerview-ktx:1.3.2")
 
     implementation(libs.io.coil.kt.coil.compose)
     implementation(libs.io.coil.kt.coil.gif)
