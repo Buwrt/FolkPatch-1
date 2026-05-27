@@ -40,7 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
-import me.bmax.apatch.BuildConfig
+import me.yuki.foly.BuildConfig
 import me.yuki.foly.R
 import me.bmax.apatch.ui.theme.APatchTheme
 import java.text.SimpleDateFormat

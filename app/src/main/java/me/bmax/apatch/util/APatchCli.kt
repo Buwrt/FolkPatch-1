@@ -19,7 +19,7 @@ import com.topjohnwu.superuser.ShellUtils
 import com.topjohnwu.superuser.io.SuFile
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.APApplication.Companion.SUPERCMD
-import me.bmax.apatch.BuildConfig
+import me.yuki.foly.BuildConfig
 import me.yuki.foly.R
 import me.bmax.apatch.apApp
 import me.bmax.apatch.ui.screen.MODULE_TYPE

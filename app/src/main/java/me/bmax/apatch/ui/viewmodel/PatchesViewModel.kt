@@ -22,7 +22,7 @@ import com.topjohnwu.superuser.nio.FileSystemManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.BuildConfig
+import me.yuki.foly.BuildConfig
 import me.yuki.foly.R
 import me.bmax.apatch.apApp
 import me.bmax.apatch.util.Version

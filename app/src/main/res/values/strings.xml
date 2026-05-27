@@ -1162,4 +1162,25 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="ka_origin">Origin</string>
     <string name="ka_app_id">Application ID</string>
     <string name="ka_creation_time">Creation Time</string>
+
+    <!-- Attestation error strings -->
+    <string name="error_unavailable">Key attestation unavailable</string>
+    <string name="error_cant_parse_cert">Cannot parse certificate</string>
+    <string name="error_strongbox_unavailable">StrongBox unavailable</string>
+    <string name="error_deviceids_unavailable">Device IDs unavailable</string>
+    <string name="error_out_of_keys">Out of keys</string>
+    <string name="error_out_of_keys_transient">Out of keys (transient)</string>
+    <string name="error_unavailable_transient">Unavailable (transient)</string>
+    <string name="error_keys_not_provisioned">Keys not provisioned</string>
+    <string name="error_remote_key_provisioning">Remote key provisioning error</string>
+    <string name="error_unknown">Unknown error</string>
+    <string name="error_unavailable_summary">Key attestation is not available on this device</string>
+    <string name="error_cant_parse_cert_summary">Failed to parse the attestation certificate chain</string>
+    <string name="error_strongbox_unavailable_summary">StrongBox security hardware is not available</string>
+    <string name="error_deviceids_unavailable_summary">Device identifiers could not be retrieved</string>
+    <string name="error_out_of_keys_summary">No more attestation keys available</string>
+    <string name="error_out_of_keys_transient_summary">Temporarily out of attestation keys, try again later</string>
+    <string name="error_unavailable_transient_summary">Key attestation temporarily unavailable</string>
+    <string name="error_keys_not_provisioned_summary">Device keys have not been provisioned</string>
+    <string name="error_remote_key_provisioning_summary">Remote key provisioning encountered an error</string>
 </resources>

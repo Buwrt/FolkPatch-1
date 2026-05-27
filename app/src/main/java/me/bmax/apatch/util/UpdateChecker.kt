@@ -6,7 +6,7 @@ import android.net.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import android.util.Log
-import me.bmax.apatch.BuildConfig
+import me.yuki.foly.BuildConfig
 
 object UpdateChecker {
     private const val TAG = "UpdateChecker"

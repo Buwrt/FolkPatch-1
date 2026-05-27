@@ -4,7 +4,7 @@ import java.security.MessageDigest
 import android.util.Log
 import androidx.core.content.pm.PackageInfoCompat
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.BuildConfig
+import me.yuki.foly.BuildConfig
 import me.bmax.apatch.Natives
 import me.bmax.apatch.apApp
 import me.bmax.apatch.util.shellForResult

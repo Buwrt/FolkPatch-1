@@ -301,7 +301,7 @@ fun AttestationResultCard(data: AttestationData) {
                     AttestationItem(stringResource(R.string.ka_verified_boot_key), 
                         formatByteArray(rot.verifiedBootKey))
                     AttestationItem(stringResource(R.string.ka_device_locked), 
-                        if (rot.deviceLocked) stringResource(R.string.ka_yes) else stringResource(R.string.ka_no))
+                        if (rot.isDeviceLocked) stringResource(R.string.ka_yes) else stringResource(R.string.ka_no))
                     AttestationItem(stringResource(R.string.ka_boot_state), 
                         bootStateToString(rot.verifiedBootState))
                 }
@@ -422,9 +422,6 @@ fun AuthorizationListItems(list: AuthorizationList?) {
         }
         if (authList.digests != null) {
             AttestationItem(stringResource(R.string.ka_digests), authList.digests.toString())
-        }
-        if (authList.blockModes != null) {
-            AttestationItem(stringResource(R.string.ka_block_modes), authList.blockModes.toString())
         }
         if (authList.paddingModes != null) {
             AttestationItem(stringResource(R.string.ka_padding), authList.paddingModes.toString())

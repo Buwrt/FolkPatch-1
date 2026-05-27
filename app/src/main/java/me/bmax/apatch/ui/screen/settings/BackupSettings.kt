@@ -3,7 +3,7 @@ package me.bmax.apatch.ui.screen.settings
 import android.content.Intent
 import me.bmax.apatch.util.ui.showToast
 import androidx.core.content.FileProvider
-import me.bmax.apatch.BuildConfig
+import me.yuki.foly.BuildConfig
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape

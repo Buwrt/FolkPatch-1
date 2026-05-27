@@ -6,6 +6,7 @@ import android.security.keystore.KeyProperties
 import android.util.Log
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.security.KeyPairGenerator
 import java.security.KeyStore
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
