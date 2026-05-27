@@ -308,7 +308,7 @@ class APModuleViewModel : ViewModel() {
                 sb.append(" /data/adb/modules/")
                 sb.append(id.replace(" ", "\\ "))
             }
-            sb.append("; do if [ -d \"\$d\" ]; then /data/adb/ap/bin/busybox du -sb \"\$d\" 2>/dev/null; fi; done")
+            sb.append("; do if [ -d \"\$d\" ]; then /data/adb/foly/bin/busybox du -sb \"\$d\" 2>/dev/null; fi; done")
             val result = getRootShell().newJob().add(sb.toString()).to(ArrayList(), null).exec()
             if (result.isSuccess) {
                 for (line in result.out) {

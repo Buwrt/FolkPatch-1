@@ -342,7 +342,7 @@ suspend fun listModules(): String = withContext(Dispatchers.IO) {
         ArrayList<String>()
     }
     withNewRootShell {
-        newJob().add("cp /data/user/*/me.bmax.apatch/patch/ori.img /data/adb/ap/ && rm /data/user/*/me.bmax.apatch/patch/ori.img")
+        newJob().add("cp /data/user/*/me.bmax.apatch/patch/ori.img /data/adb/foly/ && rm /data/user/*/me.bmax.apatch/patch/ori.img")
             .to(ArrayList(), null).exec()
     }
     return@withContext out.joinToString("\n").ifBlank { "[]" }

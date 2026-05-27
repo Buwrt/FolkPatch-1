@@ -440,7 +440,7 @@ class PatchesViewModel : ViewModel() {
             val result = getShell().newJob().add(
                 "export ASH_STANDALONE=1",
                 "cd $patchDir",
-                "cp /data/adb/ap/ori.img new-boot.img",
+                "cp /data/adb/foly/ori.img new-boot.img",
                 "./busybox sh ./boot_unpatch.sh $bootDev",
                 "rm -f ${APApplication.APD_PATH}",
                 "rm -rf ${APApplication.APATCH_FOLDER}",

@@ -86,12 +86,12 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
 
 
     companion object {
-        const val APD_PATH = "/data/adb/apd"
+        const val APD_PATH = "/data/adb/folyd"
 
         @Deprecated("No more KPatch ELF from 0.11.0-dev")
         const val KPATCH_PATH = "/data/adb/kpatch"
         const val SUPERCMD = "/system/bin/truncate"
-        const val APATCH_FOLDER = "/data/adb/ap/"
+        const val APATCH_FOLDER = "/data/adb/foly/"
         private const val APATCH_BIN_FOLDER = APATCH_FOLDER + "bin/"
         private const val APATCH_LOG_FOLDER = APATCH_FOLDER + "log/"
         private const val APD_LINK_PATH = APATCH_BIN_FOLDER + "apd"
@@ -130,7 +130,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         private const val DEFAULT_SU_PATH = "/system/bin/kp"
         private const val LEGACY_SU_PATH = "/system/bin/su"
 
-        const val SP_NAME = "config"
+        const val SP_NAME = "foly_config"
         const val PREF_BLOCK_KERNELPATCH_UPDATE = "block_kernelpatch_update"
         const val PREF_BLOCK_ANDROIDPATCH_UPDATE = "block_androidpatch_update"
         const val PREF_AUTO_EXCLUDE_NEW_APPS = "auto_exclude_new_apps"

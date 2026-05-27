@@ -11,11 +11,11 @@ pub fn ensure_binaries() -> Result<()> {
     utils::ensure_binary(BUSYBOX_PATH)?;
     let resetprop_link = RESETPROP_PATH;
     let _ = std::fs::remove_file(resetprop_link);
-    std::os::unix::fs::symlink("/data/adb/apd", resetprop_link)?;
+    std::os::unix::fs::symlink("/data/adb/folyd", resetprop_link)?;
 
     let magiskpolicy_link = MAGISKPOLICY_PATH;
     let _ = std::fs::remove_file(magiskpolicy_link);
-    std::os::unix::fs::symlink("/data/adb/apd", magiskpolicy_link)?;
+    std::os::unix::fs::symlink("/data/adb/folyd", magiskpolicy_link)?;
 
     Ok(())
 }

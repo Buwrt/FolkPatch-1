@@ -39,14 +39,14 @@ suspend fun getBugreportFile(context: Context): File = withContext(Dispatchers.I
     shell.newJob().add("tar -czf ${dropboxFile.absolutePath} -C /data/system/dropbox .").exec()
     shell.newJob().add("tar -czf ${pstoreFile.absolutePath} -C /sys/fs/pstore .").exec()
     shell.newJob().add("tar -czf ${diagFile.absolutePath} -C /data/vendor/diag .").exec()
-    shell.newJob().add("tar -czf ${bootlogFile.absolutePath} -C /data/adb/ap/log .").exec()
+    shell.newJob().add("tar -czf ${bootlogFile.absolutePath} -C /data/adb/foly/log .").exec()
 
     shell.newJob().add("cat /proc/1/mountinfo > ${mountsFile.absolutePath}").exec()
     shell.newJob().add("cat /proc/filesystems > ${fileSystemsFile.absolutePath}").exec()
     shell.newJob().add("ls -alRZ /data/adb > ${apFileTree.absolutePath}").exec()
     shell.newJob().add("cp /data/system/packages.list ${appListFile.absolutePath}").exec()
     shell.newJob().add("getprop > ${propFile.absolutePath}").exec()
-    shell.newJob().add("cp /data/adb/ap/package_config ${packageConfigFile.absolutePath}").exec()
+    shell.newJob().add("cp /data/adb/foly/package_config ${packageConfigFile.absolutePath}").exec()
 
     val selinux = ShellUtils.fastCmd(shell, "getenforce")
 

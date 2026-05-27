@@ -72,7 +72,7 @@ val baseArgs = mutableListOf(
 ).apply { if (ccache != null) add("-DANDROID_CCACHE=$ccache") }
 
 android {
-    namespace = "me.bmax.apatch"
+    namespace = "me.yuki.foly"
     signingConfigs {
         create("release") {
             storeFile = file(keystoreProperties.getProperty("KEYSTORE_FILE") ?: "debug.keystore")
@@ -440,6 +440,12 @@ dependencies {
     implementation(libs.google.code.gson)
 
     implementation(libs.liquid)
+
+    // KeyAttestation dependencies
+    implementation(libs.bouncycastle)
+    implementation(libs.cbor)
+    implementation(libs.guava)
+    implementation(libs.shizuku.api)
 
     compileOnly(libs.cxx)
 }

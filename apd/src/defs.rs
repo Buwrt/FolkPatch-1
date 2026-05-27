@@ -1,7 +1,7 @@
 use const_format::concatcp;
 
 pub const ADB_DIR: &str = "/data/adb/";
-pub const WORKING_DIR: &str = concatcp!(ADB_DIR, "ap/");
+pub const WORKING_DIR: &str = concatcp!(ADB_DIR, "foly/");
 pub const BINARY_DIR: &str = concatcp!(WORKING_DIR, "bin/");
 pub const APATCH_LOG_FOLDER: &str = concatcp!(WORKING_DIR, "log/");
 
@@ -16,7 +16,7 @@ pub const UTS_SPOOF_ENABLE_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_enable");
 pub const UTS_SPOOF_CONFIG_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_config");
 pub const UTS_SPOOF_BOOT_PENDING: &str = concatcp!(ADB_DIR, ".uts_spoof_boot_pending");
 pub const UTS_SPOOF_RETRY_FILE: &str = concatcp!(ADB_DIR, ".uts_spoof_retry");
-pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "apd");
+pub const DAEMON_PATH: &str = concatcp!(ADB_DIR, "folyd");
 pub const AUTO_EXCLUDE_KNOWN_PACKAGES_FILE: &str =
     concatcp!(WORKING_DIR, "auto_exclude_known_packages");
 

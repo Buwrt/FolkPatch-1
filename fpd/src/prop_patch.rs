@@ -1,6 +1,6 @@
 use std::process::Stdio;
 
-const RESETPROP: &str = "/data/adb/ap/bin/resetprop";
+const RESETPROP: &str = "/data/adb/foly/bin/resetprop";
 
 struct PropItem {
     key: &'static str,
