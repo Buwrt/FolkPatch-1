@@ -1,7 +1,6 @@
 package io.github.vvb2060.keyattestation.keystore;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityThread;
 import android.app.Application;
 import android.app.Instrumentation;
 import android.app.admin.DevicePolicyManager;
@@ -14,7 +13,6 @@ import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
 import android.os.Process;
 import android.os.RemoteException;
-import android.os.SystemProperties;
 import android.security.keystore.AttestationUtils;
 import android.security.keystore.DeviceIdAttestationException;
 import android.security.keystore.KeyGenParameterSpec;
@@ -29,6 +27,8 @@ import com.samsung.android.security.keystore.AttestParameterSpec;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -52,7 +52,7 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
     public AndroidKeyStore() throws Exception {
         if (Os.geteuid() < Process.FIRST_APPLICATION_UID) {
             fixEnv();
-            var pm = ActivityThread.currentApplication().getPackageManager();
+            var pm = AppApplication.app.getPackageManager();
             clientUid = pm.getApplicationInfo(BuildConfig.APPLICATION_ID, 0).uid;
         }
         keyStore = KeyStore.getInstance("AndroidKeyStore");
@@ -80,7 +80,13 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            ActivityThread.initializeMainlineModules();
+            try {
+                var c = Class.forName("android.app.ActivityThread");
+                var m = c.getMethod("initializeMainlineModules");
+                m.invoke(null);
+            } catch (Exception e) {
+                Log.w(AppApplication.TAG, "initializeMainlineModules", e);
+            }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -89,8 +95,21 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
             android.security.keystore.AndroidKeyStoreProvider.install();
         }
 
-        var activityThread = ActivityThread.systemMain();
-        Context systemContext = activityThread.getSystemContext();
+        Object activityThread;
+        try {
+            var c = Class.forName("android.app.ActivityThread");
+            var m = c.getMethod("systemMain");
+            activityThread = m.invoke(null);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Context systemContext;
+        try {
+            var m = activityThread.getClass().getMethod("getSystemContext");
+            systemContext = (Context) m.invoke(activityThread);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         var flags = Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY;
         var context = systemContext.createPackageContext(packageName, flags);
         var mPackageInfo = context.getClass().getDeclaredField("mPackageInfo");
@@ -100,7 +119,7 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
                 boolean.class, Instrumentation.class);
         var application = (Application) makeApplication.invoke(loadedApk, true, null);
         ContextHook.hook(application);
-        var mInitialApplication = ActivityThread.class.getDeclaredField("mInitialApplication");
+        var mInitialApplication = activityThread.getClass().getDeclaredField("mInitialApplication");
         mInitialApplication.setAccessible(true);
         mInitialApplication.set(activityThread, application);
     }
@@ -240,7 +259,7 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
     private static AttestParameterSpec genSakParameter(KeyGenParameterSpec params) {
         var alias = params.getKeystoreAlias();
         var challenge = params.getAttestationChallenge();
-        var packageName = ActivityThread.currentApplication().getPackageName();
+        var packageName = AppApplication.app.getPackageName();
         var builder = new AttestParameterSpec.Builder(alias, challenge)
                 .setAlgorithm(KeyProperties.KEY_ALGORITHM_EC)
                 .setKeyGenParameterSpec(params)
@@ -293,7 +312,7 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
                 || Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             throw new IllegalStateException();
         }
-        var context = ActivityThread.currentApplication();
+        var context = AppApplication.app;
         var attestationIds = flagsToArray(idFlags);
         var challenge = new Date().toString().getBytes();
         try {
@@ -324,7 +343,7 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             throw new IllegalStateException();
         }
-        SystemProperties.set(RemoteProvisioning.PROP_NAME, hostname);
+        setSystemProperty(RemoteProvisioning.PROP_NAME, hostname);
     }
 
     @Override
@@ -332,7 +351,27 @@ public class AndroidKeyStore extends IAndroidKeyStore.Stub {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             throw new IllegalStateException();
         }
-        return SystemProperties.get(RemoteProvisioning.PROP_NAME);
+        return getSystemProperty(RemoteProvisioning.PROP_NAME);
+    }
+
+    private static String getSystemProperty(String key) {
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method m = c.getMethod("get", String.class);
+            return (String) m.invoke(null, key);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    private static void setSystemProperty(String key, String value) {
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method m = c.getMethod("set", String.class, String.class);
+            m.invoke(null, key, value);
+        } catch (Exception e) {
+            Log.w(AppApplication.TAG, "setSystemProperty", e);
+        }
     }
 
     @Override

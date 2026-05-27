@@ -4,10 +4,10 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.SystemProperties;
 import android.telephony.TelephonyManager_rename;
 import android.util.Log;
 
+import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 
 import io.github.vvb2060.keyattestation.AppApplication;
@@ -24,7 +24,7 @@ public class ContextHook extends ContextWrapper {
             }
             if (imei == null) {
                 var slot = slotIndex == 0 ? "" : "2";
-                var prop = SystemProperties.get("ro.ril.oem.imei" + slot);
+                var prop = getSystemProperty("ro.ril.oem.imei" + slot);
                 return prop.isEmpty() ? null : prop;
             }
             return imei;
@@ -39,7 +39,7 @@ public class ContextHook extends ContextWrapper {
                 Log.w(AppApplication.TAG, "getMeid", e);
             }
             if (meid == null) {
-                var prop = SystemProperties.get("ro.ril.oem.meid");
+                var prop = getSystemProperty("ro.ril.oem.meid");
                 return prop.isEmpty() ? null : prop;
             }
             return meid;
@@ -74,5 +74,15 @@ public class ContextHook extends ContextWrapper {
         var base = ContextWrapper.class.getDeclaredField("mBase");
         base.setAccessible(true);
         base.set(context, wrapper);
+    }
+
+    private static String getSystemProperty(String key) {
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method m = c.getMethod("get", String.class);
+            return (String) m.invoke(null, key);
+        } catch (Exception e) {
+            return "";
+        }
     }
 }

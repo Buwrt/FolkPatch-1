@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.ServiceSpecificException;
-import android.os.SystemProperties;
 import android.util.Base64;
 import android.util.Log;
 
@@ -19,6 +18,7 @@ import androidx.annotation.RequiresApi;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -169,8 +169,18 @@ class RemoteProvisioning {
     private static Uri.Builder getBaseUri() {
         return new Uri.Builder()
                 .scheme("https")
-                .authority(SystemProperties.get(PROP_NAME, HOSTNAME))
+                .authority(getSystemProperty(PROP_NAME, HOSTNAME))
                 .appendPath("v1");
+    }
+
+    private static String getSystemProperty(String key, String defaultValue) {
+        try {
+            Class<?> c = Class.forName("android.os.SystemProperties");
+            Method m = c.getMethod("get", String.class, String.class);
+            return (String) m.invoke(null, key, defaultValue);
+        } catch (Exception e) {
+            return defaultValue;
+        }
     }
 
     private EekResponse fetchEek() throws IOException, CborException {
