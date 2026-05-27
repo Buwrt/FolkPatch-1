@@ -31,6 +31,7 @@ import me.bmax.apatch.util.HanziToPinyin
 import me.bmax.apatch.util.PkgConfig
 import me.bmax.apatch.util.SafeUriResolver
 import me.bmax.apatch.util.getRootShell
+import me.yuki.foly.R
 import java.text.Collator
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicBoolean
@@ -257,7 +258,7 @@ class SuperUserViewModel : ViewModel() {
                     outputStream.write(jsonArray.toString(4).toByteArray())
                 }
                 withContext(Dispatchers.Main) {
-                    me.bmax.apatch.util.ui.showToast(context, me.bmax.apatch.R.string.backup_success)
+                    me.bmax.apatch.util.ui.showToast(context, R.string.backup_success)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "Backup failed", e)
@@ -355,7 +356,7 @@ class SuperUserViewModel : ViewModel() {
 
                     fetchAppList()
                     withContext(Dispatchers.Main) {
-                        me.bmax.apatch.util.ui.showToast(context, me.bmax.apatch.R.string.restore_success)
+                        me.bmax.apatch.util.ui.showToast(context, R.string.restore_success)
                     }
                 }
             } catch (e: Exception) {
