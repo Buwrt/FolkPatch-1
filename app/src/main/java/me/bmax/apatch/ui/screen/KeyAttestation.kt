@@ -1,12 +1,6 @@
 package me.bmax.apatch.ui.screen
 
-import android.app.Activity
-import android.content.Intent
 import android.net.Uri
-import android.os.Bundle
-import android.security.keystore.KeyGenParameterSpec
-import android.security.keystore.KeyProperties
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -42,8 +35,7 @@ import io.github.vvb2060.keyattestation.repository.AttestationData
 import io.github.vvb2060.keyattestation.repository.AttestationRepository
 import me.yuki.foly.R
 import java.io.InputStream
-import java.security.KeyStore
-import java.security.cert.X509Certificate
+import java.io.OutputStream
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -433,8 +425,8 @@ fun AuthorizationListItems(list: AuthorizationList?) {
             AttestationItem(stringResource(R.string.ka_app_id), authList.applicationId.toString())
         }
         if (authList.creationDateTime != null) {
-            AttestationItem(stringResource(R.string.ka_creation_time), 
-                java.util.Date(authList.creationDateTime).toString())
+            AttestationItem(stringResource(R.string.ka_creation_time),
+                authList.creationDateTime.toString())
         }
     } ?: run {
         Text(
@@ -464,10 +456,10 @@ private fun bootStateToString(state: Int): String {
 
 private fun algorithmToString(algorithm: Int): String {
     return when (algorithm) {
-        KeyProperties.KEY_ALGORITHM_RSA -> "RSA"
-        KeyProperties.KEY_ALGORITHM_EC -> "EC"
-        KeyProperties.KEY_ALGORITHM_AES -> "AES"
-        KeyProperties.KEY_ALGORITHM_HMAC_SHA256 -> "HMAC"
+        AuthorizationList.KM_ALGORITHM_RSA -> "RSA"
+        AuthorizationList.KM_ALGORITHM_EC -> "EC"
+        AuthorizationList.KM_ALGORITHM_AES -> "AES"
+        AuthorizationList.KM_ALGORITHM_HMAC -> "HMAC"
         else -> "Unknown ($algorithm)"
     }
 }
@@ -545,7 +537,7 @@ class KeyAttestationViewModel : ViewModel() {
         }
     }
     
-    fun saveCertificateToUri(outputStream: android.os.OutputStream?) {
+    fun saveCertificateToUri(outputStream: OutputStream?) {
         if (outputStream == null || certificateChain == null) {
             return
         }
