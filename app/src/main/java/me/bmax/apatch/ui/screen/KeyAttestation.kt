@@ -40,7 +40,7 @@ import io.github.vvb2060.keyattestation.attestation.AuthorizationList
 import io.github.vvb2060.keyattestation.attestation.RootOfTrust
 import io.github.vvb2060.keyattestation.repository.AttestationData
 import io.github.vvb2060.keyattestation.repository.AttestationRepository
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import java.io.InputStream
 import java.security.KeyStore
 import java.security.cert.X509Certificate

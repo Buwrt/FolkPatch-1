@@ -67,7 +67,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.KpmAutoLoadConfig
 import me.bmax.apatch.ui.component.KpmAutoLoadEntry
 import me.bmax.apatch.ui.component.KpmAutoLoadManager

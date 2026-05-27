@@ -36,7 +36,7 @@ import com.ramcosta.composedestinations.generated.destinations.MyThemesScreenDes
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.AppLoadingIndicator
 import me.bmax.apatch.ui.viewmodel.ThemeStoreViewModel
 import java.io.File

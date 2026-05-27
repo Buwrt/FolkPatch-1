@@ -12,7 +12,7 @@ import androidx.compose.material.icons.filled.ViewAgenda
 import androidx.compose.runtime.*
 import androidx.compose.ui.res.stringResource
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.SplicedColumnGroup
 import me.bmax.apatch.ui.component.ToggleSettingCard
 

@@ -2,7 +2,7 @@ package me.bmax.apatch.ui.screen.settings
 
 import androidx.annotation.StringRes
 import android.content.res.Resources
-import me.bmax.apatch.R
+import me.yuki.foly.R
 
 enum class SettingCategory(
     val key: String,

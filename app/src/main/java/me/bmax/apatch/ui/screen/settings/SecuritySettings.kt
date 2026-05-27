@@ -11,7 +11,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.SplicedColumnGroup
 import me.bmax.apatch.ui.component.ToggleSettingCard
 

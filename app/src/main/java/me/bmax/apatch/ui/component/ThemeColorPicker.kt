@@ -41,7 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.annotation.StringRes
-import me.bmax.apatch.R
+import me.yuki.foly.R
 
 data class ThemeColorOption(
     val key: String,

@@ -42,7 +42,7 @@ import androidx.compose.ui.window.DialogWindowProvider
 import androidx.core.content.edit
 import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.ExpressiveCard
 import me.bmax.apatch.ui.component.ExpressiveSwitch
 import me.bmax.apatch.ui.component.SwitchIconState

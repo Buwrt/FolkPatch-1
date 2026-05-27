@@ -32,7 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import me.bmax.apatch.R
+import me.yuki.foly.R
 
 @Composable
 fun ModuleUpdateButton(

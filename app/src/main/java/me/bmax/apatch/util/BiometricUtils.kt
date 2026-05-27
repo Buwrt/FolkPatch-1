@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import kotlin.coroutines.resume
 
 object BiometricUtils {

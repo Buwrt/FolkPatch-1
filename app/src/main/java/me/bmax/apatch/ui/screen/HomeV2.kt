@@ -26,7 +26,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.ramcosta.composedestinations.generated.destinations.InstallModeSelectScreenDestination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.Version
 import androidx.compose.foundation.isSystemInDarkTheme

@@ -95,7 +95,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.launch
 import me.bmax.apatch.APApplication
 import me.bmax.apatch.Natives
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.apApp
 import me.bmax.apatch.ui.LocalBottomBarVisible
 import me.bmax.apatch.ui.LocalIsFloatingNavMode

@@ -133,7 +133,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.apApp
 import me.bmax.apatch.ui.WebUIActivity
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults

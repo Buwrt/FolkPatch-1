@@ -28,7 +28,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import me.bmax.apatch.R
+import me.yuki.foly.R
 
 enum class ThemeMode {
     LIGHT, DARK, SYSTEM

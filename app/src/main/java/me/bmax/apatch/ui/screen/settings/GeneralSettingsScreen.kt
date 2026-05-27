@@ -35,7 +35,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.theme.BackgroundConfig
 import me.bmax.apatch.util.getSELinuxMode
 import me.bmax.apatch.util.isGlobalNamespaceEnabled as checkGlobalNamespaceEnabled

@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.launch
 import me.bmax.apatch.BuildConfig
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.theme.APatchTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar

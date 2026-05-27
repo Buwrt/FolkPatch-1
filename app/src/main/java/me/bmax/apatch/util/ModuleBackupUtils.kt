@@ -6,7 +6,7 @@ import androidx.compose.material3.SnackbarHostState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import me.bmax.apatch.APApplication
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File

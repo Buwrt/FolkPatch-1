@@ -47,7 +47,7 @@ import com.ramcosta.composedestinations.generated.destinations.InstallScreenDest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.KeyEventBlocker
 import me.bmax.apatch.util.getSafeDownloadsDir
 import me.bmax.apatch.util.installModule
