@@ -45,6 +45,7 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -671,10 +672,10 @@ private fun StealthModuleCard(
     onExecute: (List<String>) -> Unit
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
-    val subFeatureStates = rememberSaveable(saver = listSaver<MutableMap<Int, Boolean>, Pair<Int, Boolean>>(
+    val subFeatureStates = rememberSaveable(saver = listSaver<MutableList<Pair<Int, Boolean>>, Pair<Int, Boolean>>(
         save = { stateList -> stateList.toList() },
-        restore = { it.toMap().toMutableMap() }
-    )) { mutableStateOf<Int, Boolean>() }
+        restore = { it.toMutableList() }
+    )) { mutableListOf<Pair<Int, Boolean>>() }
 
     Card(
         shape = RoundedCornerShape(20.dp),
@@ -721,7 +722,7 @@ private fun StealthModuleCard(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     module.subFeatures.forEachIndexed { subIndex, sub ->
-                        val subEnabled = subFeatureStates[subIndex] ?: sub.enabled
+                        val subEnabled = subFeatureStates.find { it.first == subIndex }?.second ?: sub.enabled
                         ListItem(
                             headlineContent = { Text(sub.name, style = MaterialTheme.typography.bodyMedium) },
                             supportingContent = {
@@ -731,7 +732,14 @@ private fun StealthModuleCard(
                             trailingContent = {
                                 Switch(
                                     checked = subEnabled,
-                                    onCheckedChange = { subFeatureStates[subIndex] = it },
+                                    onCheckedChange = { checked ->
+                                        val existing = subFeatureStates.find { it.first == subIndex }
+                                        if (existing != null) {
+                                            subFeatureStates[subFeatureStates.indexOf(existing)] = Pair(subIndex, checked)
+                                        } else {
+                                            subFeatureStates.add(Pair(subIndex, checked))
+                                        }
+                                    },
                                     modifier = Modifier.size(40.dp)
                                 )
                             }
@@ -742,7 +750,7 @@ private fun StealthModuleCard(
 
                     // 执行按钮
                     val enabledCommands = module.subFeatures.filterIndexed { idx, _ ->
-                        subFeatureStates[idx] ?: true
+                        subFeatureStates.find { it.first == idx }?.second ?: true
                     }.flatMap { it.commands }
 
                     Button(
