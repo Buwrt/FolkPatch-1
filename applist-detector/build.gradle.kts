@@ -6,19 +6,10 @@ plugins {
 android {
     namespace = "icu.nullptr.applistdetector"
     compileSdk = 36
-    ndkVersion = "29.0.14206865"
-
-    buildFeatures {
-        prefab = true
-    }
 
     defaultConfig {
         minSdk = 26
         targetSdk = 36
-
-        externalNativeBuild.ndkBuild {
-            arguments += "-j${Runtime.getRuntime().availableProcessors()}"
-        }
     }
 
     buildTypes {
@@ -29,9 +20,10 @@ android {
         }
     }
 
-    externalNativeBuild.ndkBuild {
-        path("src/main/cpp/Android.mk")
-    }
+    // 禁用native编译，使用纯Kotlin实现
+    // externalNativeBuild.ndkBuild {
+    //     path("src/main/cpp/Android.mk")
+    // }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
@@ -44,6 +36,6 @@ android {
 }
 
 dependencies {
-    implementation("com.android.tools.build:apkzlib:8.11.1")
-    implementation("io.github.vvb2060.ndk:xposeddetector:2.2")
+    // 移除需要native的依赖
+    // implementation("io.github.vvb2060.ndk:xposeddetector:2.2")
 }

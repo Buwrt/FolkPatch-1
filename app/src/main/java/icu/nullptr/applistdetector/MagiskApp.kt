@@ -38,11 +38,9 @@ class MagiskApp(context: Context) : IDetector(context) {
         for (pkgName in knownMagiskPackages) {
             try {
                 val appInfo = pm.getApplicationInfo(pkgName, 0)
-                if (appInfo != null) {
-                    val label = pm.getApplicationLabel(appInfo).toString()
-                    detail?.add("$label ($pkgName)" to Result.FOUND)
-                    result = Result.FOUND
-                }
+                val label = pm.getApplicationLabel(appInfo).toString()
+                detail?.add("$label ($pkgName)" to Result.FOUND)
+                result = Result.FOUND
             } catch (e: PackageManager.NameNotFoundException) {
                 // 包不存在，继续检查
             }
@@ -53,7 +51,7 @@ class MagiskApp(context: Context) : IDetector(context) {
         for (pkg in pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)) {
             try {
                 val pInfo = pm.getPackageInfo(pkg.activityInfo.packageName, flags)
-                val aInfo = pInfo.applicationInfo
+                val aInfo = pInfo.applicationInfo ?: continue
                 val apkFile = File(aInfo.sourceDir)
                 val apkSize = apkFile.length() / 1024
                 
