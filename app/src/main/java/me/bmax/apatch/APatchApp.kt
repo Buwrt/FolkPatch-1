@@ -249,7 +249,12 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
             set(value) {
                 field = value
                 _kpStateInitializedLiveData.postValue(false)
-                val ready = Natives.nativeReady(value)
+                val ready = try {
+                    if (Natives.libraryLoaded) Natives.nativeReady(value) else false
+                } catch (e: Throwable) {
+                    Log.e(TAG, "nativeReady failed", e)
+                    false
+                }
                 _kpStateLiveData.value =
                     if (ready) State.KERNELPATCH_INSTALLED else State.UNKNOWN_STATE
                 _apStateLiveData.value =
@@ -362,14 +367,7 @@ class APApplication : Application(), Thread.UncaughtExceptionHandler, ImageLoade
         }
 
         if (!BuildConfig.DEBUG && !verifyAppSignature("qeultwLrVftfSxpnKnEzoWp7yuqUnN5DyBLvJsd96BI=")) {
-            while (true) {
-                val intent = Intent(Intent.ACTION_DELETE)
-                intent.data = "package:$packageName".toUri()
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                intent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-                startActivity(intent)
-                exitProcess(0)
-            }
+            Log.w(TAG, "Signature verification skipped for modded build")
         }
 
         if (!sharedPreferences.contains("app_initialized")) {

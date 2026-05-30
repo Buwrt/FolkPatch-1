@@ -8,8 +8,16 @@ import dalvik.annotation.optimization.FastNative
 import kotlinx.parcelize.Parcelize
 
 object Natives {
+    var libraryLoaded = false
+        private set
+
     init {
-        System.loadLibrary("apjni")
+        try {
+            System.loadLibrary("apjni")
+            libraryLoaded = true
+        } catch (e: Throwable) {
+            android.util.Log.e("Natives", "Failed to load native library", e)
+        }
     }
 
     @Immutable
