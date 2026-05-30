@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.agp.lib)
-    alias(libs.plugins.kotlin)
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
 }
 
 android {
