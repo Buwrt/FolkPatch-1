@@ -36,17 +36,17 @@ class MagiskApp(context: Context) : IDetector(context) {
         for (pkg in pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)) {
             runCatching {
                 val pInfo = pm.getPackageInfo(pkg.activityInfo.packageName, flags)
-                val aInfo = pInfo.applicationInfo
+                val aInfo = pInfo.applicationInfo ?: return@runCatching
                 val apkFile = File(aInfo.sourceDir)
                 val apkSize = apkFile.length() / 1024
                 if (apkSize !in 20..40 && apkSize !in 9 * 1024..20 * 1024) return@runCatching
                 if (aInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0) return@runCatching
-                if (pInfo.activities.size != stubInfo.activities.size) return@runCatching
-                if (pInfo.services.size != stubInfo.services.size) return@runCatching
-                if (pInfo.receivers.size != stubInfo.receivers.size) return@runCatching
-                if (pInfo.providers.size != stubInfo.providers.size) return@runCatching
-                val pPermissionSet = pInfo.requestedPermissions.toSet()
-                val stubPermissionSet = stubInfo.requestedPermissions.toMutableSet()
+                if (pInfo.activities?.size != stubInfo.activities?.size) return@runCatching
+                if (pInfo.services?.size != stubInfo.services?.size) return@runCatching
+                if (pInfo.receivers?.size != stubInfo.receivers?.size) return@runCatching
+                if (pInfo.providers?.size != stubInfo.providers?.size) return@runCatching
+                val pPermissionSet = pInfo.requestedPermissions?.toSet() ?: emptySet()
+                val stubPermissionSet = stubInfo.requestedPermissions?.toMutableSet() ?: mutableSetOf()
                 stubPermissionSet.remove("com.android.launcher.permission.INSTALL_SHORTCUT")
                 if (!pPermissionSet.containsAll(stubPermissionSet)) return@runCatching
                 detail?.add(aInfo.packageName to Result.FOUND)
