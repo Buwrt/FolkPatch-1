@@ -388,6 +388,7 @@ ksp {
 }
 
 dependencies {
+    implementation(project(":applist-detector"))
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.splashscreen)

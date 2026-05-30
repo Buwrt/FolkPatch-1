@@ -1183,4 +1183,6 @@ Please ensure the app is completely closed and reopened for the commands to exec
     <string name="error_unavailable_transient_summary">Key attestation temporarily unavailable</string>
     <string name="error_keys_not_provisioned_summary">Device keys have not been provisioned</string>
     <string name="error_remote_key_provisioning_summary">Remote key provisioning encountered an error</string>
+    <string name="applist_detector_title">应用检测</string>
+    <string name="applist_detector_hint">点击下方卡片查看详细检测结果。此工具用于检测设备上的可疑应用。</string>
 </resources>
