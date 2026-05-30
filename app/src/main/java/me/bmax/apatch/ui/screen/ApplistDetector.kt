@@ -34,7 +34,7 @@ import icu.nullptr.applistdetector.PMSundryAPIs
 import icu.nullptr.applistdetector.XposedModules
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import me.bmax.apatch.R
+import me.yuki.foly.R
 import me.bmax.apatch.ui.component.CheckCard
 import me.bmax.apatch.ui.component.IconHintCard
 
